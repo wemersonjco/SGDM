@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGDM - Sistema de Geração de Documentos Médicos</title>
+    
+    <!-- Favicon (ícone da aba do navegador) -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRhYmxldEdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI5ODBiOSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMzQ5OGRiIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibGluZUdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxNmEwODUiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJlY2M3MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHg9IjgiIHk9IjgiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0MCIgcng9IjQiIHJ5PSI0IiBmaWxsPSJ1cmwoI3RhYmxldEdyYWRpZW50KSIgLz4KICA8bGluZSB4MT0iMTYiIHkxPSIyMCIgeDI9IjQ4IiB5Mj0iMjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuNyIgLz4KICA8cGF0aCBkPSJNIDE2LDM2IAogICAgICAgICAgIEggMjYKICAgICAgICAgICBMIDMwLDMwCiAgICAgICAgICAgTCAzMiw0MAogICAgICAgICAgIEwgMzgsMjUKICAgICAgICAgICBMIDQyLDM2CiAgICAgICAgICAgSCA0OCIgCiAgICAgIHN0cm9rZT0idXJsKCNsaW5lR3JhZGllbnQpIiAKICAgICAgc3Ryb2tlLXdpZHRoPSIzIiAKICAgICAgZmlsbD0ibm9uZSIgCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgCiAgICAgIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+Cjwvc3ZnPg==" type="image/svg+xml">
+    
+    <style>
+        /* Reset e estilos gerais */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        .header {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .logo-container {
+            margin-bottom: 10px;
+            width: 300px;
+            height: 120px;
+        }
+        
+        /* Estilo para os formulários e entradas */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Seção de paciente e instituição */
+        .patient-institution-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .patient-institution-section .form-group {
+            flex: 1;
+        }
+        
+        /* Abas de navegação */
+        .tabs-container {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tab-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            transition: all 0.3s ease;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 2px;
+            color: #666;
+        }
+        
+        .tab-item:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .tab-item.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        /* Botões */
+        .button-group {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .button-group button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .button-group button:hover {
+            background-color: #2980b9;
+        }
+        
+        .add-button {
+            padding: 5px 10px;
+            margin-top: 5px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .add-button:hover {
+            background-color: #219d54;
+        }
+        
+        /* Modelos pré-definidos */
+        .modelos-container {
+            margin-bottom: 15px;
+        }
+        
+        .modelos-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .modelos-container select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+        }
+        
+        /* Textos e documentos */
+        .texto-justificado {
+            text-align: justify;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+        }
+        
+        /* Textos maiores para atestados */
+        #atestadoText, #atestadoAcompanhanteText {
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+        }
+        
+        /* Texto maior para orientações específicas */
+        #orientacoesText {
+            font-size: 13px !important;
+            line-height: 1.5 !important;
+        }
+        
+        .orientacoes-texto {
+            height: 300px;
+        }
+        
+        /* Estilos específicos para atestados - fonte maior */
+        .documento-atestado {
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+        }
+        
+        /* Estilo para Orientações pós 30 dias */
+        .orientacoes-pos-30 {
+            font-size: 16px !important;
+            line-height: 1.7 !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Barra de formatação */
+        .formatting-toolbar {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .formatting-toolbar button {
+            padding: 5px 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .formatting-toolbar button:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .formatting-toolbar button.bold {
+            font-weight: bold;
+        }
+        
+        .formatting-toolbar button.italic {
+            font-style: italic;
+        }
+        
+        .sadt-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .sadt-button {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .sadt-button:hover {
+            background-color: #e9e9e9;
+            border-color: #ccc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sadt-button img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+        
+        .sadt-button-content {
+            flex: 1;
+        }
+        
+        .sadt-button-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .sadt-button-description {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        /* Documento gerado */
+        #documentoGerado {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            white-space: pre-line;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        
+        /* Logo */
+        .documento-logo-container {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+        
+        .documento-logo {
+            max-width: 300px;
+            max-height: 85px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        /* Título do documento */
+        .document-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 8px;
+            display: block !important;
+        }
+        
+        .document-date {
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 13px; /* Aumentado para 13px */
+            font-weight: bold;
+        }
+        
+        .documento-gerado {
+            text-align: justify;
+            font-size: 11px; /* Tamanho ajustado para 11px */
+            line-height: 1.5;
+        }
+        
+        /* Estilo para nome e endereço do paciente */
+        .documento-gerado strong {
+            font-size: 13px; /* Aumentado para 13px */
+        }
+        
+        /* Assinatura centralizada */
+        .signature {
+            text-align: center;
+            font-weight: bold;
+            margin: 40px auto 20px auto; /* Espaçamento aumentado no topo e centralizado */
+            font-size: 11px;
+            line-height: 1.3;
+            width: 100%;
+            display: block;
+            clear: both;
+        }
+        
+        /* Receituário controlado - caixas menores */
+        .emitente-box {
+            border: 1px solid #000;
+            width: 220px;
+            padding: 6px;
+            margin-bottom: 10px;
+            font-size: 9px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.1;
+        }
+        
+        .id-boxes {
+            display: flex;
+            justify-content: space-between; /* Modificado para espaçar entre os elementos */
+            margin-top: 15px;
+            margin-bottom: 40px;
+            width: 100%; /* Garantir que ocupe toda a largura */
+        }
+        
+        .comprador-box, .fornecedor-box {
+            border: 1px solid #000;
+            width: 48%; /* Aumentado para ocupar quase metade da largura */
+            padding: 6px;
+            font-size: 9px;
+            font-weight: bold;
+            text-align: left;
+            line-height: 1.1;
+        }
+        
+        /* Endereço do Hospital Metropolitano */
+        #footerMetropolitano, #footerMetropolitanoAdicional {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+        
+        /* Estilos adicionais para RECEITUÁRIO CONTROLADO */
+        .receituario-controlado .documento-gerado {
+            font-size: 9px !important;
+            line-height: 1.1;
+        }
+        
+        .receituario-controlado .documento-gerado strong {
+            font-size: 9px !important;
+        }
+        
+        .receituario-controlado .document-date {
+            margin-top: 5px;
+            font-size: 10px;
+        }
+        
+        /* Botão para imprimir documento adicional */
+        .print-additional-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .print-additional-button:hover {
+            background-color: #219d54;
+        }
+        
+        /* Documento adicional */
+        #documentoAdicional {
+            margin-top: 40px;
+            border-top: 2px dashed #aaa;
+            padding-top: 20px;
+        }
+        
+        /* Aviso de documento adicional */
+        .additional-doc-notification {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2980b9;
+            padding: 10px 15px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+            display: none;
+        }
+        
+        /* Estilos para impressão */
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            #documentoGerado {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            /* Estilos específicos para o logotipo */
+            .metropolitano-document .documento-logo-container {
+                margin-top: -20px; /* Movido mais para cima */
+                margin-bottom: 0.2cm;
+                position: absolute;
+                top: -10px; /* Movido ainda mais para cima */
+                left: 50%; /* Centralizado */
+                transform: translateX(-50%); /* Centralizado */
+                width: 100%;
+                text-align: center;
+            }
+            
+            /* Garantir que os atestados tenham fonte maior na impressão */
+            .documento-atestado, .tipo-atestado-grande #documentContent {
+                font-size: 14px !important;
+                line-height: 1.6 !important;
+            }
+            
+            /* Garantir que as orientações pós 30 dias tenham fonte maior na impressão */
+            .orientacoes-pos-30, .documento-gerado .orientacoes-pos-30 {
+                font-size: 16px !important;
+                line-height: 1.7 !important;
+                font-weight: 500 !important;
+            }
+            
+            .metropolitano-document .documento-logo {
+                margin: 0 auto; /* Garantindo centralização */
+            }
+            
+            /* Ajusta o espaço depois do logo */
+            .metropolitano-document .document-title {
+                margin-top: 70px; /* Reduzido para compensar o logo mais alto */
+            }
+            
+            /* Ajuste específico para documento de orientações */
+            .tipo-orientacoes.metropolitano-document .document-title {
+                margin-top: 50px;
+            }
+            
+            .tipo-orientacoes.metropolitano-document .documento-logo-container {
+                margin-bottom: 0;
+                position: relative;
+                top: 0;
+                margin-top: 0;
+            }
+            
+            .tipo-orientacoes.metropolitano-document .documento-gerado {
+                margin-top: 10px;
+            }
+            
+            /* Configurações de página */
+            @page {
+                size: A4 portrait;
+                margin: 2cm;
+                orphans: 0;
+                widows: 0;
+            }
+            
+            /* Conteúdo principal - evitar quebrar página */
+            #documentoGerado > *:not(#documentoAdicional) {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            /* Documento adicional - configura pagebreak */
+            #documentoAdicional {
+                page-break-before: always;
+                border-top: none;
+                padding-top: 0;
+                margin-top: 0;
+            }
+            
+            /* Garantir que o logotipo apareça no documento adicional */
+            #logoMetropolitanoAdicional {
+                display: block !important;
+                margin-top: 0 !important;
+                position: relative !important;
+            }
+            
+            /* Remover elementos que podem causar espaço em branco */
+            .additional-doc-notification, 
+            .print-additional-button,
+            #documentoGerado > br,
+            #documentoGerado > div:empty {
+                display: none !important;
+                height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            /* Estilos específicos para cada instituição */
+            .metropolitano-document {
+                margin-top: 0 !important;
+                position: relative;
+                font-size: 11px !important; /* Tamanho ajustado para 11px */
+                line-height: 1.5 !important;
+            }
+            
+            .ioci-document {
+                margin-top: 4.5cm !important;
+                font-size: 11px !important; /* Tamanho ajustado para 11px */
+                line-height: 1.5 !important;
+            }
+            
+            /* Tratamento especial para o endereço do Hospital Metropolitano */
+            #footerMetropolitano, #footerMetropolitanoAdicional {
+                position: fixed;
+                bottom: 1.5cm;
+                left: 0;
+                right: 0;
+                display: block !important;
+                margin-top: 5mm !important;
+                padding-top: 0 !important;
+            }
+            
+            /* Ocultar o endereço no documento de orientações */
+            body.tipo-orientacoes #footerMetropolitano,
+            body.tipo-orientacoes #footerMetropolitanoAdicional {
+                display: none !important;
+            }
+            
+            /* Para garantir espaçamento adequado entre páginas */
+            .documento-gerado {
+                page-break-before: auto;
+                page-break-after: auto;
+                margin-top: 0 !important;
+                margin-bottom: 5mm !important;
+                font-size: 11px !important; /* Tamanho ajustado para 11px */
+                line-height: 1.5 !important;
+            }
+            
+            /* Otimização para evitar páginas em branco */
+            .signature, .assinatura, #assinatura, #assinaturaAdicional {
+                break-after: avoid;
+                break-before: auto;
+                margin-bottom: 1cm !important;
+            }
+            
+            /* Ajustes para documento de orientações na impressão */
+            body.tipo-orientacoes #documentTitle {
+                position: relative;
+                margin-top: 0 !important;
+            }
+            
+            body.tipo-orientacoes #documentoGerado {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            body.tipo-orientacoes #logoMetropolitano {
+                order: 1;
+                position: static !important;
+                margin-top: 0 !important;
+                margin-bottom: 10px !important;
+                transform: none !important;
+            }
+            
+            body.tipo-orientacoes #documentTitle {
+                order: 2;
+                margin-top: 0 !important;
+            }
+            
+            body.tipo-orientacoes #documentContent {
+                order: 3;
+                margin-top: 10px !important;
+            }
+            
+            body.tipo-orientacoes #documentDate {
+                order: 4;
+                margin-top: 20px !important;
+            }
+            
+            /* Ajustes específicos para caixas do receituário controlado */
+            .id-boxes {
+                justify-content: space-between;
+                margin-bottom: 20px;
+                width: 100%;
+            }
+            
+            .comprador-box, .fornecedor-box {
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+                width: 48% !important;
+            }
+            
+            /* Ajustes para evitar página em branco entre documentos */
+            #documentoAdicional {
+                margin-top: 0 !important;
+            }
+            
+            /* Garantir que o documento gerado não quebre em páginas desnecessárias */
+            .receituario-controlado .documento-gerado {
+                font-size: 10px !important; /* Ligeiramente maior para caber mais conteúdo */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Interface do Usuário -->
+    <div class="container no-print">
+        <div class="header">
+            <!-- Logotipo do SGDM -->
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120">
+                  <defs>
+                    <!-- Gradiente de azul para fundo do tablet/tela -->
+                    <linearGradient id="tabletGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#2980b9" />
+                      <stop offset="100%" stop-color="#3498db" />
+                    </linearGradient>
+                    
+                    <!-- Gradiente para linha médica -->
+                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#16a085" />
+                      <stop offset="100%" stop-color="#2ecc71" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Fundo transparente -->
+                  <rect width="300" height="120" fill="transparent" />
+                  
+                  <!-- Tablet/Tela digital -->
+                  <rect x="30" y="25" width="65" height="55" rx="5" ry="5" fill="url(#tabletGradient)" />
+                  
+                  <!-- Linhas de documento na tela -->
+                  <line x1="40" y1="35" x2="75" y2="35" stroke="white" stroke-width="2" stroke-opacity="0.7" />
+                  <line x1="40" y1="45" x2="85" y2="45" stroke="white" stroke-width="2" stroke-opacity="0.7" />
+                  <line x1="40" y1="55" x2="70" y2="55" stroke="white" stroke-width="2" stroke-opacity="0.7" />
+                  
+                  <!-- Linha de eletrocardiograma/pulso médico -->
+                  <path d="M 40,65 
+                           H 50
+                           L 55,60
+                           L 57,70
+                           L 65,55
+                           L 70,65
+                           H 80" 
+                        stroke="url(#lineGradient)" 
+                        stroke-width="3" 
+                        fill="none" 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" />
+                        
+                  <!-- Símbolo médico (cruz) em verde -->
+                  <path d="M 85,40 L 95,40 L 95,30 L 105,30 L 105,40 L 115,40 L 115,50 L 105,50 L 105,60 L 95,60 L 95,50 L 85,50 Z" 
+                        fill="#2ecc71" fill-opacity="0.2" stroke="#2ecc71" stroke-width="1.5" />
+                  
+                  <!-- Texto "SGDM" -->
+                  <text x="125" y="65" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#2c3e50">SGDM</text>
+                  
+                  <!-- Texto descritivo -->
+                  <text x="150" y="90" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">
+                    Sistema de Geração de Documentos Médicos
+                  </text>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Seção de Instituição e Paciente -->
+        <div class="patient-institution-section">
+            <!-- Seleção de instituição -->
+            <div class="form-group">
+                <label for="instituicao"><strong>Instituição:</strong></label>
+                <select id="instituicao">
+                    <option value="ioci">Clínica IOCI</option>
+                    <option value="metropolitano">Hospital Metropolitano</option>
+                </select>
+            </div>
+            
+            <!-- Informações do paciente -->
+            <div class="form-group">
+                <label for="patientName">Nome do Paciente:</label>
+                <input type="text" id="patientName" placeholder="Digite o nome do paciente">
+            </div>
+            <div class="form-group">
+                <label for="patientAddress">Endereço do Paciente:</label>
+                <input type="text" id="patientAddress" placeholder="Digite o endereço do paciente">
+            </div>
+        </div>
+        
+        <!-- Sistema de Abas -->
+        <div class="tabs-container">
+            <ul class="tabs">
+                <li class="tab-item" onclick="mostrarDocumento('receita')">Receita Médica</li>
+                <li class="tab-item" onclick="mostrarDocumento('receita_controlada')">Receituário Controlado</li>
+                <li class="tab-item" onclick="mostrarDocumento('atestado')">Atestado Médico</li>
+                <li class="tab-item" onclick="mostrarDocumento('atestado_acompanhante')">Atestado Acompanhante</li>
+                <li class="tab-item" onclick="mostrarDocumento('encaminhamento')">Encaminhamento</li>
+                <li class="tab-item" onclick="mostrarDocumento('relatorio')">Relatório Médico</li>
+                <li class="tab-item" onclick="mostrarDocumento('solicitacao_exames')">Solicitação de Exames</li>
+                <li class="tab-item" onclick="mostrarDocumento('orientacoes')">Orientações</li>
+                <li class="tab-item" onclick="mostrarDocumento('sadt')">SADT</li>
+            </ul>
+        </div>
+
+        <!-- Formulários para diferentes tipos de documentos -->
+        <!-- Receita Médica e Receituário Controlado -->
+        <div id="receitaForm" class="hidden">
+            <div class="form-group">
+                <label for="viaAdministracao">Via de Administração:</label>
+                <select id="viaAdministracao">
+                    <option value="">Selecione...</option>
+                    <option value="Uso Oral">USO ORAL</option>
+                    <option value="Uso Intramuscular">USO INTRAMUSCULAR</option>
+                    <option value="Uso Endovenoso">USO ENDOVENOSO</option>
+                    <option value="Uso Tópico">USO TÓPICO</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="medicamentos">Medicações:</label>
+                <select id="medicamentos">
+                    <option value="">Selecione...</option>
+                    <!-- Medicações em ordem alfabética -->
+                    <option value="ADDERA D3 OU SANY D 50.000 UI - TOMAR 01 CP POR SEMANA POR 4 MESES">ADDERA D3 OU SANY D 50.000 UI</option>
+                    <option value="ANNITA - TOMAR 01 CP DE 12/12H POR 03 DIAS">ANNITA</option>
+                    <option value="CIPRO OU FORITUS 500 MG - TOMAR 01 CP DE 12/12H POR 7 DIAS">CIPRO OU FORITUS 500 MG</option>
+                    <option value="CITONEURIM OU CITOBÊ OU CRONOBÊ COMPLEX 50.000 UI - APLICAR 01 AMP IM PROFUNDO A CADA 30 DIAS">CITONEURIM OU CITOBÊ OU CRONOBÊ COMPLEX 50.000 UI</option>
+                    <option value="DIVENA OU INILOK - TOMAR 01 CP EM JEJUM POR 8 SEMANAS">DIVENA OU INILOK</option>
+                    <option value="ESOGASTRO IBP - Tomar todos comprimidos do lado AZUL CLARO da cartela pela manhã em jejum durante 14 dias.
+Tomar todos comprimidos do lado AZUL ESCURO da cartela antes do jantar durante 14 dias.
+Iniciar as demais comprimidos no 15º dia, tomando 01 comprimido pela manhã em jejum.">ESOGASTRO IBP</option>
+                    <option value="FLAGYL OU METRONIDAZOL 400 MG - TOMAR 01 CP DE 8/8H POR 7 DIAS">FLAGYL OU METRONIDAZOL 400 MG</option>
+                    <option value="FLORATIL 200 MG - TOMAR 01 CP DE 12/12H POR 05 DIAS">FLORATIL 200 MG</option>
+                    <option value="INZELM - TOMAR 01 CP EM JEJUM POR 8 SEMANAS">INZELM</option>
+                    <option value="KEFLEX 1G - TOMAR 01 CP DE 12/12H POR 7 DIAS">KEFLEX 1G</option>
+                    <option value="LACTOSIL 10.000 FCC - DISSOLVER 01 SACHE EM AGUA E TOMAR ANTES DE INGERIR PRODUTOS LACTEOS.">LACTOSIL 10.000 FCC</option>
+                    <option value="MACRODANTINA - TOMAR 01 CP DE 6/6H POR 7 DIAS">MACRODANTINA</option>
+                    <option value="MATERNA OU QUELATUS BARI OU BARISTAR - TOMAR 01 CP APÓS O CAFÉ DA MANHÃ">MATERNA OU QUELATUS BARI OU BARISTAR</option>
+                    <option value="MECOBE OU DOZEMAST 1000 MCG - TOMAR 01 CP AO DIA">MECOBE OU DOZEMAST 1000 MCG</option>
+                    <option value="MONURIL - DISSOLVER EM UM COPO COM ÁGUA E TOMAR EM DOSE UNICA ANTES DE DORMIR">MONURIL</option>
+                    <option value="NAUTEX ODG 8 MG - COLOCAR O CONTEUDO DE UM SACHE NA LINGUA DE 8/8H SE NAUSEAS OU VOMITOS">NAUTEX ODG 8 MG</option>
+                    <option value="NEUTROFER 300 MG - TOMAR 01 CP ANTES DO ALMOÇO E JANTAR POR 60 DIAS">NEUTROFER 300 MG</option>
+                    <option value="PANTOGAR - TOMAR 01 CP 3X AO DIA POR 03 MESES">PANTOGAR</option>
+                    <option value="PERIDAL - TOMAR 01 CP ANTES DO ALMOÇO E JANTAR POR 30 DIAS">PERIDAL</option>
+                    <option value="PROSSO KM OU OSTEONUTRI OU PEROSTEO KM - TOMAR 01 CP APÓS O ALMOÇO OU JANTAR">PROSSO KM OU OSTEONUTRI OU PEROSTEO KM</option>
+                    <option value="SUCRAFILM - TOMAR 01 SACHÊ ANTES DO CAFÉ DA MANHA E JANTAR POR 15 DIAS">SUCRAFILM</option>
+                    <option value="TACITA - TOMAR 01 CP AO DIA POR 03 MESES">TACITA</option>
+                    <option value="TORAGESIC - TOMAR 01 CP SUBLINGUAL DE 12/12H POR 03 DIAS">TORAGESIC</option>
+                </select>
+                <button type="button" onclick="adicionarMedicamento()" class="add-button">Adicionar Medicamento</button>
+            </div>
+            <div class="modelos-container">
+                <label for="modelosReceita">Textos pré-definidos:</label>
+                <select id="modelosReceita" onchange="selecionarModeloReceita()">
+                    <option value="">Selecione um modelo...</option>
+                    <option value="pos_op_gastro">PÓS OPERATÓRIO GASTRO</option>
+                    <option value="vitaminas_pos_op">VITAMINAS PÓS OP</option>
+                    <option value="ulcera_gastrica">ULCERA GASTRICA</option>
+                    <option value="deficiencias_pos_op">DEFICIENCIAS PÓS OP</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="receitaText">Receita:</label>
+                <div class="formatting-toolbar">
+                    <button type="button" onclick="aplicarFormatacao('receitaText', 'bold')" class="bold">B</button>
+                    <button type="button" onclick="aplicarFormatacao('receitaText', 'italic')" class="italic">I</button>
+                    <select onchange="alterarTamanhoFonte('receitaText', this.value)">
+                        <option value="">Tamanho da fonte</option>
+                        <option value="9">Pequeno</option>
+                        <option value="11" selected>Normal</option>
+                        <option value="13">Médio</option>
+                        <option value="16">Grande</option>
+                    </select>
+                </div>
+                <textarea id="receitaText" class="texto-justificado"></textarea>
+            </div>
+        </div>
+
+        <!-- Atestado Médico -->
+        <div id="atestadoForm" class="hidden">
+            <div class="modelos-container">
+                <label for="modelosAtestado">Textos pré-definidos:</label>
+                <select id="modelosAtestado" onchange="selecionarModeloAtestado()">
+                    <option value="">Selecione um modelo...</option>
+                    <option value="pos_operatorio">PÓS OPERATÓRIO</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="atestadoText">Atestado:</label>
+                <div class="formatting-toolbar">
+                    <button type="button" onclick="aplicarFormatacao('atestadoText', 'bold')" class="bold">B</button>
+                    <button type="button" onclick="aplicarFormatacao('atestadoText', 'italic')" class="italic">I</button>
+                    <select onchange="alterarTamanhoFonte('atestadoText', this.value)">
+                        <option value="">Tamanho da fonte</option>
+                        <option value="9">Pequeno</option>
+                        <option value="11" selected>Normal</option>
+                        <option value="13">Médio</option>
+                        <option value="16">Grande</option>
+                    </select>
+                </div>
+                <textarea id="atestadoText" class="texto-justificado">Atesto para os devidos fins que o(a) paciente supracitado(a) esteve em consulta médica nesta data.
+
+
+CID: </textarea>
+            </div>
+        </div>
+
+        <!-- Atestado de Acompanhante -->
+        <div id="atestadoAcompanhanteForm" class="hidden">
+            <div class="form-group">
+                <label for="nomeAcompanhante">Nome do Acompanhante:</label>
+                <input type="text" id="nomeAcompanhante" placeholder="Digite o nome do acompanhante" oninput="atualizarNomeAcompanhante()">
+            </div>
+            <div class="form-group">
+                <label for="atestadoAcompanhanteText">Atestado:</label>
+                <div class="formatting-toolbar">
+                    <button type="button" onclick="aplicarFormatacao('atestadoAcompanhanteText', 'bold')" class="bold">B</button>
+                    <button type="button" onclick="aplicarFormatacao('atestadoAcompanhanteText', 'italic')" class="italic">I</button>
+                    <select onchange="alterarTamanhoFonte('atestadoAcompanhanteText', this.value)">
+                        <option value="">Tamanho da fonte</option>
+                        <option value="9">Pequeno</option>
+                        <option value="11" selected>Normal</option>
+                        <option value="13">Médio</option>
+                        <option value="16">Grande</option>
+                    </select>
+                </div>
+                <textarea id="atestadoAcompanhanteText" class="texto-justificado">Atesto para os devidos fins que o(a) [NOME_ACOMPANHANTE] esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.
+
+
+CID: Z763</textarea>
+            </div>
+        </div>
+
+        <!-- Solicitação de Exames -->
+        <div id="solicitacaoExamesForm" class="hidden">
+            <div class="form-group">
+                <label for="examesText">Exames:</label>
+                <div class="formatting-toolbar">
+                    <button type="button" onclick="aplicarFormatacao('examesText', 'bold')" class="bold">B</button>
+                    <button type="button" onclick="aplicarFormatacao('examesText', 'italic')" class="italic">I</button>
+                    <select onchange="alterarTamanhoFonte('examesText', this.value)">
+                        <option value="">Tamanho da fonte</option>
+                        <option value="9">Pequeno</option>
+                        <option value="11" selected>Normal</option>
+                        <option value="13">Médio</option>
+                        <option value="16">Grande</option>
+                    </select>
+                </div>
+                <textarea id="examesText" class="texto-justificado">HEMOGRAMA;
+UREIA
+CREATININA
+LIPIDOGRAMA
+PROVAS DE FUNÇÃO HEPÁTICA;
+TSH;
+T4 LIVRE;
+ROTINA DE URINA;
+25 OHD;
+VITAMINA B12;
+FERRO;
+FERRITINA.</textarea>
+            </div>
+        </div>
+
+        <!-- Encaminhamento e Relatório Médico -->
+        <div id="encaminhamentoRelatorioForm" class="hidden">
+            <div class="modelos-container">
+                <label for="modelosEncaminhamento">Textos pré-definidos:</label>
+                <select id="modelosEncaminhamento" onchange="selecionarModeloEncaminhamento()">
+                    <option value="">Selecione um modelo...</option>
+                    <option value="cirurgia_geral">A CIRURGIA GERAL</option>
+                    <option value="reparadora">REPARADORA</option>
+                    <option value="pre_operatorio">PRE OPERATÓRIO</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="encaminhamentoRelatorioText">Texto:</label>
+                <div class="formatting-toolbar">
+                    <button type="button" onclick="aplicarFormatacao('encaminhamentoRelatorioText', 'bold')" class="bold">B</button>
+                    <button type="button" onclick="aplicarFormatacao('encaminhamentoRelatorioText', 'italic')" class="italic">I</button>
+                    <select onchange="alterarTamanhoFonte('encaminhamentoRelatorioText', this.value)">
+                        <option value="">Tamanho da fonte</option>
+                        <option value="9">Pequeno</option>
+                        <option value="11" selected>Normal</option>
+                        <option value="13">Médio</option>
+                        <option value="16">Grande</option>
+                    </select>
+                </div>
+                <textarea id="encaminhamentoRelatorioText" class="texto-justificado"></textarea>
+            </div>
+        </div>
+
+        <!-- Orientações -->
+        <div id="orientacoesForm" class="hidden">
+            <div class="modelos-container">
+                <label for="modelosOrientacoes">Textos pré-definidos:</label>
+                <select id="modelosOrientacoes" onchange="selecionarModeloOrientacoes()">
+                    <option value="">Selecione um modelo...</option>
+                    <option value="pos_operatorio">ORIENTAÇÕES PÓS OPERATÓRIO</option>
+                    <option value="pre_operatorio">ORIENTAÇÕES PRE OP</option>
+                    <option value="pos_30_dias">ORIENTAÇÕES POS 30 DIAS</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="orientacoesText">Orientações:</label>
+                <div class="formatting-toolbar">
+                    <button type="button" onclick="aplicarFormatacao('orientacoesText', 'bold')" class="bold">B</button>
+                    <button type="button" onclick="aplicarFormatacao('orientacoesText', 'italic')" class="italic">I</button>
+                    <select onchange="alterarTamanhoFonte('orientacoesText', this.value)">
+                        <option value="">Tamanho da fonte</option>
+                        <option value="9">Pequeno</option>
+                        <option value="11" selected>Normal</option>
+                        <option value="13">Médio</option>
+                        <option value="16">Grande</option>
+                    </select>
+                </div>
+                <textarea id="orientacoesText" class="texto-justificado orientacoes-texto"></textarea>
+            </div>
+        </div>
+        
+        <!-- SADT -->
+        <div id="sadtForm" class="hidden">
+            <h3>Solicitação de Autorização de Diagnóstico e Terapia (SADT)</h3>
+            <p>Selecione o formulário SADT correspondente ao convênio do paciente:</p>
+            
+            <div class="sadt-buttons">
+                <a href="https://drive.google.com/uc?export=download&id=18cmBPW75hcrM-xNtQDd5yRRThGmffu7s" class="sadt-button" target="_blank">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4xIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2VkMjAyOSIgZD0iTTY0IDY0QzI4LjcgNjQgMCA5Mi43IDAgMTI4VjM4NEMwIDQxOS4zIDI4LjcgNDQ4IDY0IDQ0OEg0NDhDNDgzLjMgNDQ4IDUxMiA0MTkuMyA1MTIgMzg0VjEyOEM1MTIgOTIuNyA0ODMuMyA2NCA0NDggNjRINjR6bTg4IDY0aC0xNmMtOC44IDAtMTYgNy4yLTE2IDE2djY0YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMTQ0YzAtOC44LTcuMi0xNi0xNi0xNnptOTYgMGgtMTZjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjE0NGMwLTguOC03LjItMTYtMTYtMTZ6bTk2IDBIMzA0YzAtOC44LTcuMi0xNi0xNi0xNmgtMTZjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2SDM0NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjE0NGMwLTguOC03LjItMTYtMTYtMTZIMzYwYy04LjggMC0xNiA3LjItMTYgMTZ6bS0xNjAgOTZIMTM2YzAtOC44LTcuMi0xNi0xNi0xNkgxMDRjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2aDE2YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMjQwYzAtOC44LTcuMi0xNi0xNi0xNkgxNjBjLTguOCAwLTE2IDcuMi0xNiAxNnptOTYgMEgyNDBjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjI0MGMwLTguOC03LjItMTYtMTYtMTZ6bTgwIDBjMC04LjgtNy4yLTE2LTE2LTE2aC0xNmMtOC44IDAtMTYgNy4yLTE2IDE2djY0YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMjQweiIvPjwvc3ZnPg==" alt="Bradesco Logo">
+                    <div class="sadt-button-content">
+                        <div class="sadt-button-title">SADT Bradesco</div>
+                        <div class="sadt-button-description">Formulário de solicitação para pacientes do convênio Bradesco</div>
+                    </div>
+                </a>
+                
+                <a href="https://drive.google.com/uc?export=download&id=1z4eri36gcw0S7BD68a-V3MYEic9bAA4Z" class="sadt-button" target="_blank">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4xIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iIzEzNGE4ZSIgZD0iTTY0IDY0QzI4LjcgNjQgMCA5Mi43IDAgMTI4VjM4NEMwIDQxOS4zIDI4LjcgNDQ4IDY0IDQ0OEg0NDhDNDgzLjMgNDQ4IDUxMiA0MTkuMyA1MTIgMzg0VjEyOEM1MTIgOTIuNyA0ODMuMyA2NCA0NDggNjRINjR6bTg4IDY0aC0xNmMtOC44IDAtMTYgNy4yLTE2IDE2djY0YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMTQ0YzAtOC44LTcuMi0xNi0xNi0xNnptOTYgMGgtMTZjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjE0NGMwLTguOC03LjItMTYtMTYtMTZ6bTk2IDBIMzA0YzAtOC44LTcuMi0xNi0xNi0xNmgtMTZjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2SDM0NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjE0NGMwLTguOC03LjItMTYtMTYtMTZIMzYwYy04LjggMC0xNiA3LjItMTYgMTZ6bS0xNjAgOTZIMTM2YzAtOC44LTcuMi0xNi0xNi0xNkgxMDRjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2aDE2YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMjQwYzAtOC44LTcuMi0xNi0xNi0xNkgxNjBjLTguOCAwLTE2IDcuMi0xNiAxNnptOTYgMEgyNDBjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjI0MGMwLTguOC03LjItMTYtMTYtMTZ6bTgwIDBjMC04LjgtNy4yLTE2LTE2LTE2aC0xNmMtOC44IDAtMTYgNy4yLTE2IDE2djY0YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMjQweiIvPjwvc3ZnPg==" alt="Cassi Logo">
+                    <div class="sadt-button-content">
+                        <div class="sadt-button-title">SADT Cassi</div>
+                        <div class="sadt-button-description">Formulário de solicitação para pacientes do convênio Cassi</div>
+                    </div>
+                </a>
+                
+                <a href="https://drive.google.com/uc?export=download&id=1WbcIG56ogBqyTsa6desT0LKkSr2wLQ1c" class="sadt-button" target="_blank">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4xIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iIzAwOTY4OCIgZD0iTTY0IDY0QzI4LjcgNjQgMCA5Mi43IDAgMTI4VjM4NEMwIDQxOS4zIDI4LjcgNDQ4IDY0IDQ0OEg0NDhDNDgzLjMgNDQ4IDUxMiA0MTkuMyA1MTIgMzg0VjEyOEM1MTIgOTIuNyA0ODMuMyA2NCA0NDggNjRINjR6bTg4IDY0aC0xNmMtOC44IDAtMTYgNy4yLTE2IDE2djY0YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMTQ0YzAtOC44LTcuMi0xNi0xNi0xNnptOTYgMGgtMTZjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjE0NGMwLTguOC03LjItMTYtMTYtMTZ6bTk2IDBIMzA0YzAtOC44LTcuMi0xNi0xNi0xNmgtMTZjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2SDM0NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjE0NGMwLTguOC03LjItMTYtMTYtMTZIMzYwYy04LjggMC0xNiA3LjItMTYgMTZ6bS0xNjAgOTZIMTM2YzAtOC44LTcuMi0xNi0xNi0xNkgxMDRjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2aDE2YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMjQwYzAtOC44LTcuMi0xNi0xNi0xNkgxNjBjLTguOCAwLTE2IDcuMi0xNiAxNnptOTYgMEgyNDBjLTguOCAwLTE2IDcuMi0xNiAxNnY2NGMwIDguOCA3LjIgMTYgMTYgMTZoMTZjOC44IDAgMTYtNy4yIDE2LTE2VjI0MGMwLTguOC03LjItMTYtMTYtMTZ6bTgwIDBjMC04LjgtNy4yLTE2LTE2LTE2aC0xNmMtOC44IDAtMTYgNy4yLTE2IDE2djY0YzAgOC44IDcuMiAxNiAxNiAxNmgxNmM4LjggMCAxNi03LjIgMTYtMTZWMjQweiIvPjwvc3ZnPg==" alt="SulAmerica Logo">
+                    <div class="sadt-button-content">
+                        <div class="sadt-button-title">SADT SulAmerica</div>
+                        <div class="sadt-button-description">Formulário de solicitação para pacientes do convênio SulAmerica</div>
+                    </div>
+                </a>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <p><strong>Instruções:</strong></p>
+                <ol>
+                    <li>Clique no botão correspondente ao convênio do paciente</li>
+                    <li>O formulário PDF será aberto no seu navegador ou programa padrão de PDFs</li>
+                    <li>Preencha os campos necessários e salve ou imprima o documento</li>
+                </ol>
+                <p><strong>Nota:</strong> Estes formulários são PDFs editáveis que permitem o preenchimento digital dos campos.</p>
+            </div>
+        </div>
+
+        <!-- Campo personalizado para dados do médico -->
+        <div class="form-group">
+            <label for="doctorData"><strong>Dados do Médico (opcional):</strong></label>
+            <textarea id="doctorData" placeholder="Ex: Dr. João Silva&#10;CIRURGIA GERAL&#10;CRM XX 12345" class="texto-justificado" rows="3"></textarea>
+        </div>
+
+        <!-- Botões -->
+        <div class="button-group no-print">
+            <button type="button" onclick="gerarDocumento()">Gerar Documento</button>
+            <button type="button" onclick="limparFormulario()">Limpar</button>
+            <button type="button" onclick="imprimirDocumento()">Imprimir</button>
+        </div>
+    </div>
+
+    <!-- Documento Gerado para Impressão -->
+    <div id="documentoGerado" class="hidden">
+        <!-- Logo para Hospital Metropolitano -->
+        <div id="logoMetropolitano" class="documento-logo-container hidden">
+            <img src="https://i.imgur.com/nAokkPY.jpg" alt="Logo Hospital Metropolitano" class="documento-logo">
+        </div>
+        <!-- Título do documento -->
+        <h2 id="documentTitle" class="document-title"></h2>
+        <div id="documentContent" class="documento-gerado"></div>
+        <p id="documentDate" class="document-date"></p>
+        
+        <!-- Assinatura personalizada (opcional) -->
+        <p id="assinatura" class="signature hidden"></p>
+        
+        <div id="idBoxes" class="id-boxes"></div>
+        
+        <!-- Rodapé para Hospital Metropolitano -->
+        <div id="footerMetropolitano" class="hidden">
+            Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187<br>
+            Telefone: (65) 3388-0600
+        </div>
+        
+        <!-- Notificação de documento adicional -->
+        <div id="additionalDocNotification" class="additional-doc-notification">
+            Foi gerado um documento adicional que será impresso automaticamente junto com este.
+        </div>
+        
+        <!-- Botão para imprimir documento adicional separadamente -->
+        <button id="printAdditionalButton" class="print-additional-button" onclick="imprimirDocumentoAdicional()">Imprimir Documento Adicional</button>
+        
+        <!-- Documento adicional (orientações) -->
+        <div id="documentoAdicional" class="hidden">
+            <!-- Logo para Hospital Metropolitano (adicional) -->
+            <div id="logoMetropolitanoAdicional" class="documento-logo-container hidden">
+                <img src="https://i.imgur.com/nAokkPY.jpg" alt="Logo Hospital Metropolitano" class="documento-logo">
+            </div>
+            <!-- Título do documento adicional -->
+            <h2 id="documentTitleAdicional" class="document-title"></h2>
+            <div id="documentContentAdicional" class="documento-gerado"></div>
+            <p id="documentDateAdicional" class="document-date"></p>
+            
+            <!-- Assinatura personalizada (opcional) para documento adicional -->
+            <p id="assinaturaAdicional" class="signature hidden"></p>
+            
+            <!-- Rodapé para Hospital Metropolitano (adicional) -->
+            <div id="footerMetropolitanoAdicional" class="hidden">
+                Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187<br>
+                Telefone: (65) 3388-0600
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modelos de textos pré-definidos
+        const modelosTexto = {
+            receita: {
+                pos_op_gastro: `1)      DIVENA 40 mg ------------------------------------- 06 MESES
+Tomar 01 comprimido pela manhã em jejum e a noite -30 dias, posteriormente
+Tomar 01 comprimido pela manha em jejum  por 05 (cinco) MESES
+ 
+2)      DIPIRONA GOTAS ----------------------------------- 01 FRASCO
+Tomar 40 gotas de 6/6 horas por 03 dias, após em caso de dor ou febre.
+ 
+3)      FLAGASS GOTAS ------------------------------------ 01 FRASCO
+Tomar 40 gotas de 8/8 horas por 03 dias, após em caso de gases.
+ 
+4)      VONAU FLASH 8 mg --------------------------------- 01 CAIXA
+Tomar 1 comprimido sublingual de 8/8 horas em caso de náuseas ou vômitos.
+ 
+USO INJETÁVEL:
+ 
+1)      VOLARE 40MG (ENOXAPARINA 40MG) ___________01 CAIXA
+APLICAR NO SUBCUTÂNEO 1 VEZ AO DIA  DURANTE 06 (SEIS) DIAS.
+ 
+  
+MANTER AS MEDICAÇÕES DE USO HABITUAL, POR EXEMPLO, MEDICAÇÃO PARA "PRESSÃO ALTA", DIABETES, ETC. LAVAR AS FERIDAS OPERATÓRIAS COM AGUA E SABONETE DIARIAMENTE. RETORNAR NO AMBULATÓRIO (AGENDAR NO DIA DA ALTA)`,
+                
+                vitaminas_pos_op: `1)      MATERNA OU QUELATUS BARI OU FUSION PLUS OU BARISTAR
+Tomar 01 comprimido ao dia, APÓS O CAFÉ DA MANHÃ.
+ 
+2)      PROSSO KM OU OSTEONUTRI OU PEROSTEO KM
+ Tomar 01 comprimido ao dia, APÓS O ALMOÇO OU JANTAR. 
+ 
+USO INJETÁVEL:
+ 
+3)      CITONEURIM OU CITOBÊ OU CRONOBE COMPLEX 5000 UI
+Aplicar 01 unidade intra muscular a cada 03 meses
+ 
+TODAS AS MEDICAÇÕES ACIMA DEVERÃO SER TOMADAS PELO RESTO DA VIDA.`,
+                
+                ulcera_gastrica: `1)      INILOK OU ESIO OU GAESO OU DIVENA
+Tomar 1 comprimido pela manha em jejum e 30 minutos antes do jantar –  DURANTE  03  (TRES) MESES
+ 
+2)      SUCRAFILM 2G EM FLACONETES
+Tomar 01 flaconete de 12/12 horas (ANTES DO CAFÉ DA MANHA E JANTAR), com o estômago vazio por 15 dias.
+ 
+ATENÇÃO: NÃO INGERIR FRITURAS, REFRIGERANTES, ALIMENTOS ÁCIDOS, ALIMENTOS COM CAFEÍNA (CAFÉ, CHÁ PRETO, CHÁ MATE, CHOCOLATE, TERERÉ, CHIMARRÃO), GORDURAS, ALIMENTOS CONDIMENTADOS, PIMENTAS, EMBUTIDOS (PRESUNTO, BACON, LINGUIÇA, SALAME). NÃO UTILIZAR QUALQUER TIPO DE ANTI-INFLAMATÓRIOS (AAS, VOLTAREN, DICLOFENACO, NIMESULIDA, IBUPROFENO, CETOPROFENO, NAPROXENO, TORSILAX, TANDRILAX). MASTIGAR MUITO BEM OS ALIMENTOS, NÃO IGERIR LÍQUIDOS APÓS AS REFEIÇÕES, ESPERAR PELO MENOS 2H APÓS SE ALIMENTAR PARA SE DEITAR, FRACIONAR OS ALIMENTOS EM PORÇÕES MENORES. PERDA PONDERAL TAMBÉM É IMPORTANTE PARA O TRATAMENTO.`,
+                
+                deficiencias_pos_op: `ADDERA D3 OU SANY D 50.000 UI
+TOMAR 01 CP POR SEMANA POR 3 MESES
+
+TACITA
+TOMAR 01 CP AO DIA POR 4 MESES
+
+NEUTROFER 300 MG
+TOMAR 01 CP ANTES DO ALMOÇO E JANTAR POR 60 DIAS
+
+USO INTRAMUSCULAR
+CITONEURIM OU CITOBE OU CRONOBE COMPLEX 5000 UI
+APLICAR 01 AMP IM A CADA 30 DIAS POR 6 MESES E APÓS A CADA 3 MESES.`
+            },
+            encaminhamento: {
+                cirurgia_geral: `ENCAMINHAMENTO A CIRURGIA GERAL
+ 
+ENCAMINHO PACIENE EM POS OPERATÓRIO DE CIRURGIA BARIATRICA (BYPASS GASTRICO), APRESENTANDO COLELITIASE COM NECESSIDADE DE COLECISTECTOMIA (DEVIDO DESVIO INTESTINAL QUEM IMPEDE ACESSO A VIA BILIAR VIA ENDOSCÓPICA CONVENCIONAL).
+
+CID: K802`,
+                
+                reparadora: `A UNIDADE BASICA DE SAUDE
+
+ENCAMINHO PACIENTE SUPRACITADA(O) EM PÓS OPERATÓRIO DE CIRURGIA BARIATRICA. 
+AO COMPLETAR 02 ANOS DA CIRURGIA, A(O) MESMA(O) TEM DIREITO DE REALIZAÇÃO DE CIRURGIA PLASTICA REPARADORA SE PREENCHIMENTO DE CRITERIOS SEGUNDO O MINISTÉRIO DA SAUDE. 
+PARA TANTO, DEVERÁ SER ENCAMINHADA DA PROPRIA UNIDADE BASICA DE SAUDE PARA A REDE ASSISTENCIAL DO SUS PARA A ESPECIALIDADE CIRURGIA PLÁSTICA. 
+
+GRATO. 
+
+CID: E660`,
+                
+                pre_operatorio: `Encaminho o (a) paciente Sr (a). supracitado(a) com proposta de tratamento cirúrgico da obesidade, para avaliação pré-operatória.
+ 
+- ENDOCRINOLOGIA
+- PSIQUIATRIA
+- CARDIOLOGIA
+- PNEUMOLOGIA
+- PSICOLOGIA
+- NUTRIÇÃO
+
+CID: E660`
+            },
+            atestado: {
+                pos_operatorio: `Atesto, para os devidos fins, que o(a) Sr. (a) supracitado foi submetido (a) a tratamento cirúrgico necessitando se ausentar de suas atividades laborais por um período de 30 (TRINTA) dias a contar desta data.
+      
+Grato
+ 
+CID:E-660`
+            },
+            orientacoes: {
+                pos_operatorio: `Superamos, com sucesso, mais uma importante etapa no tratamento da obesidade mórbida; apresentamos a seguir importantes informações a respeito de cuidados pós-operatórios, os quais devem ser seguidos para uma plena e rápida recuperação.1) A dieta, conforme orientado pela nutricionista (equipe do hospital Metropolitano) deve ser seguida à risca, integralmente, principalmente no que se refere a horários, quantidades e tipos de alimentos. MANTENHA-SE HIDRATADO. A SEDE E FRAQUEZA SÃO SINAIS DE DESIDRATAÇÃO. MANTENHA A URINA SEMPRE CLARA
+2) É extremamente importante se manter  bem hidratado (a); nos intervalos da dieta devemos ingerir líquidos em abundância. Durante a primeira semana a sensação de fraqueza e indisposição refletem muito mais um estado de desidratação do que falta de alimentação. LEMBRE-SE: não há limite máximo em relação à hidratação oral; não há problemas em se ingerir grandes quantidades, tais como 3 ou 4 litros por dia! Mas temos uma quantidade mínima – devem ser ingeridos, NO MÍNIMO, 3 litros ao dia. O melhor controle em relação ao estado de hidratação em domicilio é a quantidade e a coloração da urina: pouca urina ou urina concentrada mostram necessidade de mais liquido (mesmo que você considere já ter ingerido quantidade suficiente).
+3) O mais importante em relação aos líquidos ingeridos é a VELOCIDADE da sua ingestão: nesse primeiro momento devem ser ingeridos gole a gole, com paciência e perseverança. Você deve manter sempre ao seu lado uma garrafa com o líquido da sua preferência (água, chá, suco light, água de coco, isotônicos, etc). Se durante a tomada de líquidos houver dor ou desconforto abdominal, ou você ingeriu goles muito grandes, ou vários goles em intervalo muito curto. NÃO DESISTA – aguarde alguns minutos e recomece a hidratação oral, mas dessa vez com goles menores e com um pouco mais de tempo entre os goles. Procure tomar gole de "TAMANHO NORMAL", nem grande, nem pequeno, tamanho NORMAL.
+DICA: QUANTO MAIS GELADOS ESTIVEREM OS LÍQUIDOS, MENOS DESCONFORTO ABDOMINAL; MELHOR SERÁ SUA ACEITAÇÃO. DEIXE OS LÍQUIDOS BEM GELADOS PARA CONSUMO.
+4) Pela característica da dieta (líquida sem resíduos) é esperado um atraso na função intestinal e uma dificuldade natural para evacuar – você pode esperar até 5-7 dias para a ocorrência da primeira evacuação, habitualmente evacuação mais endurecida, com pouco mais de dificuldade. As primeiras evacuações ainda podem ser bastante escurecidas, retornando a coloração normal a partir do segundo ou terceiro episódio – se a coloração não voltar ao normal, por favor, entre em contato com os cirurgiões da equipe.
+5) Outro cuidado FUNDAMENTAL: você não deve, permanecer deitado no pós-operatório. Tente levar a vida o mais próximo possível do habitual; o esforço de sentar, levantar, deitar, caminhar, subir/descer escadas, tossir ou evacuar não prejudica sua operação – pelo contrário, o fato de se movimentar ajuda muito sua recuperação no pós-operatório, diminui a sensação de gases e, mais importante, diminui o risco de trombose. Contudo, você deve evitar esforços físicos intensos: esforços como academia de ginástica, levantamento de algo pesado (considere pesado como 5kg), esforços na atividade de cuidados do lar (limpar casa, lavar roupas, etc) – para essas atividades, o intervalo mínimo deve ser de 30 (TRINTA) dias. Dirigir somente após 7 dias da cirurgia. MANTENHA A MEIA COMPRESSIVA POR PELO MENOS 10 DIAS.
+		6) Os curativos devem ser trocados diariamente até o retorno no ambulatório. Os pontos devem ser retirado após 10 a 14 dias (depois de avaliação medica); durante o banho lave a ferida operatória com água e sabonete, seque bem com uma toalha seca e coloque fitas por cima – essa fita se chama micropore e pode ser encontrada em qualquer farmácia. Coloque quantas fitas forem necessárias, essas fitas protegem a ferida contra infecções.
+		7) Em razão do emprego de medicamentos anti-trombose durante o período de internação, as feridas no abdome podem ficar roxas, com um grande hematoma visível. Esse evento é, de certa forma, esperado; não se preocupe, logo a pele retornará ao normal.
+		8)  Em relação aos medicamentos em uso, você deve continuar o uso de todos os medicamentos de uso contínuo (por exemplo medicamentos para diabete, hipertensão, etc)– caso os comprimidos sejam grandes, parta o comprimido em 4 partes e tome parte por parte, na mesma dosagem e horários de antes da cirurgia. Para as mulheres que estão usando anticoncepcional deverão INTERROMPER o uso durante 30 dias após a cirurgia, retornando ao uso posteriormente conforme orientação de seu ginecologista. Medicações prescritas pelos especialistar  no pré operatório (Pneumo, Endocrino, Psiquiatra, etc) deve sem seguida a risca.
+		9) Siga as orientações da receita de medicamentos de pós-operatório que segue junto com essas orientações. O uso da medicação para o estômago (DIVENA 40mg) é muito importante e deve ser mantido rigorosamente por período de 6 meses após a cirurgia, sendo que deverá ser tomado 2x ao dia nos primeiros 30 dias, posteriormente 1x ao dia (pela manha). EVITE GENÉRICOS
+		10) Seu retorno no ambulatório do hospital Metropolitano deverá ser agendado na recepção. É SUGESTIVO  NÃO VIAJAR ATÉ  O RETORNO NO AMBULATORIO. Permaneca na cidade para possíveis intercorrencias. É EXPRESSAMENTO PROIBIDO BEBIDA ALCOOLICA ANTES DE 12 MESES.
+		11) Em caso de URGÊNCIA REFENTE A CIRURGIA, durante a primeira semana, entre em contato com os cirurgiões da equipe (ligar ou enviar mensagem de texto), dúvidas SOBRE DIETA OU MEDICAMENTOS será esclarecidas no ambulatório:
+		Dr. Samuel Rabello -  (65) 99969-1654
+		Dr. Regis Vilela –  (65) 98415-3137
+		Dr. Kaway Juliano – (65) 99973-5099
+		Dr. Wemerson Oliveira – (65) 98160-0178
+		Dr. Djulian Baldi (65) 99676-2601
+		Dr. Lucas Marques Bertholdo	(65)99972-9703
+		Dra. Ivana Paola de Jorgi (65) 99944-8446
+
+
+ Nos vemos no retorno ambulatorial; desejamos a você uma ótima recuperação.`,
+                
+                pre_operatorio: `Bem vindo (a)!
+
+Você está iniciando o programa de Cirurgia Bariátrica (Gastroplastia) do Hospital Metropolitano. 
+Os especialistas estão para ajudar e auxiliar você. SEJA O MAIS FRANCO POSSIVEL, NÃO OMITA DADOS, isso pode impactar profundamente seu resultado cirúrgico. Aqui no Hospital dispomos de todos os profissionais e exames necessários para realizar a sua cirurgia, porém os exames e os laudos podem ser realizados em qualquer local inclusive na sua cidade de origem.
+Quando todos os laudos e todos os exames forem realizados, agende um retorno com um dos cirurgiões da equipe para solicitar a sua cirurgia.
+Agora que você decidiu fazer a cirurgia bariátrica, é muito importante ter acesso a algumas informações para o sucesso do procedimento cirúrgico. A obesidade é uma doença crônica, e não termina no centro cirúrgico, a gastroplastia é uma FERRAMENTA para auxilia-lo na perca de peso, porém é imprescindível no pós-operatório que você faça acompanhamento com nutricionista, psicólogo e endocrinologista por toda sua vida, bem como o uso de polivitamínicos (NUNCA SUSPENDA AS VITAMINAS POR CONTA PROPRIA).
+•	Quem não pode fazer a cirurgia bariátrica?
+-Paciente com doenças psiquiátricas graves não controladas.
+-História de alcoolismo ou uso de drogas ilícitas. O Tabagismo (cigarro) não é contraindicação, vale lembrar que suspender o uso de cigarro quatro semanas antes da cirurgia auxilia a recuperação pós-operatória.
+-Doenças crônicas como hipertensão, diabete e colesterol não contraindicam a cirurgia, NÃO OMITA suas doenças aos profissionais. Estamos para auxiliar e ajudar.
+•	Como é a anestesia para a cirurgia bariátrica?
+ – A anestesia é Geral, a dose do anestésico é calculada em base ao peso do paciente, por isso é FUNDAMENTAL VOCÊ PERDER PESO ANTES DA CIRURGIA para ajudar a reduzir os riscos anestésicos. Perder peso não contraindica a cirurgia, ao contrario, faz a equipe perceber que você está comprometido. Inicie hoje mesmo exercícios físicos, caminhas e dieta alimentar para perder peso.
+•	Quais são as técnicas cirúrgicas mais utilizadas no Hospital Metropolitano?
+-As duas técnicas mais utilizadas são o Bypass gástrico (preferência da equipe) e a gastrectomia vertical (Sleeve), ambas realizadas por videolaparoscopia, popularmente conhecida como "furinhos/laser".
+•	Quais as principais complicações da cirurgia bariátrica?
+-Atualmente a cirurgia bariátrica é muito segura, sendo taxas de complicações extremamente baixas. Como em qualquer outra cirurgia, pode haver complicações eventuais como: sangramentos, tromboses, infecções, hematomas, fístula, deiscência, desnutrição, etc... Por isso, é importante seguir a RISCA TODAS AS ORIENTAÇÕES DA EQUIPE, é fundamenta você confiar nos profissionais e NÃO ESCUTAR O "VIZINHO" ou o "AMIGO" que fez a cirurgia no passado que fica orientando você a comer alimentos proibidos pela nutricionista, ou a suspender/substituir medicações prescrita pelos médicos da equipe.
+•	Como devo proceder no dia da cirurgia?
+Comparecer no Hospital, levar um documento com foto (identidade, RG, carteira de trabalho, Passaporte ou carteira profissional), trazer TODOS OS EXAMES realizados. Levar material de higiene pessoal (escova de dente, creme dental, pijama);
+•	Precisarei no pós-operatório ir à Unidade de Terapia Intensiva (UTI)?
+-Na imensa maioria das vezes é optado por fazer o pós-operatório na enfermaria, alguns casos irão a UTI devido ao melhor monitoramento e acompanhamento
+•	Quando começarei a receber a dieta no pós-operatório?
+De forma geral a dieta é iniciada no mesmo dia da cirurgia (vai estar prescrita no seu prontuário o horário de início). Após a dieta liberada, você deve seguir rigorosamente as instruções de sua nutricionista, alguns componentes da dieta pode variar entre paciente, pois você é único. De forma geral, nos primeiros cinco dias será liberado líquidos claro (água, água de coco, chás, suco natural coado, caldo de legumes) e deve ser tomado UM GOLE POR VEZ, no mínimo 2 litros ao dia.
+•	O que posso fazer quando chegar no quarto?
+- Você pode e deve sair da cama, pode ir ao banheiro acompanhado, pode caminhar pelos corredores do hospital, desde que se sinta apto e confortável para fazer. Caminhar ativa a circulação e estimula cicatrização. Preste atenção nos exercícios que o fisioterapeuta vai fazer para continuar realizando após sua alta hospitalar. Quanto mais caminhar melhor, diminui a probabilidade de trombose e atelectasia pulmonar, acelera o retorno da atividade intestinal (diminuindo os gases e dores abdominais)
+- Pode deitar de lado
+- Pode subir e descer escadas, porem evite esforços
+•	Quando sairei do hospital após a cirurgia?
+- Em média a alta ocorre até as primeiras 48 horas após a cirurgia
+Toda a equipe esta para auxiliar e ajudar. Porém VOCE DEVE FAZER A SUA PARTE. Inicie hoje mesmo com alimentação saudável e atividade física diária. As mulheres é FUNDAMENTAL USAR ALGUM METODO CONTRASSEPTIVO (para não engravidar) durante o pré-operatório e os 12 meses após a cirurgia. Converse com seu ginecologista ou clinico geral.
+LEMBRE-SE É FUNDAMENTAL VOCE PERDER PESO DURANTE O PROCESSO E ANTES DA CIRURGIA, SIGA AS ORIENTACOES DA NUTRICINONISTA COMECE A CAMINHAR E SE EXERCITAR, FACA DIETA HOJE MESMO, GANHAR PESO ATRASA A SOLICITACAO DO PROCEDIMENTO
+Bem vindo ao programa de cirurgia Bariátrica do Hospital Metropolitano, toda a equipe esta para auxiliar e mudar sua vida da melhor forma. 
+
+Nos vemos na próxima consulta e que Deus nos abençoe.`,
+                
+                pos_30_dias: `ORIENTAÇÕES PÓS OPERATÓRIO TARDIO
+
+Chegamos a uma etapa muito importante do tratamento, sendo agora necessário manter a perda de peso e evitar o reganho ponderal. Para isso, segue algumas orientações:
+- É muito importante a realização de atividade física, principalmente exercícios aeróbicos (caminhada, bicicleta, natação, dança) por pelo menos 50 minutos por dia, 6 vezes por semana. Evitar exercícios abdominais e jogar bola nos primeiros 3 meses após a cirurgia. 
+	Já pode começar a realizar academia sob supervisão de um profissional habilitado (personal trainer/professor de educação física). 
+- Manter o uso das medicações de uso contínuo para pressão alta, diabetes e colesterol. Só suspendê-las sob orientação do seu médico. 
+- Manter o uso da medicação de proteção do estômago (DIVENA, DEXILANT, GAESO, INILOK) por 6 meses após a cirurgia. 
+- Não fazer uso de medicamentos anti-inflamatórios por 03 meses após a cirurgia devido risco de úlcera no estômago(Exemplos: Dorflex,Torsilax,Ibuprofeno, Nimesulida, Cetoprofeno, Diclofenaco, Dexametasona, Prednisona). Em caso de dores, poderá ser utilizado dipirona, paracetamol, tramadol conforme prescrição Médica. 
+-Seguir rigorosamente as orientações da nutricionista. 
+
+Estamos a disposição para esclarecer suas dúvidas.`
+            }
+        };
+        
+        // Variável para armazenar o tipo de documento atual e referências para documentos relacionados
+        let tipoDocumentoAtual = '';
+        let documentoAdicionalTipo = null;
+        let documentoAdicionalModelo = null;
+        
+        // Função para mostrar o documento selecionado
+        function mostrarDocumento(tipo) {
+            // Armazena o tipo de documento
+            tipoDocumentoAtual = tipo;
+            
+            // Atualiza visual das abas
+            const abas = document.querySelectorAll('.tab-item');
+            abas.forEach((aba, index) => {
+                aba.classList.remove('active');
+            });
+            
+            // Mapeamento de tipos para índices de abas
+            const tipoParaIndice = {
+                'receita': 0,
+                'receita_controlada': 1,
+                'atestado': 2,
+                'atestado_acompanhante': 3,
+                'encaminhamento': 4,
+                'relatorio': 5,
+                'solicitacao_exames': 6,
+                'orientacoes': 7,
+                'sadt': 8
+            };
+            
+            // Ativa a aba selecionada
+            const indice = tipoParaIndice[tipo];
+            if (indice !== undefined && abas[indice]) {
+                abas[indice].classList.add('active');
+            }
+            
+            // Esconde todos os formulários
+            document.getElementById('receitaForm').classList.add('hidden');
+            document.getElementById('atestadoForm').classList.add('hidden');
+            document.getElementById('atestadoAcompanhanteForm').classList.add('hidden');
+            document.getElementById('solicitacaoExamesForm').classList.add('hidden');
+            document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
+            document.getElementById('sadtForm').classList.add('hidden');
+            document.getElementById('documentoGerado').classList.add('hidden');
+            
+            // Mostra o formulário correspondente
+            if (tipo === 'receita' || tipo === 'receita_controlada') {
+                document.getElementById('receitaForm').classList.remove('hidden');
+            } else if (tipo === 'atestado') {
+                document.getElementById('atestadoForm').classList.remove('hidden');
+            } else if (tipo === 'atestado_acompanhante') {
+                document.getElementById('atestadoAcompanhanteForm').classList.remove('hidden');
+            } else if (tipo === 'solicitacao_exames') {
+                document.getElementById('solicitacaoExamesForm').classList.remove('hidden');
+            } else if (tipo === 'encaminhamento' || tipo === 'relatorio') {
+                document.getElementById('encaminhamentoRelatorioForm').classList.remove('hidden');
+            } else if (tipo === 'orientacoes') {
+                document.getElementById('orientacoesForm').classList.remove('hidden');
+            } else if (tipo === 'sadt') {
+                document.getElementById('sadtForm').classList.remove('hidden');
+            }
+        }
+        
+        // Função para adicionar medicamento
+        function adicionarMedicamento() {
+            const medicamentosSelect = document.getElementById('medicamentos');
+            const receitaText = document.getElementById('receitaText');
+            
+            if (medicamentosSelect.selectedIndex > 0) {
+                const selectedOption = medicamentosSelect.options[medicamentosSelect.selectedIndex];
+                const values = selectedOption.value.split(' - ');
+                const medicamento = values[0];
+                const modoUso = values.length > 1 ? values[1] : '';
+                
+                receitaText.value += `${medicamento}\n${modoUso}\n\n`;
+            }
+        }
+        
+        // Função para atualizar nome do acompanhante
+        function atualizarNomeAcompanhante() {
+            const nomeAcompanhante = document.getElementById('nomeAcompanhante').value;
+            const atestadoAcompanhanteText = document.getElementById('atestadoAcompanhanteText');
+            
+            atestadoAcompanhanteText.value = `Atesto para os devidos fins que o(a) ${nomeAcompanhante} esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.
+
+
+CID: Z763`;
+        }
+        
+        // Função para selecionar modelo de receita
+        function selecionarModeloReceita() {
+            const modeloSelecionado = document.getElementById('modelosReceita').value;
+            const receitaText = document.getElementById('receitaText');
+            
+            if (modeloSelecionado && modelosTexto.receita[modeloSelecionado]) {
+                receitaText.value = modelosTexto.receita[modeloSelecionado];
+            }
+        }
+        
+        // Função para selecionar modelo de atestado
+        function selecionarModeloAtestado() {
+            const modeloSelecionado = document.getElementById('modelosAtestado').value;
+            const atestadoText = document.getElementById('atestadoText');
+            
+            if (modeloSelecionado && modelosTexto.atestado[modeloSelecionado]) {
+                atestadoText.value = modelosTexto.atestado[modeloSelecionado];
+            }
+        }
+        
+        // Função para selecionar modelo de encaminhamento
+        function selecionarModeloEncaminhamento() {
+            const modeloSelecionado = document.getElementById('modelosEncaminhamento').value;
+            const encaminhamentoRelatorioText = document.getElementById('encaminhamentoRelatorioText');
+            
+            if (modeloSelecionado && modelosTexto.encaminhamento[modeloSelecionado]) {
+                encaminhamentoRelatorioText.value = modelosTexto.encaminhamento[modeloSelecionado];
+            }
+        }
+        
+        // Função para selecionar modelo de orientações
+        function selecionarModeloOrientacoes() {
+            const modeloSelecionado = document.getElementById('modelosOrientacoes').value;
+            const orientacoesText = document.getElementById('orientacoesText');
+            
+            if (modeloSelecionado && modelosTexto.orientacoes[modeloSelecionado]) {
+                orientacoesText.value = modelosTexto.orientacoes[modeloSelecionado];
+                
+                // Aplicar classe específica para Orientações pós 30 dias
+                if (modeloSelecionado === 'pos_30_dias') {
+                    orientacoesText.classList.add('orientacoes-pos-30');
+                } else {
+                    orientacoesText.classList.remove('orientacoes-pos-30');
+                }
+            }
+        }
+        
+        // Função para verificar se um documento adicional deve ser gerado
+        function verificarDocumentoAdicional() {
+            documentoAdicionalTipo = null;
+            documentoAdicionalModelo = null;
+            
+            // Verifica se a instituição selecionada é o Hospital Metropolitano
+            const instituicao = document.getElementById('instituicao').value;
+            if (instituicao !== 'metropolitano') {
+                return false; // Só gera documento adicional para o Hospital Metropolitano
+            }
+            
+            // Verifica se é uma receita de "VITAMINAS PÓS OP"
+            if (tipoDocumentoAtual === 'receita' && document.getElementById('modelosReceita').value === 'vitaminas_pos_op') {
+                documentoAdicionalTipo = 'orientacoes';
+                documentoAdicionalModelo = 'pos_30_dias';
+                return true;
+            }
+            
+            // Verifica se é um encaminhamento de "PRE OPERATÓRIO"
+            if (tipoDocumentoAtual === 'encaminhamento' && document.getElementById('modelosEncaminhamento').value === 'pre_operatorio') {
+                documentoAdicionalTipo = 'orientacoes';
+                documentoAdicionalModelo = 'pre_operatorio';
+                return true;
+            }
+            
+            return false;
+        }
+        
+        // Função para gerar documento adicional
+        function gerarDocumentoAdicional() {
+            if (!documentoAdicionalTipo || !documentoAdicionalModelo) return;
+            
+            const nomePaciente = document.getElementById('patientName').value;
+            const instituicao = document.getElementById('instituicao').value;
+            const dadosMedico = document.getElementById('doctorData').value;
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            
+            // Elementos do documento adicional
+            const documentTitleAdicional = document.getElementById('documentTitleAdicional');
+            const documentContentAdicional = document.getElementById('documentContentAdicional');
+            const documentDateAdicional = document.getElementById('documentDateAdicional');
+            const assinaturaAdicional = document.getElementById('assinaturaAdicional');
+            const logoMetropolitanoAdicional = document.getElementById('logoMetropolitanoAdicional');
+            const footerMetropolitanoAdicional = document.getElementById('footerMetropolitanoAdicional');
+            const documentoAdicional = document.getElementById('documentoAdicional');
+            
+            // Configura elementos específicos da instituição
+            if (instituicao === 'metropolitano') {
+                // Sempre exibe o logotipo no documento adicional para o Hospital Metropolitano
+                logoMetropolitanoAdicional.classList.remove('hidden');
+                
+                if (documentoAdicionalTipo !== 'orientacoes') {
+                    footerMetropolitanoAdicional.classList.remove('hidden');
+                } else {
+                    footerMetropolitanoAdicional.classList.add('hidden');
+                }
+            } else {
+                logoMetropolitanoAdicional.classList.add('hidden');
+                footerMetropolitanoAdicional.classList.add('hidden');
+            }
+            
+            // Adiciona dados do médico se foram fornecidos
+            if (dadosMedico.trim() !== '') {
+                assinaturaAdicional.innerHTML = dadosMedico.replace(/\n/g, '<br>');
+                assinaturaAdicional.classList.remove('hidden');
+            } else {
+                assinaturaAdicional.classList.add('hidden');
+            }
+            
+            // Configura o título do documento
+            if (documentoAdicionalTipo === 'orientacoes') {
+                documentTitleAdicional.textContent = "ORIENTAÇÕES";
+            }
+            
+            // Define a data
+            documentDateAdicional.textContent = `Data: ${dataAtual}`;
+            
+            // Gera o conteúdo do documento adicional
+            if (documentoAdicionalTipo === 'orientacoes') {
+                const textoOrientacoes = modelosTexto.orientacoes[documentoAdicionalModelo];
+                
+                // Verifica se é o modelo específico pós 30 dias
+                if (documentoAdicionalModelo === 'pos_30_dias') {
+                    documentContentAdicional.classList.add('orientacoes-pos-30');
+                } else {
+                    documentContentAdicional.classList.remove('orientacoes-pos-30');
+                }
+                
+                // Preserva as tags HTML para formatação e adiciona quebras de linha extras
+                documentContentAdicional.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${textoOrientacoes}<br><br>`;
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDateAdicional.style.marginTop = '20px';
+                
+                // Reposiciona a data após o conteúdo
+                const dateParent = documentDateAdicional.parentNode;
+                dateParent.removeChild(documentDateAdicional);
+                
+                if (assinaturaAdicional && !assinaturaAdicional.classList.contains('hidden')) {
+                    dateParent.insertBefore(documentDateAdicional, assinaturaAdicional);
+                } else {
+                    dateParent.appendChild(documentDateAdicional);
+                }
+            }
+            
+            // Mostra o documento adicional
+            documentoAdicional.classList.remove('hidden');
+            
+            // Mostra a notificação de documento adicional
+            document.getElementById('additionalDocNotification').style.display = 'block';
+            document.getElementById('printAdditionalButton').style.display = 'block';
+        }
+        
+        // Função para gerar documento
+        function gerarDocumento() {
+            const nomePaciente = document.getElementById('patientName').value;
+            const enderecoPaciente = document.getElementById('patientAddress').value;
+            const instituicao = document.getElementById('instituicao').value;
+            const dadosMedico = document.getElementById('doctorData').value;
+            
+            // Para atestado médico pós-operatório, usar a data de ontem
+            const dataAtual = new Date();
+            let dataDocumento;
+            
+            const modelosAtestado = document.getElementById('modelosAtestado');
+            if (tipoDocumentoAtual === 'atestado' && modelosAtestado && modelosAtestado.value === 'pos_operatorio') {
+                // Subtrai um dia para o atestado pós-operatório
+                dataAtual.setDate(dataAtual.getDate() - 1);
+                dataDocumento = dataAtual.toLocaleDateString('pt-BR');
+            } else {
+                dataDocumento = dataAtual.toLocaleDateString('pt-BR');
+            }
+
+            // Elementos do documento
+            const documentTitle = document.getElementById('documentTitle');
+            const documentContent = document.getElementById('documentContent');
+            const documentDate = document.getElementById('documentDate');
+            const idBoxes = document.getElementById('idBoxes');
+            const assinatura = document.getElementById('assinatura');
+            const logoMetropolitano = document.getElementById('logoMetropolitano');
+            const footerMetropolitano = document.getElementById('footerMetropolitano');
+            const documentoGerado = document.getElementById('documentoGerado');
+            
+            // Limpa classes anteriores
+            documentoGerado.className = 'document';
+            
+            // Verifica e esconde elementos do documento adicional
+            document.getElementById('documentoAdicional').classList.add('hidden');
+            document.getElementById('additionalDocNotification').style.display = 'none';
+            document.getElementById('printAdditionalButton').style.display = 'none';
+            
+            // Configura elementos específicos da instituição
+            if (instituicao === 'metropolitano') {
+                // Hospital Metropolitano: mostra logo e rodapé
+                logoMetropolitano.classList.remove('hidden');
+                documentoGerado.classList.add('metropolitano-document');
+                
+                // Oculta o rodapé para o documento de orientações
+                if (tipoDocumentoAtual === 'orientacoes') {
+                    footerMetropolitano.classList.add('hidden');
+                } else {
+                    footerMetropolitano.classList.remove('hidden');
+                }
+            } else {
+                // Clínica IOCI: esconde logo e rodapé
+                logoMetropolitano.classList.add('hidden');
+                footerMetropolitano.classList.add('hidden');
+                documentoGerado.classList.add('ioci-document');
+            }
+            
+            // Adiciona dados do médico se foram fornecidos
+            if (dadosMedico.trim() !== '') {
+                assinatura.innerHTML = dadosMedico.replace(/\n/g, '<br>');
+                assinatura.classList.remove('hidden');
+            } else {
+                assinatura.classList.add('hidden');
+            }
+            
+            // Adiciona classe específica para o tipo de documento
+            if (tipoDocumentoAtual) {
+                documentoGerado.classList.add('tipo-' + tipoDocumentoAtual);
+            }
+            
+            // Configura o título do documento
+            if (tipoDocumentoAtual === 'receita') {
+                documentTitle.textContent = "RECEITA MÉDICA";
+            } else if (tipoDocumentoAtual === 'receita_controlada') {
+                documentTitle.textContent = "RECEITUÁRIO CONTROLADO";
+                documentoGerado.classList.add('receituario-controlado');
+            } else if (tipoDocumentoAtual === 'atestado') {
+                documentTitle.textContent = "ATESTADO MÉDICO";
+            } else if (tipoDocumentoAtual === 'atestado_acompanhante') {
+                documentTitle.textContent = "ATESTADO DE ACOMPANHANTE";
+            } else if (tipoDocumentoAtual === 'solicitacao_exames') {
+                documentTitle.textContent = "SOLICITAÇÃO DE EXAMES";
+            } else if (tipoDocumentoAtual === 'orientacoes') {
+                documentTitle.textContent = "ORIENTAÇÕES";
+            } else if (tipoDocumentoAtual === 'encaminhamento') {
+                documentTitle.textContent = "ENCAMINHAMENTO";
+            } else if (tipoDocumentoAtual === 'relatorio') {
+                documentTitle.textContent = "RELATÓRIO MÉDICO";
+            }
+
+            // Limpa o conteúdo anterior
+            documentContent.innerHTML = '';
+            idBoxes.innerHTML = '';
+
+            // Define a data - posiciona antes ou depois do conteúdo dependendo do tipo de documento
+            if (tipoDocumentoAtual === 'orientacoes') {
+                // Para orientações, a data vai aparecer após o conteúdo
+                documentDate.textContent = `Data: ${dataDocumento}`;
+                documentDate.style.marginTop = '20px';
+            } else {
+                // Para outros documentos, a data aparece antes do conteúdo
+                documentDate.textContent = `Data: ${dataDocumento}`;
+                documentDate.style.marginTop = '';
+            }
+
+            // Gera o conteúdo do documento de acordo com o tipo
+            if (tipoDocumentoAtual === 'receita') {
+                const viaAdministracao = document.getElementById('viaAdministracao').value;
+                const receitaText = document.getElementById('receitaText').value;
+                // Preserva as tags HTML para formatação
+                documentContent.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br><strong>Via de Administração:</strong> ${viaAdministracao}<br><br>${receitaText}<br><br>`;
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+            } else if (tipoDocumentoAtual === 'receita_controlada') {
+                // Cria a caixa de identificação do emitente
+                const emitenteBox = document.createElement('div');
+                emitenteBox.className = 'emitente-box';
+                emitenteBox.style.cssFloat = 'right'; // Posiciona à direita
+                emitenteBox.style.marginLeft = '20px';
+                
+                // Define o conteúdo com base na instituição
+                if (instituicao === 'metropolitano') {
+                    emitenteBox.innerHTML = `
+                        IDENTIFICAÇÃO DO EMITENTE<br>
+                        Hospital Metropolitano Lousite Ferreira da Silva<br>
+                        Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187<br>
+                        Telefone: (65) 3388-0600
+                    `;
+                } else {
+                    emitenteBox.innerHTML = `
+                        IDENTIFICAÇÃO DO EMITENTE<br>
+                        Instituto de Obesidade e Cirurgia - IOCI<br>
+                        Av. Érico, Preza Filho, 76 - Jardim Itália, Cuiabá - MT, 78060-758<br>
+                        Tel: (65) 3028-7000
+                    `;
+                }
+                
+                documentContent.appendChild(emitenteBox);
+
+                // Adiciona as informações do paciente
+                const viaAdministracao = document.getElementById('viaAdministracao').value;
+                const receitaText = document.getElementById('receitaText').value;
+                const infoContainer = document.createElement('div');
+                infoContainer.style.clear = 'both'; // Limpa o float
+                infoContainer.style.paddingTop = '10px';
+                // Preserva as tags HTML para formatação
+                infoContainer.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><strong>Endereço:</strong> ${enderecoPaciente}<br><br><strong>Via de Administração:</strong> ${viaAdministracao}<br><br>${receitaText}<br><br>`;
+                documentContent.appendChild(infoContainer);
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+                
+                // Move a data para antes das caixas de identificação
+                const dateParent = documentDate.parentNode;
+                dateParent.removeChild(documentDate);
+                dateParent.insertBefore(documentDate, idBoxes);
+
+                // Cria as caixas de identificação do comprador e fornecedor
+                const compradorBox = document.createElement('div');
+                compradorBox.className = 'comprador-box';
+                compradorBox.innerHTML = `
+                    IDENTIFICAÇÃO DO COMPRADOR<br>
+                    Nome:<br>
+                    RG:<br>
+                    Endereço:<br>
+                    Telefone:<br>
+                    Cidade e UF:
+                `;
+                
+                const fornecedorBox = document.createElement('div');
+                fornecedorBox.className = 'fornecedor-box';
+                fornecedorBox.innerHTML = `
+                    IDENTIFICAÇÃO DO FORNECEDOR<br>
+                    Data:<br>
+                    Assinatura do Farmacêutico:
+                `;
+                
+                idBoxes.appendChild(compradorBox);
+                idBoxes.appendChild(fornecedorBox);
+            } else if (tipoDocumentoAtual === 'atestado') {
+                const atestadoText = document.getElementById('atestadoText').value;
+                // Preserva as tags HTML para formatação
+                documentContent.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${atestadoText}<br><br>`;
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+                
+                // Adiciona classe específica para atestados com fonte maior
+                documentContent.classList.add('documento-atestado');
+                documentoGerado.classList.add('tipo-atestado-grande');
+            } else if (tipoDocumentoAtual === 'atestado_acompanhante') {
+                const atestadoAcompanhanteText = document.getElementById('atestadoAcompanhanteText').value;
+                // Preserva as tags HTML para formatação
+                documentContent.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${atestadoAcompanhanteText}<br><br>`;
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+                
+                // Adiciona classe específica para atestados com fonte maior
+                documentContent.classList.add('documento-atestado');
+                documentoGerado.classList.add('tipo-atestado-grande');
+            } else if (tipoDocumentoAtual === 'solicitacao_exames') {
+                const examesText = document.getElementById('examesText').value;
+                // Preserva as tags HTML para formatação
+                documentContent.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${examesText}<br><br>`;
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+            } else if (tipoDocumentoAtual === 'orientacoes') {
+                const orientacoesText = document.getElementById('orientacoesText');
+                const modeloSelecionado = document.getElementById('modelosOrientacoes').value;
+                
+                // Preserva as tags HTML para formatação
+                documentContent.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${orientacoesText.value}<br><br>`;
+                
+                // Verifica se é o modelo específico pós 30 dias
+                if (modeloSelecionado === 'pos_30_dias') {
+                    documentContent.classList.add('orientacoes-pos-30');
+                } else {
+                    documentContent.classList.remove('orientacoes-pos-30');
+                }
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+            } else if (tipoDocumentoAtual === 'encaminhamento' || tipoDocumentoAtual === 'relatorio') {
+                const encaminhamentoRelatorioText = document.getElementById('encaminhamentoRelatorioText').value;
+                // Preserva as tags HTML para formatação
+                documentContent.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${encaminhamentoRelatorioText}<br><br>`;
+                
+                // Posiciona a data duas linhas abaixo do conteúdo
+                documentDate.style.marginTop = '20px';
+            }
+
+            // Mostra o documento gerado
+            documentoGerado.classList.remove('hidden');
+            
+            // Verifica se deve gerar documento adicional
+            if (verificarDocumentoAdicional()) {
+                gerarDocumentoAdicional();
+            }
+            
+            // Reordena elementos específicos para o documento de orientações
+            if (tipoDocumentoAtual === 'orientacoes') {
+                // Garante que a data seja o último elemento antes da assinatura
+                const documentDate = document.getElementById('documentDate');
+                const assinatura = document.getElementById('assinatura');
+                const documentContent = document.getElementById('documentContent');
+                
+                // Remove a data de sua posição atual
+                const dateParent = documentDate.parentNode;
+                dateParent.removeChild(documentDate);
+                
+                // Insere após o conteúdo do documento e antes da assinatura
+                if (assinatura && !assinatura.classList.contains('hidden')) {
+                    dateParent.insertBefore(documentDate, assinatura);
+                } else {
+                    // Se não houver assinatura, adiciona ao final
+                    dateParent.appendChild(documentDate);
+                }
+            }
+        }
+        
+        // Função para limpar formulário
+        // Função para aplicar formatação (negrito, itálico) ao texto selecionado
+        function aplicarFormatacao(textAreaId, tipo) {
+            const textArea = document.getElementById(textAreaId);
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                let novoTexto = '';
+                let tag = '';
+                
+                if (tipo === 'bold') {
+                    tag = '<strong>';
+                    fechamento = '</strong>';
+                } else if (tipo === 'italic') {
+                    tag = '<em>';
+                    fechamento = '</em>';
+                }
+                
+                novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                           tag + textoSelecionado + fechamento + 
+                           textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+        
+        // Função para alterar o tamanho da fonte do texto selecionado
+        function alterarTamanhoFonte(textAreaId, tamanho) {
+            if (!tamanho) return; // Se não houver tamanho selecionado, retorna
+            
+            const textArea = document.getElementById(textAreaId);
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                const tag = `<span style="font-size:${tamanho}px;">`;
+                const fechamento = '</span>';
+                
+                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                                 tag + textoSelecionado + fechamento + 
+                                 textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+        
+        function limparFormulario() {
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientAddress').value = '';
+            document.getElementById('receitaText').value = '';
+            document.getElementById('atestadoText').value = 'Atesto para os devidos fins que o(a) paciente supracitado(a) esteve em consulta médica nesta data.\n\nCID: ';
+            document.getElementById('atestadoAcompanhanteText').value = 'Atesto para os devidos fins que o(a) [NOME_ACOMPANHANTE] esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.\n\nCID: Z763';
+            document.getElementById('nomeAcompanhante').value = '';
+            document.getElementById('examesText').value = 'HEMOGRAMA;\nUREIA\nCREATININA\nLIPIDOGRAMA\nPROVAS DE FUNÇÃO HEPÁTICA;\nTSH;\nT4 LIVRE;\nROTINA DE URINA;\n25 OHD;\nVITAMINA B12;\nFERRO;\nFERRITINA.';
+            document.getElementById('encaminhamentoRelatorioText').value = '';
+            document.getElementById('orientacoesText').value = '';
+            document.getElementById('doctorData').value = '';
+            document.getElementById('documentoGerado').classList.add('hidden');
+            document.getElementById('documentoAdicional').classList.add('hidden');
+            document.getElementById('additionalDocNotification').style.display = 'none';
+            document.getElementById('printAdditionalButton').style.display = 'none';
+            
+            // Remove a classe 'active' de todas as abas
+            const abas = document.querySelectorAll('.tab-item');
+            abas.forEach(aba => aba.classList.remove('active'));
+            
+            // Esconde todos os formulários
+            document.getElementById('receitaForm').classList.add('hidden');
+            document.getElementById('atestadoForm').classList.add('hidden');
+            document.getElementById('atestadoAcompanhanteForm').classList.add('hidden');
+            document.getElementById('solicitacaoExamesForm').classList.add('hidden');
+            document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
+            document.getElementById('orientacoesForm').classList.add('hidden');
+            document.getElementById('sadtForm').classList.add('hidden');
+            
+            // Redefine os seletores de modelo
+            document.getElementById('modelosReceita').selectedIndex = 0;
+            document.getElementById('modelosAtestado').selectedIndex = 0;
+            document.getElementById('modelosEncaminhamento').selectedIndex = 0;
+            document.getElementById('modelosOrientacoes').selectedIndex = 0;
+            
+            // Limpa o tipo de documento atual
+            tipoDocumentoAtual = '';
+            documentoAdicionalTipo = null;
+            documentoAdicionalModelo = null;
+            
+            // Volta para a primeira aba (configuração padrão)
+            const primeiraAba = document.querySelector('.tab-item');
+            if (primeiraAba) {
+                primeiraAba.click();
+            }
+        }
+        
+        // Função para imprimir documento
+        function imprimirDocumento() {
+            // Adiciona classe ao body para identificar o tipo de documento
+            document.body.className = '';
+            document.body.classList.add('tipo-' + tipoDocumentoAtual);
+            
+            // Verificação específica para o documento ORIENTAÇÕES
+            if (tipoDocumentoAtual === 'orientacoes') {
+                // Garantir que o rodapé esteja oculto para orientações
+                document.getElementById('footerMetropolitano').classList.add('hidden');
+            }
+            
+            // Executa a impressão após breve delay para garantir que as classes sejam aplicadas
+            setTimeout(function() {
+                window.print();
+            }, 100);
+        }
+        
+        // Função para imprimir apenas o documento adicional
+        function imprimirDocumentoAdicional() {
+            // Esconde temporariamente o documento principal e mostra apenas o adicional
+            const docPrincipal = document.getElementById('documentTitle').parentNode;
+            const docAdicional = document.getElementById('documentoAdicional');
+            
+            // Salvar estados originais
+            const estadoDocPrincipal = docPrincipal.style.display;
+            const estadoDocAdicional = docAdicional.style.display;
+            const estadoDocAdNotif = document.getElementById('additionalDocNotification').style.display;
+            const estadoPrintBtn = document.getElementById('printAdditionalButton').style.display;
+            
+            // Ajustar para impressão
+            docPrincipal.style.display = 'none';
+            docAdicional.style.display = 'block';
+            docAdicional.style.marginTop = '0';
+            docAdicional.style.paddingTop = '0';
+            docAdicional.style.borderTop = 'none';
+            document.getElementById('additionalDocNotification').style.display = 'none';
+            document.getElementById('printAdditionalButton').style.display = 'none';
+            
+            // Imprimir
+            setTimeout(function() {
+                window.print();
+                
+                // Restaurar estados
+                docPrincipal.style.display = estadoDocPrincipal;
+                docAdicional.style.display = estadoDocAdicional;
+                docAdicional.style.marginTop = '';
+                docAdicional.style.paddingTop = '';
+                docAdicional.style.borderTop = '';
+                document.getElementById('additionalDocNotification').style.display = estadoDocAdNotif;
+                document.getElementById('printAdditionalButton').style.display = estadoPrintBtn;
+            }, 100);
+        }
+        
+        // Inicializa o sistema mostrando a primeira aba
+        document.addEventListener('DOMContentLoaded', function() {
+            const primeiraAba = document.querySelector('.tab-item');
+            if (primeiraAba) {
+                primeiraAba.click();
+            }
+        });
+    </script>
+</body>
+</html>
