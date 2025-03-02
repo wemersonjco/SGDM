@@ -14,6 +14,63 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+                // Função para aplicar formatação (negrito, itálico) ao texto selecionado
+        function aplicarFormatacao(textAreaId, tipo) {
+            const textArea = document.getElementById(textAreaId);
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                let novoTexto = '';
+                let tag = '';
+                let fechamento = '';
+                
+                if (tipo === 'bold') {
+                    tag = '<strong>';
+                    fechamento = '</strong>';
+                } else if (tipo === 'italic') {
+                    tag = '<em>';
+                    fechamento = '</em>';
+                }
+                
+                novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                           tag + textoSelecionado + fechamento + 
+                           textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+        
+        // Função para alterar o tamanho da fonte do texto selecionado
+        function alterarTamanhoFonte(textAreaId, tamanho) {
+            if (!tamanho) return; // Se não houver tamanho selecionado, retorna
+            
+            const textArea = document.getElementById(textAreaId);
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                const tag = `<span style="font-size:${tamanho}px;">`;
+                const fechamento = '</span>';
+                
+                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                                 tag + textoSelecionado + fechamento + 
+                                 textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
         }
         
         body {
@@ -220,11 +277,226 @@
             line-height: 1.6 !important;
         }
         
-        /* Estilo para Orientações pós 30 dias */
-        .orientacoes-pos-30 {
-            font-size: 16px !important;
-            line-height: 1.7 !important;
-            font-weight: 500 !important;
+        /* Estilos para menu de configurações */
+        .config-menu-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .config-menu-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        
+        .config-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1001;
+            overflow-y: auto;
+        }
+        
+        .config-modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        .config-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .config-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .config-tab.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .config-tab-content {
+            display: none;
+            padding: 15px;
+        }
+        
+        .config-tab-content.active {
+            display: block;
+        }
+        
+        .medication-list, .template-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .medication-item, .template-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .medication-item:last-child, .template-item:last-child {
+            border-bottom: none;
+        }
+        
+        .medication-item:hover, .template-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .medication-name, .template-name {
+            font-weight: bold;
+        }
+        
+        .medication-usage, .template-category {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .medication-actions, .template-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .edit-button, .delete-button, .add-button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .edit-button {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .delete-button {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .add-new-button {
+            padding: 8px 15px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .edit-form, .add-form {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        /* Barra de formatação para o modal de edição */
+        .formatting-toolbar-modal {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .formatting-toolbar-modal button {
+            padding: 5px 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+            min-width: 30px;
+        }
+        
+        .formatting-toolbar-modal button:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .formatting-toolbar-modal button.bold {
+            font-weight: bold;
+        }
+        
+        .formatting-toolbar-modal button.italic {
+            font-style: italic;
+        }
+        
+        .formatting-toolbar-modal .alignment-group {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .formatting-toolbar-modal select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        .formatting-separator {
+            width: 1px;
+            background-color: #ddd;
+            margin: 0 5px;
         }
         
         /* Barra de formatação */
@@ -776,6 +1048,9 @@
                 <li class="tab-item" onclick="mostrarDocumento('sadt')">SADT</li>
             </ul>
         </div>
+        
+        <!-- Botão de Configurações -->
+        <button type="button" class="config-menu-button" onclick="abrirConfiguracoes()">⚙️</button>
 
         <!-- Formulários para diferentes tipos de documentos -->
         <!-- Receita Médica e Receituário Controlado -->
@@ -1098,6 +1373,177 @@ FERRITINA.</textarea>
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Configurações -->
+    <div id="configModal" class="config-modal">
+        <div class="config-modal-content">
+            <span class="close-modal" onclick="fecharConfiguracoes()">&times;</span>
+            <h2>Configurações do SGDM</h2>
+            
+            <div class="config-tabs">
+                <div id="medicationsTab" class="config-tab active" onclick="trocarAbaConfig('medications')">Medicações</div>
+                <div id="templatesTab" class="config-tab" onclick="trocarAbaConfig('templates')">Modelos de Texto</div>
+            </div>
+            
+            <!-- Conteúdo da aba de Medicações -->
+            <div id="medicationsContent" class="config-tab-content active">
+                <h3>Gerenciar Medicações</h3>
+                <button type="button" class="add-new-button" onclick="mostrarFormularioAddMedicacao()">+ Adicionar Nova Medicação</button>
+                
+                <div id="medicationList" class="medication-list">
+                    <!-- Lista de medicações será carregada dinamicamente -->
+                </div>
+                
+                <!-- Formulário para adicionar medicação -->
+                <div id="addMedicationForm" class="add-form">
+                    <h4>Adicionar Nova Medicação</h4>
+                    <div class="form-group">
+                        <label for="newMedicationName">Nome da Medicação:</label>
+                        <input type="text" id="newMedicationName" placeholder="Ex: DIPIRONA 500mg">
+                    </div>
+                    <div class="form-group">
+                        <label for="newMedicationUsage">Modo de Uso:</label>
+                        <textarea id="newMedicationUsage" placeholder="Ex: TOMAR 01 COMPRIMIDO DE 6/6H POR 3 DIAS"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" onclick="document.getElementById('addMedicationForm').style.display='none'">Cancelar</button>
+                        <button type="button" class="save-button" onclick="salvarNovaMedicacao()">Salvar</button>
+                    </div>
+                </div>
+                
+                <!-- Formulário para editar medicação -->
+                <div id="editMedicationForm" class="edit-form">
+                    <h4>Editar Medicação</h4>
+                    <input type="hidden" id="editMedicationIndex">
+                    <div class="form-group">
+                        <label for="editMedicationName">Nome da Medicação:</label>
+                        <input type="text" id="editMedicationName">
+                    </div>
+                    <div class="form-group">
+                        <label for="editMedicationUsage">Modo de Uso:</label>
+                        <textarea id="editMedicationUsage"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" onclick="document.getElementById('editMedicationForm').style.display='none'">Cancelar</button>
+                        <button type="button" class="save-button" onclick="salvarMedicacaoEditada()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conteúdo da aba de Modelos de Texto -->
+            <div id="templatesContent" class="config-tab-content">
+                <h3>Gerenciar Modelos de Texto</h3>
+                <button type="button" class="add-new-button" onclick="mostrarFormularioAddModelo()">+ Adicionar Novo Modelo</button>
+                
+                <div id="templateList" class="template-list">
+                    <!-- Lista de modelos será carregada dinamicamente -->
+                </div>
+                
+                <!-- Formulário para adicionar modelo -->
+                <div id="addTemplateForm" class="add-form">
+                    <h4>Adicionar Novo Modelo</h4>
+                    <div class="form-group">
+                        <label for="newTemplateCategory">Categoria:</label>
+                        <select id="newTemplateCategory">
+                            <option value="receita">Receita Médica</option>
+                            <option value="encaminhamento">Encaminhamento</option>
+                            <option value="atestado">Atestado Médico</option>
+                            <option value="orientacoes">Orientações</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newTemplateKey">Chave do Modelo (sem espaços):</label>
+                        <input type="text" id="newTemplateKey" placeholder="Ex: novo_modelo">
+                    </div>
+                    <div class="form-group">
+                        <label for="newTemplateName">Nome do Modelo:</label>
+                        <input type="text" id="newTemplateName" placeholder="Ex: NOVO MODELO">
+                    </div>
+                    <div class="form-group">
+                        <label for="newTemplateContent">Conteúdo:</label>
+                        <div class="formatting-toolbar-modal">
+                            <button type="button" onclick="aplicarFormatacaoModal('newTemplateContent', 'bold')" class="bold">B</button>
+                            <button type="button" onclick="aplicarFormatacaoModal('newTemplateContent', 'italic')" class="italic">I</button>
+                            <div class="formatting-separator"></div>
+                            <div class="alignment-group">
+                                <button type="button" onclick="aplicarAlinhamento('newTemplateContent', 'left')" title="Alinhar à esquerda">⇤</button>
+                                <button type="button" onclick="aplicarAlinhamento('newTemplateContent', 'center')" title="Centralizar">≡</button>
+                                <button type="button" onclick="aplicarAlinhamento('newTemplateContent', 'right')" title="Alinhar à direita">⇥</button>
+                                <button type="button" onclick="aplicarAlinhamento('newTemplateContent', 'justify')" title="Justificar">≡≡</button>
+                            </div>
+                            <div class="formatting-separator"></div>
+                            <select onchange="alterarFonte('newTemplateContent', this.value)">
+                                <option value="">Fonte</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                            <select onchange="alterarTamanhoFonteModal('newTemplateContent', this.value)">
+                                <option value="">Tamanho</option>
+                                <option value="9">9px</option>
+                                <option value="11">11px</option>
+                                <option value="13">13px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="24">24px</option>
+                            </select>
+                        </div>
+                        <textarea id="newTemplateContent" rows="10"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" onclick="document.getElementById('addTemplateForm').style.display='none'">Cancelar</button>
+                        <button type="button" class="save-button" onclick="salvarNovoModelo()">Salvar</button>
+                    </div>
+                </div>
+                
+                <!-- Formulário para editar modelo -->
+                <div id="editTemplateForm" class="edit-form">
+                    <h4 id="editTemplateTitle">Editar Modelo</h4>
+                    <input type="hidden" id="editTemplateCategory">
+                    <input type="hidden" id="editTemplateKey">
+                    <div class="form-group">
+                        <label for="editTemplateContent">Conteúdo:</label>
+                        <div class="formatting-toolbar-modal">
+                            <button type="button" onclick="aplicarFormatacaoModal('editTemplateContent', 'bold')" class="bold">B</button>
+                            <button type="button" onclick="aplicarFormatacaoModal('editTemplateContent', 'italic')" class="italic">I</button>
+                            <div class="formatting-separator"></div>
+                            <div class="alignment-group">
+                                <button type="button" onclick="aplicarAlinhamento('editTemplateContent', 'left')" title="Alinhar à esquerda">⇤</button>
+                                <button type="button" onclick="aplicarAlinhamento('editTemplateContent', 'center')" title="Centralizar">≡</button>
+                                <button type="button" onclick="aplicarAlinhamento('editTemplateContent', 'right')" title="Alinhar à direita">⇥</button>
+                                <button type="button" onclick="aplicarAlinhamento('editTemplateContent', 'justify')" title="Justificar">≡≡</button>
+                            </div>
+                            <div class="formatting-separator"></div>
+                            <select onchange="alterarFonte('editTemplateContent', this.value)">
+                                <option value="">Fonte</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                            <select onchange="alterarTamanhoFonteModal('editTemplateContent', this.value)">
+                                <option value="">Tamanho</option>
+                                <option value="9">9px</option>
+                                <option value="11">11px</option>
+                                <option value="13">13px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="24">24px</option>
+                            </select>
+                        </div>
+                        <textarea id="editTemplateContent" rows="15"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" onclick="document.getElementById('editTemplateForm').style.display='none'">Cancelar</button>
+                        <button type="button" class="save-button" onclick="salvarModeloEditado()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Modelos de textos pré-definidos
@@ -1397,6 +1843,375 @@ CID: Z763`;
                 } else {
                     orientacoesText.classList.remove('orientacoes-pos-30');
                 }
+            }
+        }
+        
+        // Variáveis para armazenar medicações e modelos personalizados
+        let medicacoes = [
+            { nome: "ADDERA D3 OU SANY D 50.000 UI", uso: "TOMAR 01 CP POR SEMANA POR 4 MESES" },
+            { nome: "ANNITA", uso: "TOMAR 01 CP DE 12/12H POR 03 DIAS" },
+            { nome: "CIPRO OU FORITUS 500 MG", uso: "TOMAR 01 CP DE 12/12H POR 7 DIAS" },
+            { nome: "CITONEURIM OU CITOBÊ OU CRONOBÊ COMPLEX 5000 UI", uso: "APLICAR 01 AMP IM PROFUNDO A CADA 30 DIAS" },
+            { nome: "DIVENA OU INILOK", uso: "TOMAR 01 CP EM JEJUM POR 8 SEMANAS" },
+            { nome: "ESOGASTRO IBP", uso: "Tomar todos comprimidos do lado AZUL CLARO da cartela pela manhã em jejum durante 14 dias.\nTomar todos comprimidos do lado AZUL ESCURO da cartela antes do jantar durante 14 dias.\nIniciar as demais comprimidos no 15º dia, tomando 01 comprimido pela manhã em jejum." },
+            { nome: "FLAGYL OU METRONIDAZOL 400 MG", uso: "TOMAR 01 CP DE 8/8H POR 7 DIAS" },
+            { nome: "FLORATIL 200 MG", uso: "TOMAR 01 CP DE 12/12H POR 05 DIAS" },
+            { nome: "INZELM", uso: "TOMAR 01 CP EM JEJUM POR 8 SEMANAS" },
+            { nome: "KEFLEX 1G", uso: "TOMAR 01 CP DE 12/12H POR 7 DIAS" },
+            { nome: "LACTOSIL 10.000 FCC", uso: "DISSOLVER 01 SACHE EM AGUA E TOMAR ANTES DE INGERIR PRODUTOS LACTEOS." },
+            { nome: "MACRODANTINA", uso: "TOMAR 01 CP DE 6/6H POR 7 DIAS" },
+            { nome: "MATERNA OU QUELATUS BARI OU BARISTAR", uso: "TOMAR 01 CP APÓS O CAFÉ DA MANHÃ" },
+            { nome: "MECOBE OU DOZEMAST 1000 MCG", uso: "TOMAR 01 CP AO DIA" },
+            { nome: "MONURIL", uso: "DISSOLVER EM UM COPO COM ÁGUA E TOMAR EM DOSE UNICA ANTES DE DORMIR" },
+            { nome: "NAUTEX ODG 8 MG", uso: "COLOCAR O CONTEUDO DE UM SACHE NA LINGUA DE 8/8H SE NAUSEAS OU VOMITOS" },
+            { nome: "NEUTROFER 300 MG", uso: "TOMAR 01 CP ANTES DO ALMOÇO E JANTAR POR 60 DIAS" },
+            { nome: "PANTOGAR", uso: "TOMAR 01 CP 3X AO DIA POR 03 MESES" },
+            { nome: "PERIDAL", uso: "TOMAR 01 CP ANTES DO ALMOÇO E JANTAR POR 30 DIAS" },
+            { nome: "PROSSO KM OU OSTEONUTRI OU PEROSTEO KM", uso: "TOMAR 01 CP APÓS O ALMOÇO OU JANTAR" },
+            { nome: "SUCRAFILM", uso: "TOMAR 01 SACHÊ ANTES DO CAFÉ DA MANHA E JANTAR POR 15 DIAS" },
+            { nome: "TACITA", uso: "TOMAR 01 CP AO DIA POR 03 MESES" },
+            { nome: "TORAGESIC", uso: "TOMAR 01 CP SUBLINGUAL DE 12/12H POR 03 DIAS" }
+        ];
+        
+        // Função para atualizar o select de medicações
+        function atualizarSelectMedicacoes() {
+            const medicamentosSelect = document.getElementById('medicamentos');
+            
+            // Limpa todas as opções exceto a primeira
+            while (medicamentosSelect.options.length > 1) {
+                medicamentosSelect.remove(1);
+            }
+            
+            // Adiciona as medicações atualizadas
+            medicacoes.forEach(med => {
+                const option = document.createElement('option');
+                option.value = `${med.nome} - ${med.uso}`;
+                option.textContent = med.nome;
+                medicamentosSelect.appendChild(option);
+            });
+        }
+        
+        // Função para abrir o modal de configurações
+        function abrirConfiguracoes() {
+            const modal = document.getElementById('configModal');
+            modal.style.display = 'block';
+            
+            // Inicializa a lista de medicações
+            atualizarListaMedicacoes();
+            
+            // Inicializa a lista de modelos
+            atualizarListaModelos();
+        }
+        
+        // Função para fechar o modal de configurações
+        function fecharConfiguracoes() {
+            const modal = document.getElementById('configModal');
+            modal.style.display = 'none';
+            
+            // Oculta formulários abertos
+            document.getElementById('editMedicationForm').style.display = 'none';
+            document.getElementById('addMedicationForm').style.display = 'none';
+            document.getElementById('editTemplateForm').style.display = 'none';
+            document.getElementById('addTemplateForm').style.display = 'none';
+        }
+        
+        // Função para trocar entre abas de configuração
+        function trocarAbaConfig(aba) {
+            // Oculta todos os conteúdos de aba
+            const tabContents = document.querySelectorAll('.config-tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove a classe ativa de todas as abas
+            const tabs = document.querySelectorAll('.config-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Ativa a aba selecionada e seu conteúdo
+            document.getElementById(`${aba}Tab`).classList.add('active');
+            document.getElementById(`${aba}Content`).classList.add('active');
+            
+            // Oculta formulários abertos
+            document.getElementById('editMedicationForm').style.display = 'none';
+            document.getElementById('addMedicationForm').style.display = 'none';
+            document.getElementById('editTemplateForm').style.display = 'none';
+            document.getElementById('addTemplateForm').style.display = 'none';
+        }
+        
+        // Função para atualizar a lista de medicações
+        function atualizarListaMedicacoes() {
+            const medicationList = document.getElementById('medicationList');
+            medicationList.innerHTML = '';
+            
+            medicacoes.forEach((med, index) => {
+                const item = document.createElement('div');
+                item.className = 'medication-item';
+                
+                const info = document.createElement('div');
+                
+                const name = document.createElement('div');
+                name.className = 'medication-name';
+                name.textContent = med.nome;
+                
+                const usage = document.createElement('div');
+                usage.className = 'medication-usage';
+                usage.textContent = med.uso;
+                
+                info.appendChild(name);
+                info.appendChild(usage);
+                
+                const actions = document.createElement('div');
+                actions.className = 'medication-actions';
+                
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-button';
+                editBtn.textContent = 'Editar';
+                editBtn.onclick = () => editarMedicacao(index);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-button';
+                deleteBtn.textContent = 'Excluir';
+                deleteBtn.onclick = () => excluirMedicacao(index);
+                
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+                
+                item.appendChild(info);
+                item.appendChild(actions);
+                
+                medicationList.appendChild(item);
+            });
+        }
+        
+        // Função para adicionar nova medicação
+        function mostrarFormularioAddMedicacao() {
+            document.getElementById('addMedicationForm').style.display = 'block';
+            document.getElementById('newMedicationName').value = '';
+            document.getElementById('newMedicationUsage').value = '';
+        }
+        
+        // Função para salvar nova medicação
+        function salvarNovaMedicacao() {
+            const nome = document.getElementById('newMedicationName').value;
+            const uso = document.getElementById('newMedicationUsage').value;
+            
+            if (nome && uso) {
+                medicacoes.push({ nome, uso });
+                atualizarListaMedicacoes();
+                atualizarSelectMedicacoes();
+                document.getElementById('addMedicationForm').style.display = 'none';
+            } else {
+                alert('Por favor, preencha todos os campos!');
+            }
+        }
+        
+        // Função para editar medicação
+        function editarMedicacao(index) {
+            const med = medicacoes[index];
+            
+            document.getElementById('editMedicationIndex').value = index;
+            document.getElementById('editMedicationName').value = med.nome;
+            document.getElementById('editMedicationUsage').value = med.uso;
+            
+            document.getElementById('editMedicationForm').style.display = 'block';
+        }
+        
+        // Função para salvar medicação editada
+        function salvarMedicacaoEditada() {
+            const index = parseInt(document.getElementById('editMedicationIndex').value);
+            const nome = document.getElementById('editMedicationName').value;
+            const uso = document.getElementById('editMedicationUsage').value;
+            
+            if (nome && uso) {
+                medicacoes[index] = { nome, uso };
+                atualizarListaMedicacoes();
+                atualizarSelectMedicacoes();
+                document.getElementById('editMedicationForm').style.display = 'none';
+            } else {
+                alert('Por favor, preencha todos os campos!');
+            }
+        }
+        
+        // Função para excluir medicação
+        function excluirMedicacao(index) {
+            if (confirm('Tem certeza que deseja excluir esta medicação?')) {
+                medicacoes.splice(index, 1);
+                atualizarListaMedicacoes();
+                atualizarSelectMedicacoes();
+            }
+        }
+        
+        // Função para atualizar a lista de modelos
+        function atualizarListaModelos() {
+            const templateList = document.getElementById('templateList');
+            templateList.innerHTML = '';
+            
+            // Para cada categoria de modelo
+            Object.keys(modelosTexto).forEach(categoria => {
+                // Para cada modelo na categoria
+                Object.keys(modelosTexto[categoria]).forEach(chaveModelo => {
+                    const item = document.createElement('div');
+                    item.className = 'template-item';
+                    
+                    const info = document.createElement('div');
+                    
+                    const name = document.createElement('div');
+                    name.className = 'template-name';
+                    
+                    // Definir nomes mais amigáveis para as categorias e modelos
+                    const categoriaTexto = {
+                        'receita': 'Receita Médica',
+                        'encaminhamento': 'Encaminhamento',
+                        'atestado': 'Atestado Médico',
+                        'orientacoes': 'Orientações'
+                    }[categoria];
+                    
+                    let modeloTexto;
+                    switch(chaveModelo) {
+                        case 'pos_op_gastro': modeloTexto = 'PÓS OPERATÓRIO GASTRO'; break;
+                        case 'vitaminas_pos_op': modeloTexto = 'VITAMINAS PÓS OP'; break;
+                        case 'ulcera_gastrica': modeloTexto = 'ÚLCERA GÁSTRICA'; break;
+                        case 'deficiencias_pos_op': modeloTexto = 'DEFICIÊNCIAS PÓS OP'; break;
+                        case 'cirurgia_geral': modeloTexto = 'A CIRURGIA GERAL'; break;
+                        case 'reparadora': modeloTexto = 'REPARADORA'; break;
+                        case 'pre_operatorio': modeloTexto = 'PRÉ OPERATÓRIO'; break;
+                        case 'pos_operatorio': modeloTexto = 'PÓS OPERATÓRIO'; break;
+                        case 'pos_30_dias': modeloTexto = 'PÓS 30 DIAS'; break;
+                        default: modeloTexto = chaveModelo.toUpperCase().replace('_', ' ');
+                    }
+                    
+                    name.textContent = modeloTexto;
+                    
+                    const categoryName = document.createElement('div');
+                    categoryName.className = 'template-category';
+                    categoryName.textContent = categoriaTexto;
+                    
+                    info.appendChild(name);
+                    info.appendChild(categoryName);
+                    
+                    const actions = document.createElement('div');
+                    actions.className = 'template-actions';
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'edit-button';
+                    editBtn.textContent = 'Editar';
+                    editBtn.onclick = () => editarModelo(categoria, chaveModelo);
+                    
+                    actions.appendChild(editBtn);
+                    
+                    item.appendChild(info);
+                    item.appendChild(actions);
+                    
+                    templateList.appendChild(item);
+                });
+            });
+        }
+        
+        // Função para editar modelo
+        function editarModelo(categoria, chaveModelo) {
+            document.getElementById('editTemplateCategory').value = categoria;
+            document.getElementById('editTemplateKey').value = chaveModelo;
+            document.getElementById('editTemplateContent').value = modelosTexto[categoria][chaveModelo];
+            
+            // Definir nomes mais amigáveis para o título do formulário
+            const categoriaTexto = {
+                'receita': 'Receita Médica',
+                'encaminhamento': 'Encaminhamento',
+                'atestado': 'Atestado Médico',
+                'orientacoes': 'Orientações'
+            }[categoria];
+            
+            let modeloTexto;
+            switch(chaveModelo) {
+                case 'pos_op_gastro': modeloTexto = 'PÓS OPERATÓRIO GASTRO'; break;
+                case 'vitaminas_pos_op': modeloTexto = 'VITAMINAS PÓS OP'; break;
+                case 'ulcera_gastrica': modeloTexto = 'ÚLCERA GÁSTRICA'; break;
+                case 'deficiencias_pos_op': modeloTexto = 'DEFICIÊNCIAS PÓS OP'; break;
+                case 'cirurgia_geral': modeloTexto = 'A CIRURGIA GERAL'; break;
+                case 'reparadora': modeloTexto = 'REPARADORA'; break;
+                case 'pre_operatorio': modeloTexto = 'PRÉ OPERATÓRIO'; break;
+                case 'pos_operatorio': modeloTexto = 'PÓS OPERATÓRIO'; break;
+                case 'pos_30_dias': modeloTexto = 'PÓS 30 DIAS'; break;
+                default: modeloTexto = chaveModelo.toUpperCase().replace('_', ' ');
+            }
+            
+            document.getElementById('editTemplateTitle').textContent = `Editar ${categoriaTexto}: ${modeloTexto}`;
+            
+            document.getElementById('editTemplateForm').style.display = 'block';
+        }
+        
+        // Função para salvar modelo editado
+        function salvarModeloEditado() {
+            const categoria = document.getElementById('editTemplateCategory').value;
+            const chaveModelo = document.getElementById('editTemplateKey').value;
+            const conteudo = document.getElementById('editTemplateContent').value;
+            
+            if (conteudo) {
+                modelosTexto[categoria][chaveModelo] = conteudo;
+                
+                // Atualiza os selects correspondentes
+                atualizarSelectsModelos();
+                
+                document.getElementById('editTemplateForm').style.display = 'none';
+            } else {
+                alert('Por favor, preencha o conteúdo do modelo!');
+            }
+        }
+        
+        // Função para atualizar todos os selects de modelos
+        function atualizarSelectsModelos() {
+            // Atualiza cada tipo de select baseado nas alterações feitas
+            const modelosReceita = document.getElementById('modelosReceita');
+            const modelosAtestado = document.getElementById('modelosAtestado');
+            const modelosEncaminhamento = document.getElementById('modelosEncaminhamento');
+            const modelosOrientacoes = document.getElementById('modelosOrientacoes');
+            
+            // Não precisa refazer os selects inteiros, pois os textos pré-definidos
+            // são modificados no objeto modelosTexto, então já estarão atualizados
+            // quando o usuário selecionar uma opção.
+        }
+        
+        // Função para mostrar formulário de adicionar modelo
+        function mostrarFormularioAddModelo() {
+            document.getElementById('addTemplateForm').style.display = 'block';
+            document.getElementById('newTemplateCategory').value = 'receita';
+            document.getElementById('newTemplateKey').value = '';
+            document.getElementById('newTemplateName').value = '';
+            document.getElementById('newTemplateContent').value = '';
+        }
+        
+        // Função para salvar novo modelo
+        function salvarNovoModelo() {
+            const categoria = document.getElementById('newTemplateCategory').value;
+            const chave = document.getElementById('newTemplateKey').value;
+            const nome = document.getElementById('newTemplateName').value;
+            const conteudo = document.getElementById('newTemplateContent').value;
+            
+            if (categoria && chave && nome && conteudo) {
+                // Verifica se a chave já existe
+                if (modelosTexto[categoria][chave]) {
+                    alert('Já existe um modelo com esta chave. Por favor, escolha outra.');
+                    return;
+                }
+                
+                // Adiciona o novo modelo
+                modelosTexto[categoria][chave] = conteudo;
+                
+                // Atualiza o select correspondente
+                const select = document.getElementById(`modelos${categoria.charAt(0).toUpperCase() + categoria.slice(1)}`);
+                if (select) {
+                    const option = document.createElement('option');
+                    option.value = chave;
+                    option.textContent = nome;
+                    select.appendChild(option);
+                }
+                
+                atualizarListaModelos();
+                document.getElementById('addTemplateForm').style.display = 'none';
+            } else {
+                alert('Por favor, preencha todos os campos!');
             }
         }
         
@@ -1942,6 +2757,9 @@ CID: Z763`;
             if (primeiraAba) {
                 primeiraAba.click();
             }
+            
+            // Inicializa o select de medicações
+            atualizarSelectMedicacoes();
         });
     </script>
 </body>
