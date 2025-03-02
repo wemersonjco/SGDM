@@ -17,6 +17,8 @@
                 // Função para aplicar formatação (negrito, itálico) ao texto selecionado
         function aplicarFormatacao(textAreaId, tipo) {
             const textArea = document.getElementById(textAreaId);
+            if (!textArea) return; // Verifica se o textarea existe
+            
             const selecaoInicio = textArea.selectionStart;
             const selecaoFim = textArea.selectionEnd;
             const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
@@ -52,6 +54,8 @@
             if (!tamanho) return; // Se não houver tamanho selecionado, retorna
             
             const textArea = document.getElementById(textAreaId);
+            if (!textArea) return; // Verifica se o textarea existe
+            
             const selecaoInicio = textArea.selectionStart;
             const selecaoFim = textArea.selectionEnd;
             const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
@@ -2099,7 +2103,13 @@ CID: Z763`;
                     editBtn.textContent = 'Editar';
                     editBtn.onclick = () => editarModelo(categoria, chaveModelo);
                     
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-button';
+                    deleteBtn.textContent = 'Excluir';
+                    deleteBtn.onclick = () => excluirModelo(categoria, chaveModelo);
+                    
                     actions.appendChild(editBtn);
+                    actions.appendChild(deleteBtn);
                     
                     item.appendChild(info);
                     item.appendChild(actions);
@@ -2160,17 +2170,34 @@ CID: Z763`;
             }
         }
         
-        // Função para atualizar todos os selects de modelos
-        function atualizarSelectsModelos() {
-            // Atualiza cada tipo de select baseado nas alterações feitas
-            const modelosReceita = document.getElementById('modelosReceita');
-            const modelosAtestado = document.getElementById('modelosAtestado');
-            const modelosEncaminhamento = document.getElementById('modelosEncaminhamento');
-            const modelosOrientacoes = document.getElementById('modelosOrientacoes');
-            
-            // Não precisa refazer os selects inteiros, pois os textos pré-definidos
-            // são modificados no objeto modelosTexto, então já estarão atualizados
-            // quando o usuário selecionar uma opção.
+        // Função para excluir modelo
+        function excluirModelo(categoria, chaveModelo) {
+            // Confirmação antes de excluir
+            if (confirm(`Tem certeza que deseja excluir este modelo? Esta ação não pode ser desfeita.`)) {
+                // Verificar se o modelo existe e não é um modelo essencial do sistema
+                if (modelosTexto[categoria] && modelosTexto[categoria][chaveModelo]) {
+                    // Lista de modelos essenciais que não devem ser excluídos
+                    const modelosEssenciais = {
+                        'receita': ['pos_op_gastro', 'vitaminas_pos_op', 'ulcera_gastrica', 'deficiencias_pos_op'],
+                        'encaminhamento': ['cirurgia_geral', 'reparadora', 'pre_operatorio'],
+                        'atestado': ['pos_operatorio'],
+                        'orientacoes': ['pos_operatorio', 'pre_operatorio', 'pos_30_dias']
+                    };
+                    
+                    // Verificar se é um modelo essencial
+                    if (modelosEssenciais[categoria] && modelosEssenciais[categoria].includes(chaveModelo)) {
+                        alert('Este é um modelo essencial do sistema e não pode ser excluído. Você pode editá-lo, mas não excluí-lo.');
+                        return;
+                    }
+                    
+                    // Excluir o modelo
+                    delete modelosTexto[categoria][chaveModelo];
+                    
+                    // Atualizar os selects e a lista de modelos
+                    atualizarSelectsModelos();
+                    atualizarListaModelos();
+                }
+            }
         }
         
         // Função para mostrar formulário de adicionar modelo
