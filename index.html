@@ -137,6 +137,14 @@
         .form-group textarea:focus {
             border-color: #3498db;
             outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Estilo específico para campo de nome do paciente */
+        #patientName {
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px;
         }
         
         .form-group textarea {
@@ -151,12 +159,22 @@
         /* Seção de paciente e instituição */
         .patient-institution-section {
             display: flex;
-            gap: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
             margin-bottom: 25px;
         }
         
-        .patient-institution-section .form-group {
-            flex: 1;
+        .patient-institution-section .form-group.instituicao {
+            flex: 0 0 200px;
+        }
+        
+        .patient-institution-section .form-group.nome-paciente {
+            flex: 1 1 400px; /* Maior largura para o nome do paciente */
+        }
+        
+        .patient-institution-section .form-group.endereco-paciente {
+            flex: 1 1 100%;  /* Ocupa toda a largura em uma nova linha */
+            margin-top: 5px;
         }
         
         /* Abas de navegação */
@@ -1019,7 +1037,7 @@
         <!-- Seção de Instituição e Paciente -->
         <div class="patient-institution-section">
             <!-- Seleção de instituição -->
-            <div class="form-group">
+            <div class="form-group instituicao">
                 <label for="instituicao"><strong>Instituição:</strong></label>
                 <select id="instituicao">
                     <option value="ioci">Clínica IOCI</option>
@@ -1028,11 +1046,11 @@
             </div>
             
             <!-- Informações do paciente -->
-            <div class="form-group">
+            <div class="form-group nome-paciente">
                 <label for="patientName">Nome do Paciente:</label>
                 <input type="text" id="patientName" placeholder="Digite o nome do paciente">
             </div>
-            <div class="form-group">
+            <div class="form-group endereco-paciente">
                 <label for="patientAddress">Endereço do Paciente:</label>
                 <input type="text" id="patientAddress" placeholder="Digite o endereço do paciente">
             </div>
