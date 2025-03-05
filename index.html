@@ -1878,7 +1878,7 @@ Tomar 1 comprimido sublingual de 8/8 horas em caso de náuseas ou vômitos.
  
 USO INJETÁVEL:
  
-1)      VOLARE 40MG ___________01 CAIXA
+1)      VOLARE 40MG (ENOXAPARINA 40MG) ___________01 CAIXA
 APLICAR NO SUBCUTÂNEO 1 VEZ AO DIA  DURANTE 06 (SEIS) DIAS.
  
   
@@ -1954,7 +1954,7 @@ Grato
 CID:E-660`
             },
             orientacoes: {
-                pos_operatorio: `1)Superamos, com sucesso, mais uma importante etapa no tratamento da obesidade mórbida; apresentamos a seguir importantes informações a respeito de cuidados pós-operatórios, os quais devem ser seguidos para uma plena e rápida recuperação.1) A dieta, conforme orientado pela nutricionista (equipe do hospital Metropolitano) deve ser seguida à risca, integralmente, principalmente no que se refere a horários, quantidades e tipos de alimentos. MANTENHA-SE HIDRATADO. A SEDE E FRAQUEZA SÃO SINAIS DE DESIDRATAÇÃO. MANTENHA A URINA SEMPRE CLARA
+                pos_operatorio: `Superamos, com sucesso, mais uma importante etapa no tratamento da obesidade mórbida; apresentamos a seguir importantes informações a respeito de cuidados pós-operatórios, os quais devem ser seguidos para uma plena e rápida recuperação.1) A dieta, conforme orientado pela nutricionista (equipe do hospital Metropolitano) deve ser seguida à risca, integralmente, principalmente no que se refere a horários, quantidades e tipos de alimentos. MANTENHA-SE HIDRATADO. A SEDE E FRAQUEZA SÃO SINAIS DE DESIDRATAÇÃO. MANTENHA A URINA SEMPRE CLARA
 2) É extremamente importante se manter  bem hidratado (a); nos intervalos da dieta devemos ingerir líquidos em abundância. Durante a primeira semana a sensação de fraqueza e indisposição refletem muito mais um estado de desidratação do que falta de alimentação. LEMBRE-SE: não há limite máximo em relação à hidratação oral; não há problemas em se ingerir grandes quantidades, tais como 3 ou 4 litros por dia! Mas temos uma quantidade mínima – devem ser ingeridos, NO MÍNIMO, 3 litros ao dia. O melhor controle em relação ao estado de hidratação em domicilio é a quantidade e a coloração da urina: pouca urina ou urina concentrada mostram necessidade de mais liquido (mesmo que você considere já ter ingerido quantidade suficiente).
 3) O mais importante em relação aos líquidos ingeridos é a VELOCIDADE da sua ingestão: nesse primeiro momento devem ser ingeridos gole a gole, com paciência e perseverança. Você deve manter sempre ao seu lado uma garrafa com o líquido da sua preferência (água, chá, suco light, água de coco, isotônicos, etc). Se durante a tomada de líquidos houver dor ou desconforto abdominal, ou você ingeriu goles muito grandes, ou vários goles em intervalo muito curto. NÃO DESISTA – aguarde alguns minutos e recomece a hidratação oral, mas dessa vez com goles menores e com um pouco mais de tempo entre os goles. Procure tomar gole de "TAMANHO NORMAL", nem grande, nem pequeno, tamanho NORMAL.
 DICA: QUANTO MAIS GELADOS ESTIVEREM OS LÍQUIDOS, MENOS DESCONFORTO ABDOMINAL; MELHOR SERÁ SUA ACEITAÇÃO. DEIXE OS LÍQUIDOS BEM GELADOS PARA CONSUMO.
@@ -3078,62 +3078,58 @@ CID: Z763`;
         }
         
         // Sistema de login
-        function verificarLogin() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const loginError = document.getElementById('loginError');
-            const loginButton = document.getElementById('loginButton');
-            
-            // Adicionar efeito de loading
-            loginButton.classList.add('loading');
-            loginButton.disabled = true;
-            
-            // Simular tempo de verificação para efeito visual - curto para melhor experiência
+        // Sistema de login
+function verificarLogin() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const loginError = document.getElementById('loginError');
+    const loginButton = document.getElementById('loginButton');
+    
+    // Adicionar efeito de loading
+    loginButton.classList.add('loading');
+    loginButton.disabled = true;
+    
+    // Simular tempo de verificação para efeito visual - curto para melhor experiência
+    setTimeout(() => {
+        // Verificar credenciais - apenas aceita as credenciais específicas
+        if (username === 'IOCI' && password === 'ioci@2025') {
+            // Login bem-sucedido
+            document.getElementById('loginScreen').style.opacity = 0;
             setTimeout(() => {
-                // Verificar credenciais - aceita qualquer valor para facilitar o acesso
-                if ((username === 'IOCI' && password === 'ioci@2025') || 
-                    (username && password)) { // Aceita qualquer login/senha preenchidos
-                    
-                    // Login bem-sucedido
-                    document.getElementById('loginScreen').style.opacity = 0;
-                    setTimeout(() => {
-                        document.getElementById('loginScreen').style.display = 'none';
-                        document.getElementById('mainInterface').style.display = 'block';
-                    }, 400);
-                    
-                    // Salvar estado de login
-                    localStorage.setItem('sgdmLoggedIn', 'true');
-                    
-                    // Inicializar sistema
-                    const primeiraAba = document.querySelector('.tab-item');
-                    if (primeiraAba) {
-                        primeiraAba.click();
-                    }
-                    
-                    // Inicializa o select de medicações
-                    atualizarSelectMedicacoes();
-                } else {
-                    // Login falhou - apenas se os campos estiverem vazios
-                    loginError.style.display = 'block';
-                    
-                    // Remover efeito de loading
-                    loginButton.classList.remove('loading');
-                    loginButton.disabled = false;
-                    
-                    // Focar no campo de usuário se estiver vazio, senão no campo de senha
-                    if (!username) {
-                        document.getElementById('loginUsername').focus();
-                    } else {
-                        document.getElementById('loginPassword').focus();
-                    }
-                    
-                    // Esconder mensagem de erro após 3 segundos
-                    setTimeout(() => {
-                        loginError.style.display = 'none';
-                    }, 3000);
-                }
-            }, 600); // Tempo de simulação reduzido
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainInterface').style.display = 'block';
+            }, 400);
+            
+            // Salvar estado de login
+            localStorage.setItem('sgdmLoggedIn', 'true');
+            
+            // Inicializar sistema
+            const primeiraAba = document.querySelector('.tab-item');
+            if (primeiraAba) {
+                primeiraAba.click();
+            }
+            
+            // Inicializa o select de medicações
+            atualizarSelectMedicacoes();
+        } else {
+            // Login falhou
+            loginError.textContent = "Usuário ou senha incorretos.";
+            loginError.style.display = 'block';
+            
+            // Remover efeito de loading
+            loginButton.classList.remove('loading');
+            loginButton.disabled = false;
+            
+            // Focar no campo de usuário
+            document.getElementById('loginUsername').focus();
+            
+            // Esconder mensagem de erro após 3 segundos
+            setTimeout(() => {
+                loginError.style.display = 'none';
+            }, 3000);
         }
+    }, 600); // Tempo de simulação reduzido
+}
         
         // Função para fazer logout
         function fazerLogout() {
