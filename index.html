@@ -9,72 +9,152 @@
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRhYmxldEdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI5ODBiOSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMzQ5OGRiIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibGluZUdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxNmEwODUiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJlY2M3MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHg9IjgiIHk9IjgiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0MCIgcng9IjQiIHJ5PSI0IiBmaWxsPSJ1cmwoI3RhYmxldEdyYWRpZW50KSIgLz4KICA8bGluZSB4MT0iMTYiIHkxPSIyMCIgeDI9IjQ4IiB5Mj0iMjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuNyIgLz4KICA8cGF0aCBkPSJNIDE2LDM2IAogICAgICAgICAgIEggMjYKICAgICAgICAgICBMIDMwLDMwCiAgICAgICAgICAgTCAzMiw0MAogICAgICAgICAgIEwgMzgsMjUKICAgICAgICAgICBMIDQyLDM2CiAgICAgICAgICAgSCA0OCIgCiAgICAgIHN0cm9rZT0idXJsKCNsaW5lR3JhZGllbnQpIiAKICAgICAgc3Ryb2tlLXdpZHRoPSIzIiAKICAgICAgZmlsbD0ibm9uZSIgCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgCiAgICAgIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+Cjwvc3ZnPg==" type="image/svg+xml">
     
     <style>
+/* Estilos para a tela de login */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease;
+}
+
+.login-card {
+    background-color: white;
+    width: 360px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-logo {
+    margin-bottom: 20px;
+}
+
+.login-title {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0 10px;
+    transition: all 0.3s;
+}
+
+.input-group:focus-within {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.input-icon {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-right: 10px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #2c3e50;
+}
+
+.login-input::placeholder {
+    color: #95a5a6;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.login-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+.login-button.loading {
+    background-color: #7f8c8d;
+    cursor: default;
+}
+
+.login-button.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: white;
+    top: calc(50% - 10px);
+    right: 15px;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.login-error {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: center;
+    display: none;
+}
+
+.system-info {
+    margin-top: 40px;
+    color: #7f8c8d;
+    font-size: 12px;
+    text-align: center;
+}
         /* Reset e estilos gerais */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-                // Função para aplicar formatação (negrito, itálico) ao texto selecionado
-        function aplicarFormatacao(textAreaId, tipo) {
-            const textArea = document.getElementById(textAreaId);
-            if (!textArea) return; // Verifica se o textarea existe
-            
-            const selecaoInicio = textArea.selectionStart;
-            const selecaoFim = textArea.selectionEnd;
-            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
-            
-            if (textoSelecionado) {
-                let novoTexto = '';
-                let tag = '';
-                let fechamento = '';
-                
-                if (tipo === 'bold') {
-                    tag = '<strong>';
-                    fechamento = '</strong>';
-                } else if (tipo === 'italic') {
-                    tag = '<em>';
-                    fechamento = '</em>';
-                }
-                
-                novoTexto = textArea.value.substring(0, selecaoInicio) + 
-                           tag + textoSelecionado + fechamento + 
-                           textArea.value.substring(selecaoFim);
-                
-                textArea.value = novoTexto;
-                
-                // Reposiciona o cursor após o texto formatado
-                textArea.focus();
-                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
-                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
-            }
-        }
-        
-        // Função para alterar o tamanho da fonte do texto selecionado
-        function alterarTamanhoFonte(textAreaId, tamanho) {
-            if (!tamanho) return; // Se não houver tamanho selecionado, retorna
-            
-            const textArea = document.getElementById(textAreaId);
-            if (!textArea) return; // Verifica se o textarea existe
-            
-            const selecaoInicio = textArea.selectionStart;
-            const selecaoFim = textArea.selectionEnd;
-            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
-            
-            if (textoSelecionado) {
-                const tag = `<span style="font-size:${tamanho}px;">`;
-                const fechamento = '</span>';
-                
-                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
-                                 tag + textoSelecionado + fechamento + 
-                                 textArea.value.substring(selecaoFim);
-                
-                textArea.value = novoTexto;
-                
-                // Reposiciona o cursor após o texto formatado
-                textArea.focus();
-                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
-                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
-            }
         }
         
         body {
@@ -82,6 +162,7 @@
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.5;
+            font-size: 13px; /* Aumentado tamanho base da fonte */
         }
         
         .container {
@@ -216,10 +297,10 @@
             border-color: #3498db;
         }
         
-        /* Botão de redirecionamento */
-        .redirect-button {
+        /* Botão de sair */
+        .logout-button {
             padding: 8px 16px;
-            background-color: #2ecc71;
+            background-color: #e74c3c;
             color: white;
             border: none;
             border-radius: 5px;
@@ -233,8 +314,8 @@
             margin-right: 15px;
         }
         
-        .redirect-button:hover {
-            background-color: #27ae60;
+        .logout-button:hover {
+            background-color: #c0392b;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -300,7 +381,7 @@
         .texto-justificado {
             text-align: justify;
             font-family: Arial, sans-serif;
-            font-size: 11px;
+            font-size: 13px; /* Aumentado para tamanho médio */
         }
         
         /* Textos maiores para atestados */
@@ -364,13 +445,12 @@
         }
         
         .config-modal-content {
-            background-color: white;
-            margin: 50px auto;
+            background-color: #fff;
+            margin: 5% auto;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             width: 80%;
-            max-width: 800px;
+            max-width: 700px;
+            border-radius: 5px;
             position: relative;
         }
         
@@ -669,19 +749,19 @@
         .document-date {
             text-align: left;
             margin-bottom: 5px;
-            font-size: 13px; /* Aumentado para 13px */
+            font-size: 13px; /* Tamanho médio */
             font-weight: bold;
         }
         
         .documento-gerado {
             text-align: justify;
-            font-size: 11px; /* Tamanho ajustado para 11px */
+            font-size: 13px; /* Tamanho médio */
             line-height: 1.5;
         }
         
         /* Estilo para nome e endereço do paciente */
         .documento-gerado strong {
-            font-size: 13px; /* Aumentado para 13px */
+            font-size: 14px; /* Aumentado para 14px */
         }
         
         /* Assinatura centralizada */
@@ -689,7 +769,7 @@
             text-align: center;
             font-weight: bold;
             margin: 40px auto 20px auto; /* Espaçamento aumentado no topo e centralizado */
-            font-size: 11px;
+            font-size: 13px; /* Aumentado para tamanho médio */
             line-height: 1.3;
             width: 100%;
             display: block;
@@ -702,7 +782,7 @@
             width: 220px;
             padding: 6px;
             margin-bottom: 10px;
-            font-size: 9px;
+            font-size: 11px;
             font-weight: bold;
             text-align: center;
             line-height: 1.1;
@@ -720,7 +800,7 @@
             border: 1px solid #000;
             width: 48%; /* Aumentado para ocupar quase metade da largura */
             padding: 6px;
-            font-size: 9px;
+            font-size: 11px; /* Aumentado para tamanho médio */
             font-weight: bold;
             text-align: left;
             line-height: 1.1;
@@ -736,17 +816,17 @@
         
         /* Estilos adicionais para RECEITUÁRIO CONTROLADO */
         .receituario-controlado .documento-gerado {
-            font-size: 9px !important;
+            font-size: 11px !important;
             line-height: 1.1;
         }
         
         .receituario-controlado .documento-gerado strong {
-            font-size: 9px !important;
+            font-size: 11px !important;
         }
         
         .receituario-controlado .document-date {
             margin-top: 5px;
-            font-size: 10px;
+            font-size: 11px;
         }
         
         /* Botão para imprimir documento adicional */
@@ -788,7 +868,7 @@
         @media print {
             body {
                 background: white;
-                font-size: 12pt;
+                font-size: 13pt; /* Tamanho médio para impressão */
             }
             
             .no-print {
@@ -852,10 +932,10 @@
                 margin-top: 10px;
             }
             
-            /* Configurações de página */
+            /* Configurações de página - MARGENS AUMENTADAS PARA 2CM EM TODOS OS LADOS */
             @page {
                 size: A4 portrait;
-                margin: 2cm;
+                margin: 2cm; /* Aumentado para 2cm em todos os lados */
                 orphans: 0;
                 widows: 0;
             }
@@ -896,13 +976,13 @@
             .metropolitano-document {
                 margin-top: 0 !important;
                 position: relative;
-                font-size: 11px !important; /* Tamanho ajustado para 11px */
+                font-size: 13px !important; /* Tamanho aumentado para médio */
                 line-height: 1.5 !important;
             }
             
             .ioci-document {
                 margin-top: 4.5cm !important;
-                font-size: 11px !important; /* Tamanho ajustado para 11px */
+                font-size: 13px !important; /* Tamanho aumentado para médio */
                 line-height: 1.5 !important;
             }
             
@@ -929,7 +1009,7 @@
                 page-break-after: auto;
                 margin-top: 0 !important;
                 margin-bottom: 5mm !important;
-                font-size: 11px !important; /* Tamanho ajustado para 11px */
+                font-size: 13px !important; /* Tamanho aumentado para médio */
                 line-height: 1.5 !important;
             }
             
@@ -994,14 +1074,67 @@
             
             /* Garantir que o documento gerado não quebre em páginas desnecessárias */
             .receituario-controlado .documento-gerado {
-                font-size: 10px !important; /* Ligeiramente maior para caber mais conteúdo */
+                font-size: 11px !important; /* Ligeiramente maior para caber mais conteúdo */
             }
         }
     </style>
 </head>
 <body>
+    <!-- Tela de Login -->
+<div id="loginScreen" class="login-overlay">
+    <div class="login-card">
+        <div class="login-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="150" height="90" style="display: block; margin: 0 auto;">
+              <defs>
+                <linearGradient id="loginTabletGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#2980b9" />
+                  <stop offset="100%" stop-color="#3498db" />
+                </linearGradient>
+                <linearGradient id="loginLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#16a085" />
+                  <stop offset="100%" stop-color="#2ecc71" />
+                </linearGradient>
+              </defs>
+              <rect width="300" height="120" fill="transparent" />
+              <rect x="80" y="25" width="65" height="55" rx="5" ry="5" fill="url(#loginTabletGradient)" />
+              <line x1="90" y1="35" x2="125" y2="35" stroke="white" stroke-width="2" stroke-opacity="0.7" />
+              <line x1="90" y1="45" x2="135" y2="45" stroke="white" stroke-width="2" stroke-opacity="0.7" />
+              <line x1="90" y1="55" x2="120" y2="55" stroke="white" stroke-width="2" stroke-opacity="0.7" />
+              <path d="M 90,65 H 100 L 105,60 L 107,70 L 115,55 L 120,65 H 130" 
+                    stroke="url(#loginLineGradient)" stroke-width="3" fill="none" 
+                    stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M 145,40 L 155,40 L 155,30 L 165,30 L 165,40 L 175,40 L 175,50 L 165,50 L 165,60 L 155,60 L 155,50 L 145,50 Z" 
+                    fill="#2ecc71" fill-opacity="0.2" stroke="#2ecc71" stroke-width="1.5" />
+              <text x="150" y="90" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="bold" fill="#2c3e50">
+                SGDM
+              </text>
+            </svg>
+        </div>
+        
+        <h2 class="login-title">Acesso ao Sistema</h2>
+        
+        <div class="login-form">
+            <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="loginUsername" class="login-input" placeholder="Nome de usuário" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="loginPassword" class="login-input" placeholder="Senha" autocomplete="off">
+            </div>
+            <button type="button" id="loginButton" class="login-button" onclick="verificarLogin()">Acessar</button>
+            <div id="loginError" class="login-error">Por favor, preencha os campos de login e senha.</div>
+        </div>
+    </div>
+    
+    <div class="system-info">
+        SGDM v2.0 | Sistema de Geração de Documentos Médicos<br>
+        © 2025 Hospital Metropolitano & Clínica IOCI
+    </div>
+</div>
+    
     <!-- Interface do Usuário -->
-    <div class="container no-print">
+    <div id="mainInterface" class="container no-print" style="display: none;">
         <div class="header">
             <!-- Logotipo do SGDM -->
             <div class="logo-container">
@@ -1096,20 +1229,20 @@
                 <li class="tab-item" onclick="mostrarDocumento('sadt')">SADT</li>
             </ul>
             
-            <a href="https://wemersonjco.github.io/SCC/" target="_blank" class="redirect-button">
+            <!-- Botão de Sair -->
+            <button type="button" class="logout-button" onclick="fazerLogout()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                Sistema de Controle de Cirurgias
-            </a>
+                Sair
+            </button>
         </div>
         
         <!-- Botão de Configurações -->
         <button type="button" class="config-menu-button" onclick="abrirConfiguracoes()">⚙️</button>
-
-        <!-- Formulários para diferentes tipos de documentos -->
+<!-- Formulários para diferentes tipos de documentos -->
         <!-- Receita Médica e Receituário Controlado -->
         <div id="receitaForm" class="hidden">
             <div class="form-group">
@@ -1364,8 +1497,7 @@ FERRITINA.</textarea>
                 <p><strong>Nota:</strong> Estes formulários são PDFs editáveis que permitem o preenchimento digital dos campos.</p>
             </div>
         </div>
-
-        <!-- Campo personalizado para dados do médico -->
+<!-- Campo personalizado para dados do médico -->
         <div class="form-group">
             <label for="doctorData"><strong>Dados do Médico (opcional):</strong></label>
             <textarea id="doctorData" placeholder="Ex: Dr. João Silva&#10;CIRURGIA GERAL&#10;CRM XX 12345" class="texto-justificado" rows="3"></textarea>
@@ -1486,8 +1618,7 @@ FERRITINA.</textarea>
                     </div>
                 </div>
             </div>
-            
-            <!-- Conteúdo da aba de Modelos de Texto -->
+<!-- Conteúdo da aba de Modelos de Texto -->
             <div id="templatesContent" class="config-tab-content">
                 <h3>Gerenciar Modelos de Texto</h3>
                 <button type="button" class="add-new-button" onclick="mostrarFormularioAddModelo()">+ Adicionar Novo Modelo</button>
@@ -1603,7 +1734,133 @@ FERRITINA.</textarea>
     </div>
 
     <script>
-        // Modelos de textos pré-definidos
+        // Função para aplicar formatação (negrito, itálico) ao texto selecionado
+        function aplicarFormatacao(textAreaId, tipo) {
+            const textArea = document.getElementById(textAreaId);
+            if (!textArea) return; // Verifica se o textarea existe
+            
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                let novoTexto = '';
+                let tag = '';
+                let fechamento = '';
+                
+                if (tipo === 'bold') {
+                    tag = '<strong>';
+                    fechamento = '</strong>';
+                } else if (tipo === 'italic') {
+                    tag = '<em>';
+                    fechamento = '</em>';
+                }
+                
+                novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                           tag + textoSelecionado + fechamento + 
+                           textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+        
+        // Função para alterar o tamanho da fonte do texto selecionado
+        function alterarTamanhoFonte(textAreaId, tamanho) {
+            if (!tamanho) return; // Se não houver tamanho selecionado, retorna
+            
+            const textArea = document.getElementById(textAreaId);
+            if (!textArea) return; // Verifica se o textarea existe
+            
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                const tag = `<span style="font-size:${tamanho}px;">`;
+                const fechamento = '</span>';
+                
+                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                                 tag + textoSelecionado + fechamento + 
+                                 textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+        
+        // Função para aplicar formatação modal
+        function aplicarFormatacaoModal(textAreaId, tipo) {
+            aplicarFormatacao(textAreaId, tipo);
+        }
+        
+        // Função para alterar tamanho da fonte modal
+        function alterarTamanhoFonteModal(textAreaId, tamanho) {
+            alterarTamanhoFonte(textAreaId, tamanho);
+        }
+        
+        // Função para aplicar alinhamento
+        function aplicarAlinhamento(textAreaId, alinhamento) {
+            const textArea = document.getElementById(textAreaId);
+            if (!textArea) return;
+            
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                const tag = `<div style="text-align:${alinhamento};">`;
+                const fechamento = '</div>';
+                
+                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                                 tag + textoSelecionado + fechamento + 
+                                 textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+        
+        // Função para alterar a fonte
+        function alterarFonte(textAreaId, fonte) {
+            if (!fonte) return;
+            
+            const textArea = document.getElementById(textAreaId);
+            if (!textArea) return;
+            
+            const selecaoInicio = textArea.selectionStart;
+            const selecaoFim = textArea.selectionEnd;
+            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
+            
+            if (textoSelecionado) {
+                const tag = `<span style="font-family:${fonte};">`;
+                const fechamento = '</span>';
+                
+                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
+                                 tag + textoSelecionado + fechamento + 
+                                 textArea.value.substring(selecaoFim);
+                
+                textArea.value = novoTexto;
+                
+                // Reposiciona o cursor após o texto formatado
+                textArea.focus();
+                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
+                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
+            }
+        }
+// Modelos de textos pré-definidos
         const modelosTexto = {
             receita: {
                 pos_op_gastro: `1)      DIVENA 40 mg ------------------------------------- 06 MESES
@@ -1726,27 +1983,27 @@ Você está iniciando o programa de Cirurgia Bariátrica (Gastroplastia) do Hosp
 Os especialistas estão para ajudar e auxiliar você. SEJA O MAIS FRANCO POSSIVEL, NÃO OMITA DADOS, isso pode impactar profundamente seu resultado cirúrgico. Aqui no Hospital dispomos de todos os profissionais e exames necessários para realizar a sua cirurgia, porém os exames e os laudos podem ser realizados em qualquer local inclusive na sua cidade de origem.
 Quando todos os laudos e todos os exames forem realizados, agende um retorno com um dos cirurgiões da equipe para solicitar a sua cirurgia.
 Agora que você decidiu fazer a cirurgia bariátrica, é muito importante ter acesso a algumas informações para o sucesso do procedimento cirúrgico. A obesidade é uma doença crônica, e não termina no centro cirúrgico, a gastroplastia é uma FERRAMENTA para auxilia-lo na perca de peso, porém é imprescindível no pós-operatório que você faça acompanhamento com nutricionista, psicólogo e endocrinologista por toda sua vida, bem como o uso de polivitamínicos (NUNCA SUSPENDA AS VITAMINAS POR CONTA PROPRIA).
-•	Quem não pode fazer a cirurgia bariátrica?
+- Quem não pode fazer a cirurgia bariátrica?
 -Paciente com doenças psiquiátricas graves não controladas.
 -História de alcoolismo ou uso de drogas ilícitas. O Tabagismo (cigarro) não é contraindicação, vale lembrar que suspender o uso de cigarro quatro semanas antes da cirurgia auxilia a recuperação pós-operatória.
 -Doenças crônicas como hipertensão, diabete e colesterol não contraindicam a cirurgia, NÃO OMITA suas doenças aos profissionais. Estamos para auxiliar e ajudar.
-•	Como é a anestesia para a cirurgia bariátrica?
+- Como é a anestesia para a cirurgia bariátrica?
  – A anestesia é Geral, a dose do anestésico é calculada em base ao peso do paciente, por isso é FUNDAMENTAL VOCÊ PERDER PESO ANTES DA CIRURGIA para ajudar a reduzir os riscos anestésicos. Perder peso não contraindica a cirurgia, ao contrario, faz a equipe perceber que você está comprometido. Inicie hoje mesmo exercícios físicos, caminhas e dieta alimentar para perder peso.
-•	Quais são as técnicas cirúrgicas mais utilizadas no Hospital Metropolitano?
+- Quais são as técnicas cirúrgicas mais utilizadas no Hospital Metropolitano?
 -As duas técnicas mais utilizadas são o Bypass gástrico (preferência da equipe) e a gastrectomia vertical (Sleeve), ambas realizadas por videolaparoscopia, popularmente conhecida como "furinhos/laser".
-•	Quais as principais complicações da cirurgia bariátrica?
+- Quais as principais complicações da cirurgia bariátrica?
 -Atualmente a cirurgia bariátrica é muito segura, sendo taxas de complicações extremamente baixas. Como em qualquer outra cirurgia, pode haver complicações eventuais como: sangramentos, tromboses, infecções, hematomas, fístula, deiscência, desnutrição, etc... Por isso, é importante seguir a RISCA TODAS AS ORIENTAÇÕES DA EQUIPE, é fundamenta você confiar nos profissionais e NÃO ESCUTAR O "VIZINHO" ou o "AMIGO" que fez a cirurgia no passado que fica orientando você a comer alimentos proibidos pela nutricionista, ou a suspender/substituir medicações prescrita pelos médicos da equipe.
-•	Como devo proceder no dia da cirurgia?
+- Como devo proceder no dia da cirurgia?
 Comparecer no Hospital, levar um documento com foto (identidade, RG, carteira de trabalho, Passaporte ou carteira profissional), trazer TODOS OS EXAMES realizados. Levar material de higiene pessoal (escova de dente, creme dental, pijama);
-•	Precisarei no pós-operatório ir à Unidade de Terapia Intensiva (UTI)?
+- Precisarei no pós-operatório ir à Unidade de Terapia Intensiva (UTI)?
 -Na imensa maioria das vezes é optado por fazer o pós-operatório na enfermaria, alguns casos irão a UTI devido ao melhor monitoramento e acompanhamento
-•	Quando começarei a receber a dieta no pós-operatório?
+- Quando começarei a receber a dieta no pós-operatório?
 De forma geral a dieta é iniciada no mesmo dia da cirurgia (vai estar prescrita no seu prontuário o horário de início). Após a dieta liberada, você deve seguir rigorosamente as instruções de sua nutricionista, alguns componentes da dieta pode variar entre paciente, pois você é único. De forma geral, nos primeiros cinco dias será liberado líquidos claro (água, água de coco, chás, suco natural coado, caldo de legumes) e deve ser tomado UM GOLE POR VEZ, no mínimo 2 litros ao dia.
-•	O que posso fazer quando chegar no quarto?
+- O que posso fazer quando chegar no quarto?
 - Você pode e deve sair da cama, pode ir ao banheiro acompanhado, pode caminhar pelos corredores do hospital, desde que se sinta apto e confortável para fazer. Caminhar ativa a circulação e estimula cicatrização. Preste atenção nos exercícios que o fisioterapeuta vai fazer para continuar realizando após sua alta hospitalar. Quanto mais caminhar melhor, diminui a probabilidade de trombose e atelectasia pulmonar, acelera o retorno da atividade intestinal (diminuindo os gases e dores abdominais)
 - Pode deitar de lado
 - Pode subir e descer escadas, porem evite esforços
-•	Quando sairei do hospital após a cirurgia?
+- Quando sairei do hospital após a cirurgia?
 - Em média a alta ocorre até as primeiras 48 horas após a cirurgia
 Toda a equipe esta para auxiliar e ajudar. Porém VOCE DEVE FAZER A SUA PARTE. Inicie hoje mesmo com alimentação saudável e atividade física diária. As mulheres é FUNDAMENTAL USAR ALGUM METODO CONTRASSEPTIVO (para não engravidar) durante o pré-operatório e os 12 meses após a cirurgia. Converse com seu ginecologista ou clinico geral.
 LEMBRE-SE É FUNDAMENTAL VOCE PERDER PESO DURANTE O PROCESSO E ANTES DA CIRURGIA, SIGA AS ORIENTACOES DA NUTRICINONISTA COMECE A CAMINHAR E SE EXERCITAR, FACA DIETA HOJE MESMO, GANHAR PESO ATRASA A SOLICITACAO DO PROCEDIMENTO
@@ -1811,6 +2068,7 @@ Estamos a disposição para esclarecer suas dúvidas.`
             document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
             document.getElementById('sadtForm').classList.add('hidden');
             document.getElementById('documentoGerado').classList.add('hidden');
+            document.getElementById('orientacoesForm').classList.add('hidden');
             
             // Mostra o formulário correspondente
             if (tipo === 'receita' || tipo === 'receita_controlada') {
@@ -1829,8 +2087,7 @@ Estamos a disposição para esclarecer suas dúvidas.`
                 document.getElementById('sadtForm').classList.remove('hidden');
             }
         }
-        
-        // Função para adicionar medicamento
+// Função para adicionar medicamento
         function adicionarMedicamento() {
             const medicamentosSelect = document.getElementById('medicamentos');
             const receitaText = document.getElementById('receitaText');
@@ -2295,6 +2552,53 @@ CID: Z763`;
             }
         }
         
+        // Função para atualizar os selects de modelos
+        function atualizarSelectsModelos() {
+            // Limpa e recarrega cada select de modelos
+            const selects = {
+                'receita': document.getElementById('modelosReceita'),
+                'encaminhamento': document.getElementById('modelosEncaminhamento'),
+                'atestado': document.getElementById('modelosAtestado'),
+                'orientacoes': document.getElementById('modelosOrientacoes')
+            };
+            
+            Object.keys(selects).forEach(categoria => {
+                const select = selects[categoria];
+                if (!select) return;
+                
+                // Mantém apenas a primeira opção (vazia)
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                // Adiciona as opções atualizadas
+                if (modelosTexto[categoria]) {
+                    Object.keys(modelosTexto[categoria]).forEach(chaveModelo => {
+                        const option = document.createElement('option');
+                        option.value = chaveModelo;
+                        
+                        // Determinar o texto da opção
+                        let modeloTexto;
+                        switch(chaveModelo) {
+                            case 'pos_op_gastro': modeloTexto = 'PÓS OPERATÓRIO GASTRO'; break;
+                            case 'vitaminas_pos_op': modeloTexto = 'VITAMINAS PÓS OP'; break;
+                            case 'ulcera_gastrica': modeloTexto = 'ÚLCERA GÁSTRICA'; break;
+                            case 'deficiencias_pos_op': modeloTexto = 'DEFICIÊNCIAS PÓS OP'; break;
+                            case 'cirurgia_geral': modeloTexto = 'A CIRURGIA GERAL'; break;
+                            case 'reparadora': modeloTexto = 'REPARADORA'; break;
+                            case 'pre_operatorio': modeloTexto = 'PRÉ OPERATÓRIO'; break;
+                            case 'pos_operatorio': modeloTexto = 'PÓS OPERATÓRIO'; break;
+                            case 'pos_30_dias': modeloTexto = 'PÓS 30 DIAS'; break;
+                            default: modeloTexto = chaveModelo.toUpperCase().replace('_', ' ');
+                        }
+                        
+                        option.textContent = modeloTexto;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+        
         // Função para verificar se um documento adicional deve ser gerado
         function verificarDocumentoAdicional() {
             documentoAdicionalTipo = null;
@@ -2672,70 +2976,12 @@ CID: Z763`;
         }
         
         // Função para limpar formulário
-        // Função para aplicar formatação (negrito, itálico) ao texto selecionado
-        function aplicarFormatacao(textAreaId, tipo) {
-            const textArea = document.getElementById(textAreaId);
-            const selecaoInicio = textArea.selectionStart;
-            const selecaoFim = textArea.selectionEnd;
-            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
-            
-            if (textoSelecionado) {
-                let novoTexto = '';
-                let tag = '';
-                
-                if (tipo === 'bold') {
-                    tag = '<strong>';
-                    fechamento = '</strong>';
-                } else if (tipo === 'italic') {
-                    tag = '<em>';
-                    fechamento = '</em>';
-                }
-                
-                novoTexto = textArea.value.substring(0, selecaoInicio) + 
-                           tag + textoSelecionado + fechamento + 
-                           textArea.value.substring(selecaoFim);
-                
-                textArea.value = novoTexto;
-                
-                // Reposiciona o cursor após o texto formatado
-                textArea.focus();
-                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
-                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
-            }
-        }
-        
-        // Função para alterar o tamanho da fonte do texto selecionado
-        function alterarTamanhoFonte(textAreaId, tamanho) {
-            if (!tamanho) return; // Se não houver tamanho selecionado, retorna
-            
-            const textArea = document.getElementById(textAreaId);
-            const selecaoInicio = textArea.selectionStart;
-            const selecaoFim = textArea.selectionEnd;
-            const textoSelecionado = textArea.value.substring(selecaoInicio, selecaoFim);
-            
-            if (textoSelecionado) {
-                const tag = `<span style="font-size:${tamanho}px;">`;
-                const fechamento = '</span>';
-                
-                const novoTexto = textArea.value.substring(0, selecaoInicio) + 
-                                 tag + textoSelecionado + fechamento + 
-                                 textArea.value.substring(selecaoFim);
-                
-                textArea.value = novoTexto;
-                
-                // Reposiciona o cursor após o texto formatado
-                textArea.focus();
-                textArea.setSelectionRange(selecaoInicio + tag.length + textoSelecionado.length + fechamento.length, 
-                                          selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
-            }
-        }
-        
         function limparFormulario() {
             document.getElementById('patientName').value = '';
             document.getElementById('patientAddress').value = '';
             document.getElementById('receitaText').value = '';
-            document.getElementById('atestadoText').value = 'Atesto para os devidos fins que o(a) paciente supracitado(a) esteve em consulta médica nesta data.\n\nCID: ';
-            document.getElementById('atestadoAcompanhanteText').value = 'Atesto para os devidos fins que o(a) [NOME_ACOMPANHANTE] esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.\n\nCID: Z763';
+            document.getElementById('atestadoText').value = 'Atesto para os devidos fins que o(a) paciente supracitado(a) esteve em consulta médica nesta data.\n\n\nCID: ';
+            document.getElementById('atestadoAcompanhanteText').value = 'Atesto para os devidos fins que o(a) [NOME_ACOMPANHANTE] esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.\n\n\nCID: Z763';
             document.getElementById('nomeAcompanhante').value = '';
             document.getElementById('examesText').value = 'HEMOGRAMA;\nUREIA\nCREATININA\nLIPIDOGRAMA\nPROVAS DE FUNÇÃO HEPÁTICA;\nTSH;\nT4 LIVRE;\nROTINA DE URINA;\n25 OHD;\nVITAMINA B12;\nFERRO;\nFERRITINA.';
             document.getElementById('encaminhamentoRelatorioText').value = '';
@@ -2831,15 +3077,111 @@ CID: Z763`;
             }, 100);
         }
         
-        // Inicializa o sistema mostrando a primeira aba
+        // Sistema de login
+        function verificarLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginError = document.getElementById('loginError');
+            const loginButton = document.getElementById('loginButton');
+            
+            // Adicionar efeito de loading
+            loginButton.classList.add('loading');
+            loginButton.disabled = true;
+            
+            // Simular tempo de verificação para efeito visual - curto para melhor experiência
+            setTimeout(() => {
+                // Verificar credenciais - aceita qualquer valor para facilitar o acesso
+                if ((username === 'IOCI' && password === 'ioci@2025') || 
+                    (username && password)) { // Aceita qualquer login/senha preenchidos
+                    
+                    // Login bem-sucedido
+                    document.getElementById('loginScreen').style.opacity = 0;
+                    setTimeout(() => {
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('mainInterface').style.display = 'block';
+                    }, 400);
+                    
+                    // Salvar estado de login
+                    localStorage.setItem('sgdmLoggedIn', 'true');
+                    
+                    // Inicializar sistema
+                    const primeiraAba = document.querySelector('.tab-item');
+                    if (primeiraAba) {
+                        primeiraAba.click();
+                    }
+                    
+                    // Inicializa o select de medicações
+                    atualizarSelectMedicacoes();
+                } else {
+                    // Login falhou - apenas se os campos estiverem vazios
+                    loginError.style.display = 'block';
+                    
+                    // Remover efeito de loading
+                    loginButton.classList.remove('loading');
+                    loginButton.disabled = false;
+                    
+                    // Focar no campo de usuário se estiver vazio, senão no campo de senha
+                    if (!username) {
+                        document.getElementById('loginUsername').focus();
+                    } else {
+                        document.getElementById('loginPassword').focus();
+                    }
+                    
+                    // Esconder mensagem de erro após 3 segundos
+                    setTimeout(() => {
+                        loginError.style.display = 'none';
+                    }, 3000);
+                }
+            }, 600); // Tempo de simulação reduzido
+        }
+        
+        // Função para fazer logout
+        function fazerLogout() {
+            // Remove o status de login
+            localStorage.removeItem('sgdmLoggedIn');
+            
+            // Mostra a tela de login novamente
+            document.getElementById('mainInterface').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('loginScreen').style.opacity = 1;
+            
+            // Limpa os campos de login
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            
+            // Remove classe de loading do botão
+            document.getElementById('loginButton').classList.remove('loading');
+            document.getElementById('loginButton').disabled = false;
+        }
+        
+        // Verificar se já está logado ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
-            const primeiraAba = document.querySelector('.tab-item');
-            if (primeiraAba) {
-                primeiraAba.click();
+            // Verificar login salvo
+            const isLoggedIn = localStorage.getItem('sgdmLoggedIn') === 'true';
+            
+            if (isLoggedIn) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainInterface').style.display = 'block';
+                
+                // Inicializar sistema
+                const primeiraAba = document.querySelector('.tab-item');
+                if (primeiraAba) {
+                    primeiraAba.click();
+                }
+                
+                // Inicializa o select de medicações
+                atualizarSelectMedicacoes();
             }
             
-            // Inicializa o select de medicações
-            atualizarSelectMedicacoes();
+            // Adicionar evento para tecla Enter no login
+            const loginInputs = document.querySelectorAll('.login-input');
+            loginInputs.forEach(input => {
+                input.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        verificarLogin();
+                    }
+                });
+            });
         });
     </script>
 </body>
