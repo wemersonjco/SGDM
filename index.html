@@ -182,6 +182,7 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
+            position: relative; /* Adicionado para posicionar o botão de logout */
         }
         
         .logo-container {
@@ -297,7 +298,7 @@
             border-color: #3498db;
         }
         
-        /* Botão de sair */
+        /* Botão de sair - Modificado para ficar no canto superior direito */
         .logout-button {
             padding: 8px 16px;
             background-color: #e74c3c;
@@ -311,7 +312,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-right: 15px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
         
         .logout-button:hover {
@@ -806,12 +809,9 @@
             line-height: 1.1;
         }
         
-        /* Endereço do Hospital Metropolitano */
+        /* Endereço do Hospital Metropolitano - RODAPÉS REMOVIDOS */
         #footerMetropolitano, #footerMetropolitanoAdicional {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            margin-top: 40px;
+            display: none !important;
         }
         
         /* Estilos adicionais para RECEITUÁRIO CONTROLADO */
@@ -845,11 +845,21 @@
             background-color: #219d54;
         }
         
-        /* Documento adicional */
+        /* Documento adicional - Ajustado espaçamento */
         #documentoAdicional {
-            margin-top: 40px;
+            margin-top: 20px; /* Reduzido de 40px para 20px */
             border-top: 2px dashed #aaa;
             padding-top: 20px;
+        }
+        
+        /* Reduzido espaçamento entre logo e conteúdo no documento adicional */
+        #logoMetropolitanoAdicional {
+            margin-bottom: 5px !important;
+        }
+        
+        #documentTitleAdicional {
+            margin-top: 5px !important;
+            margin-bottom: 5px !important;
         }
         
         /* Aviso de documento adicional */
@@ -959,6 +969,13 @@
                 display: block !important;
                 margin-top: 0 !important;
                 position: relative !important;
+                margin-bottom: 5px !important; /* Reduzido o espaçamento após o logo */
+            }
+            
+            /* Ajuste para título do documento adicional */
+            #documentTitleAdicional {
+                margin-top: 5px !important;
+                margin-bottom: 5px !important;
             }
             
             /* Remover elementos que podem causar espaço em branco */
@@ -986,20 +1003,8 @@
                 line-height: 1.5 !important;
             }
             
-            /* Tratamento especial para o endereço do Hospital Metropolitano */
+            /* Tratamento especial para o endereço do Hospital Metropolitano - REMOVIDO */
             #footerMetropolitano, #footerMetropolitanoAdicional {
-                position: fixed;
-                bottom: 1.5cm;
-                left: 0;
-                right: 0;
-                display: block !important;
-                margin-top: 5mm !important;
-                padding-top: 0 !important;
-            }
-            
-            /* Ocultar o endereço no documento de orientações */
-            body.tipo-orientacoes #footerMetropolitano,
-            body.tipo-orientacoes #footerMetropolitanoAdicional {
                 display: none !important;
             }
             
@@ -1191,6 +1196,16 @@
                   </text>
                 </svg>
             </div>
+            
+            <!-- Botão de Sair (reposicionado para canto superior direito) -->
+            <button type="button" class="logout-button" onclick="fazerLogout()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Sair
+            </button>
         </div>
         
         <!-- Seção de Instituição e Paciente -->
@@ -1228,21 +1243,12 @@
                 <li class="tab-item" onclick="mostrarDocumento('orientacoes')">Orientações</li>
                 <li class="tab-item" onclick="mostrarDocumento('sadt')">SADT</li>
             </ul>
-            
-            <!-- Botão de Sair -->
-            <button type="button" class="logout-button" onclick="fazerLogout()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                Sair
-            </button>
         </div>
         
         <!-- Botão de Configurações -->
         <button type="button" class="config-menu-button" onclick="abrirConfiguracoes()">⚙️</button>
-<!-- Formulários para diferentes tipos de documentos -->
+        
+        <!-- Formulários para diferentes tipos de documentos -->
         <!-- Receita Médica e Receituário Controlado -->
         <div id="receitaForm" class="hidden">
             <div class="form-group">
@@ -1497,7 +1503,8 @@ FERRITINA.</textarea>
                 <p><strong>Nota:</strong> Estes formulários são PDFs editáveis que permitem o preenchimento digital dos campos.</p>
             </div>
         </div>
-<!-- Campo personalizado para dados do médico -->
+
+        <!-- Campo personalizado para dados do médico -->
         <div class="form-group">
             <label for="doctorData"><strong>Dados do Médico (opcional):</strong></label>
             <textarea id="doctorData" placeholder="Ex: Dr. João Silva&#10;CIRURGIA GERAL&#10;CRM XX 12345" class="texto-justificado" rows="3"></textarea>
@@ -1527,7 +1534,7 @@ FERRITINA.</textarea>
         
         <div id="idBoxes" class="id-boxes"></div>
         
-        <!-- Rodapé para Hospital Metropolitano -->
+        <!-- Rodapé para Hospital Metropolitano (Removido) -->
         <div id="footerMetropolitano" class="hidden">
             Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187<br>
             Telefone: (65) 3388-0600
@@ -1555,7 +1562,7 @@ FERRITINA.</textarea>
             <!-- Assinatura personalizada (opcional) para documento adicional -->
             <p id="assinaturaAdicional" class="signature hidden"></p>
             
-            <!-- Rodapé para Hospital Metropolitano (adicional) -->
+            <!-- Rodapé para Hospital Metropolitano (adicional) (Removido) -->
             <div id="footerMetropolitanoAdicional" class="hidden">
                 Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187<br>
                 Telefone: (65) 3388-0600
@@ -1618,7 +1625,8 @@ FERRITINA.</textarea>
                     </div>
                 </div>
             </div>
-<!-- Conteúdo da aba de Modelos de Texto -->
+            
+            <!-- Conteúdo da aba de Modelos de Texto -->
             <div id="templatesContent" class="config-tab-content">
                 <h3>Gerenciar Modelos de Texto</h3>
                 <button type="button" class="add-new-button" onclick="mostrarFormularioAddModelo()">+ Adicionar Novo Modelo</button>
@@ -1645,7 +1653,8 @@ FERRITINA.</textarea>
                     </div>
                     <div class="form-group">
                         <label for="newTemplateName">Nome do Modelo:</label>
-                        <input type="text" id="newTemplateName" placeholder="Ex: NOVO MODELO">
+                        <input type="text" id="newTemplateName" placeholder="Ex: NOVO MODELO
+">
                     </div>
                     <div class="form-group">
                         <label for="newTemplateContent">Conteúdo:</label>
@@ -1860,7 +1869,8 @@ FERRITINA.</textarea>
                                           selecaoInicio + tag.length + textoSelecionado.length + fechamento.length);
             }
         }
-// Modelos de textos pré-definidos
+
+        // Modelos de textos pré-definidos
         const modelosTexto = {
             receita: {
                 pos_op_gastro: `1)      DIVENA 40 mg ------------------------------------- 06 MESES
@@ -2087,7 +2097,8 @@ Estamos a disposição para esclarecer suas dúvidas.`
                 document.getElementById('sadtForm').classList.remove('hidden');
             }
         }
-// Função para adicionar medicamento
+
+        // Função para adicionar medicamento
         function adicionarMedicamento() {
             const medicamentosSelect = document.getElementById('medicamentos');
             const receitaText = document.getElementById('receitaText');
@@ -2650,11 +2661,8 @@ CID: Z763`;
                 // Sempre exibe o logotipo no documento adicional para o Hospital Metropolitano
                 logoMetropolitanoAdicional.classList.remove('hidden');
                 
-                if (documentoAdicionalTipo !== 'orientacoes') {
-                    footerMetropolitanoAdicional.classList.remove('hidden');
-                } else {
-                    footerMetropolitanoAdicional.classList.add('hidden');
-                }
+                // Sempre oculta o rodapé (conforme solicitado)
+                footerMetropolitanoAdicional.classList.add('hidden');
             } else {
                 logoMetropolitanoAdicional.classList.add('hidden');
                 footerMetropolitanoAdicional.classList.add('hidden');
@@ -2691,7 +2699,7 @@ CID: Z763`;
                 documentContentAdicional.innerHTML = `<strong>Nome do Paciente:</strong> ${nomePaciente}<br><br>${textoOrientacoes}<br><br>`;
                 
                 // Posiciona a data duas linhas abaixo do conteúdo
-                documentDateAdicional.style.marginTop = '20px';
+                documentDateAdicional.style.marginTop = '10px'; // Reduzido para melhor aproveitamento do espaço
                 
                 // Reposiciona a data após o conteúdo
                 const dateParent = documentDateAdicional.parentNode;
@@ -2703,6 +2711,12 @@ CID: Z763`;
                     dateParent.appendChild(documentDateAdicional);
                 }
             }
+            
+            // Ajustes de espaçamento para o documento adicional
+            documentoAdicional.style.marginTop = '20px';
+            logoMetropolitanoAdicional.style.marginBottom = '5px';
+            documentTitleAdicional.style.marginTop = '5px';
+            documentTitleAdicional.style.marginBottom = '5px';
             
             // Mostra o documento adicional
             documentoAdicional.classList.remove('hidden');
@@ -2752,16 +2766,12 @@ CID: Z763`;
             
             // Configura elementos específicos da instituição
             if (instituicao === 'metropolitano') {
-                // Hospital Metropolitano: mostra logo e rodapé
+                // Hospital Metropolitano: mostra logo mas REMOVE rodapé (conforme solicitado)
                 logoMetropolitano.classList.remove('hidden');
                 documentoGerado.classList.add('metropolitano-document');
                 
-                // Oculta o rodapé para o documento de orientações
-                if (tipoDocumentoAtual === 'orientacoes') {
-                    footerMetropolitano.classList.add('hidden');
-                } else {
-                    footerMetropolitano.classList.remove('hidden');
-                }
+                // Sempre oculta o rodapé para todos os documentos
+                footerMetropolitano.classList.add('hidden');
             } else {
                 // Clínica IOCI: esconde logo e rodapé
                 logoMetropolitano.classList.add('hidden');
@@ -2977,6 +2987,9 @@ CID: Z763`;
         
         // Função para limpar formulário
         function limparFormulario() {
+            // Guarda os dados do médico antes de limpar
+            const dadosMedico = document.getElementById('doctorData').value;
+            
             document.getElementById('patientName').value = '';
             document.getElementById('patientAddress').value = '';
             document.getElementById('receitaText').value = '';
@@ -2986,7 +2999,8 @@ CID: Z763`;
             document.getElementById('examesText').value = 'HEMOGRAMA;\nUREIA\nCREATININA\nLIPIDOGRAMA\nPROVAS DE FUNÇÃO HEPÁTICA;\nTSH;\nT4 LIVRE;\nROTINA DE URINA;\n25 OHD;\nVITAMINA B12;\nFERRO;\nFERRITINA.';
             document.getElementById('encaminhamentoRelatorioText').value = '';
             document.getElementById('orientacoesText').value = '';
-            document.getElementById('doctorData').value = '';
+            // NÃO limpa os dados do médico
+            
             document.getElementById('documentoGerado').classList.add('hidden');
             document.getElementById('documentoAdicional').classList.add('hidden');
             document.getElementById('additionalDocNotification').style.display = 'none';
@@ -3077,59 +3091,58 @@ CID: Z763`;
             }, 100);
         }
         
-        // Sistema de login
-        // Sistema de login
-function verificarLogin() {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-    const loginError = document.getElementById('loginError');
-    const loginButton = document.getElementById('loginButton');
-    
-    // Adicionar efeito de loading
-    loginButton.classList.add('loading');
-    loginButton.disabled = true;
-    
-    // Simular tempo de verificação para efeito visual - curto para melhor experiência
-    setTimeout(() => {
-        // Verificar credenciais - apenas aceita as credenciais específicas
-        if (username === 'IOCI' && password === 'ioci@2025') {
-            // Login bem-sucedido
-            document.getElementById('loginScreen').style.opacity = 0;
+        // Sistema de login - Função para verificar login
+        function verificarLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginError = document.getElementById('loginError');
+            const loginButton = document.getElementById('loginButton');
+            
+            // Adicionar efeito de loading
+            loginButton.classList.add('loading');
+            loginButton.disabled = true;
+            
+            // Simular tempo de verificação para efeito visual - curto para melhor experiência
             setTimeout(() => {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainInterface').style.display = 'block';
-            }, 400);
-            
-            // Salvar estado de login
-            localStorage.setItem('sgdmLoggedIn', 'true');
-            
-            // Inicializar sistema
-            const primeiraAba = document.querySelector('.tab-item');
-            if (primeiraAba) {
-                primeiraAba.click();
-            }
-            
-            // Inicializa o select de medicações
-            atualizarSelectMedicacoes();
-        } else {
-            // Login falhou
-            loginError.textContent = "Usuário ou senha incorretos.";
-            loginError.style.display = 'block';
-            
-            // Remover efeito de loading
-            loginButton.classList.remove('loading');
-            loginButton.disabled = false;
-            
-            // Focar no campo de usuário
-            document.getElementById('loginUsername').focus();
-            
-            // Esconder mensagem de erro após 3 segundos
-            setTimeout(() => {
-                loginError.style.display = 'none';
-            }, 3000);
+                // Verificar credenciais - apenas aceita as credenciais específicas
+                if (username === 'IOCI' && password === 'ioci@2025') {
+                    // Login bem-sucedido
+                    document.getElementById('loginScreen').style.opacity = 0;
+                    setTimeout(() => {
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('mainInterface').style.display = 'block';
+                    }, 400);
+                    
+                    // Salvar estado de login
+                    localStorage.setItem('sgdmLoggedIn', 'true');
+                    
+                    // Inicializar sistema
+                    const primeiraAba = document.querySelector('.tab-item');
+                    if (primeiraAba) {
+                        primeiraAba.click();
+                    }
+                    
+                    // Inicializa o select de medicações
+                    atualizarSelectMedicacoes();
+                } else {
+                    // Login falhou
+                    loginError.textContent = "Usuário ou senha incorretos.";
+                    loginError.style.display = 'block';
+                    
+                    // Remover efeito de loading
+                    loginButton.classList.remove('loading');
+                    loginButton.disabled = false;
+                    
+                    // Focar no campo de usuário
+                    document.getElementById('loginUsername').focus();
+                    
+                    // Esconder mensagem de erro após 3 segundos
+                    setTimeout(() => {
+                        loginError.style.display = 'none';
+                    }, 3000);
+                }
+            }, 600); // Tempo de simulação reduzido
         }
-    }, 600); // Tempo de simulação reduzido
-}
         
         // Função para fazer logout
         function fazerLogout() {
