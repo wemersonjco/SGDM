@@ -1231,19 +1231,37 @@
         </div>
         
         <!-- Sistema de Abas -->
-        <div class="tabs-container">
-            <ul class="tabs">
-                <li class="tab-item" onclick="mostrarDocumento('receita')">Receita Médica</li>
-                <li class="tab-item" onclick="mostrarDocumento('receita_controlada')">Receituário Controlado</li>
-                <li class="tab-item" onclick="mostrarDocumento('atestado')">Atestado Médico</li>
-                <li class="tab-item" onclick="mostrarDocumento('atestado_acompanhante')">Atestado Acompanhante</li>
-                <li class="tab-item" onclick="mostrarDocumento('encaminhamento')">Encaminhamento</li>
-                <li class="tab-item" onclick="mostrarDocumento('relatorio')">Relatório Médico</li>
-                <li class="tab-item" onclick="mostrarDocumento('solicitacao_exames')">Solicitação de Exames</li>
-                <li class="tab-item" onclick="mostrarDocumento('orientacoes')">Orientações</li>
-                <li class="tab-item" onclick="mostrarDocumento('sadt')">SADT</li>
-            </ul>
-        </div>
+        <!-- Modificações nas abas de navegação -->
+<div class="tabs-container">
+    <ul class="tabs">
+        <li class="tab-item" onclick="mostrarDocumento('receita')">Receita Médica</li>
+        <li class="tab-item" onclick="mostrarDocumento('receita_controlada')">Receituário Controlado</li>
+        <li class="tab-item" onclick="mostrarDocumento('atestado')">Atestado Médico</li>
+        <li class="tab-item" onclick="mostrarDocumento('atestado_acompanhante')">Atestado Acompanhante</li>
+        <li class="tab-item" onclick="mostrarDocumento('encaminhamento')">Encaminhamento</li>
+        <li class="tab-item" onclick="mostrarDocumento('relatorio')">Relatório Médico</li>
+        <li class="tab-item" onclick="mostrarDocumento('solicitacao_exames')">Solicitação de Exames</li>
+        <li class="tab-item" onclick="mostrarDocumento('orientacoes')">Orientações</li>
+        <li class="tab-item" onclick="mostrarDocumento('sadt')">SADT</li>
+        <li class="tab-item" onclick="mostrarDocumento('outros')">OUTROS</li>
+    </ul>
+</div>
+
+<!-- Novo formulário para a aba OUTROS -->
+<div id="outrosForm" class="hidden">
+    <h3>Documentos Adicionais</h3>
+    <p>Selecione um dos documentos abaixo:</p>
+    
+    <div class="sadt-buttons">
+        <a href="https://wemersonjco.github.io/atb/" class="sadt-button" target="_blank">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjMDA5ODhjIiBkPSJNNjQgMzJDMjguNyAzMiAwIDYwLjcgMCA5NlY0MTZjMCAzNS4zIDI4LjcgNjQgNjQgNjRINDQ4YzM1LjMgMCA2NC0yOC43IDY0LTY0VjE5MmMwLTM1LjMtMjguNy02NC02NC02NEgxNzZjLTguOCAwLTE2LTcuMi0xNi0xNnMtNy4yLTE2LTE2LTE2SDY0ek0xMTIgMjA4YTMyIDMyIDAgMSAxIDY0IDAgYTMyIDMyIDAgMSAxIC02NCAwek03MiAzMjBhMjQgMjQgMCAxIDEgNDggMCAyNCAyNCAwIDEgMSAtNDggMHptNTYgMTQ0YTE2IDE2IDAgMSAxIDMyIDAgYTE2IDE2IDAgMSAxIC0zMiAwek0yNDAgMzA0YzAgOC44IDcuMiAxNiAxNiAxNkgzNTJjOC44IDAgMTYtNy4yIDE2LTE2cy03LjItMTYtMTYtMTZIMjU2Yy04LjggMC0xNiA3LjItMTYgMTZ6bTE2IDk2YzAtOC44LTcuMi0xNi0xNi0xNnMtMTYgNy4yLTE2IDE2djgwYzAgOC44IDcuMiAxNiAxNiAxNkgzMzZjOC44IDAgMTYtNy4yIDE2LTE2cy03LjItMTYtMTYtMTZIMjU2Vjk2em0xMjgtODhDMzY2LjMgOCAzNDkuNiAwIDMzMiAwSDMwNGMtMTcuNiAwLTM0LjMgOC01MC40IDE5LjZDMjQ3LjIgMjQgMjQwLjEgMzIgMjI0IDMySDEyOGMtMTcuNyAwLTMyIDE0LjMtMzIgMzJzMTQuMyAzMiAzMiAzMmg5NS4xbDItMS44YzYuNi02LjYgMTUuNi0xMi4xIDI2LjMtMTcuMkMzNjYuOSA0NC43IDM4NCA4IDE2IDI1Ni45Vjg2MmwtMTYuOC04LjlsLTQtMTMuN2MtMy43LTEyLjgtNi41LTI1LjgtOC40LTM4Ljg1YzMuODMgMi4xIDcuNzcgNC4yIDExLjg1IDYuMjVjOC41OCA0LjMgMTkuMDYgMC4zIDIzLjM2LTguMjVjNC4zLTguNTgtLjI2LTE5LjA2LTguODQtMjMuMzZDMjguMTkgMTk0LjQ1IDAgMTQyLjc0IDAgOTYgMCA0Mi45OCA0Mi45OCAwIDk2IDB6TTE3NiAxOTJjMC0yNi41MSAyMS40OS00OCA0OC00OGgyNDBjMjYuNSAwIDQ4IDIxLjQ5IDQ4IDQ4VjQxNmMwIDI2LjUtMjEuNSA0OC00OCA0OGgtMjQuOWwtNy4xIDQuNTRjLTQuNCAyLjgzLTkuNCA0LjgzLTE0LjcgNS45NGMtNS4zIDEuMTgtMTEuMiAxLjUyLTE3LjEgMS41Mi0yMy41MSAwLTQyLjk4LTkuNi01NS40LTI1LjE5Yy0xMi45Ny0xNi4yOS0xNy45NS0zOC44NS0xOC45NS02MC43NS0uMzYtNy44NzQtLjU1LTE1LjYtLjY1LTIzLjA2WiIvPjwvc3ZnPg==" alt="Antibiotics Icon">
+            <div class="sadt-button-content">
+                <div class="sadt-button-title">Laudo de Antimicrobianos</div>
+                <div class="sadt-button-description">Formulário para prescrição e justificativa de uso de antimicrobianos</div>
+            </div>
+        </a>
+    </div>
+</div>
         
         <!-- Botão de Configurações -->
         <button type="button" class="config-menu-button" onclick="abrirConfiguracoes()">⚙️</button>
@@ -1888,7 +1906,7 @@ Tomar 1 comprimido sublingual de 8/8 horas em caso de náuseas ou vômitos.
  
 USO INJETÁVEL:
  
-1)      VOLARE 40MG (ENOXAPARINA 40MG) ___________01 CAIXA
+1)      VOLARE 40MG ______________________________01 CAIXA
 APLICAR NO SUBCUTÂNEO 1 VEZ AO DIA  DURANTE 06 (SEIS) DIAS.
  
   
@@ -2040,63 +2058,67 @@ Estamos a disposição para esclarecer suas dúvidas.`
         let documentoAdicionalTipo = null;
         let documentoAdicionalModelo = null;
         
-        // Função para mostrar o documento selecionado
-        function mostrarDocumento(tipo) {
-            // Armazena o tipo de documento
-            tipoDocumentoAtual = tipo;
-            
-            // Atualiza visual das abas
-            const abas = document.querySelectorAll('.tab-item');
-            abas.forEach((aba, index) => {
-                aba.classList.remove('active');
-            });
-            
-            // Mapeamento de tipos para índices de abas
-            const tipoParaIndice = {
-                'receita': 0,
-                'receita_controlada': 1,
-                'atestado': 2,
-                'atestado_acompanhante': 3,
-                'encaminhamento': 4,
-                'relatorio': 5,
-                'solicitacao_exames': 6,
-                'orientacoes': 7,
-                'sadt': 8
-            };
-            
-            // Ativa a aba selecionada
-            const indice = tipoParaIndice[tipo];
-            if (indice !== undefined && abas[indice]) {
-                abas[indice].classList.add('active');
-            }
-            
-            // Esconde todos os formulários
-            document.getElementById('receitaForm').classList.add('hidden');
-            document.getElementById('atestadoForm').classList.add('hidden');
-            document.getElementById('atestadoAcompanhanteForm').classList.add('hidden');
-            document.getElementById('solicitacaoExamesForm').classList.add('hidden');
-            document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
-            document.getElementById('sadtForm').classList.add('hidden');
-            document.getElementById('documentoGerado').classList.add('hidden');
-            document.getElementById('orientacoesForm').classList.add('hidden');
-            
-            // Mostra o formulário correspondente
-            if (tipo === 'receita' || tipo === 'receita_controlada') {
-                document.getElementById('receitaForm').classList.remove('hidden');
-            } else if (tipo === 'atestado') {
-                document.getElementById('atestadoForm').classList.remove('hidden');
-            } else if (tipo === 'atestado_acompanhante') {
-                document.getElementById('atestadoAcompanhanteForm').classList.remove('hidden');
-            } else if (tipo === 'solicitacao_exames') {
-                document.getElementById('solicitacaoExamesForm').classList.remove('hidden');
-            } else if (tipo === 'encaminhamento' || tipo === 'relatorio') {
-                document.getElementById('encaminhamentoRelatorioForm').classList.remove('hidden');
-            } else if (tipo === 'orientacoes') {
-                document.getElementById('orientacoesForm').classList.remove('hidden');
-            } else if (tipo === 'sadt') {
-                document.getElementById('sadtForm').classList.remove('hidden');
-            }
-        }
+// Adicione isso à função mostrarDocumento() 
+function mostrarDocumento(tipo) {
+    // Armazena o tipo de documento
+    tipoDocumentoAtual = tipo;
+    
+    // Atualiza visual das abas
+    const abas = document.querySelectorAll('.tab-item');
+    abas.forEach((aba, index) => {
+        aba.classList.remove('active');
+    });
+    
+    // Mapeamento de tipos para índices de abas
+    const tipoParaIndice = {
+        'receita': 0,
+        'receita_controlada': 1,
+        'atestado': 2,
+        'atestado_acompanhante': 3,
+        'encaminhamento': 4,
+        'relatorio': 5,
+        'solicitacao_exames': 6,
+        'orientacoes': 7,
+        'sadt': 8,
+        'outros': 9  // Adicionada a nova aba "outros" como índice 9
+    };
+    
+    // Ativa a aba selecionada
+    const indice = tipoParaIndice[tipo];
+    if (indice !== undefined && abas[indice]) {
+        abas[indice].classList.add('active');
+    }
+    
+    // Esconde todos os formulários
+    document.getElementById('receitaForm').classList.add('hidden');
+    document.getElementById('atestadoForm').classList.add('hidden');
+    document.getElementById('atestadoAcompanhanteForm').classList.add('hidden');
+    document.getElementById('solicitacaoExamesForm').classList.add('hidden');
+    document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
+    document.getElementById('sadtForm').classList.add('hidden');
+    document.getElementById('documentoGerado').classList.add('hidden');
+    document.getElementById('orientacoesForm').classList.add('hidden');
+    document.getElementById('outrosForm').classList.add('hidden');  // Adicionada a ocultação do novo formulário
+    
+    // Mostra o formulário correspondente
+    if (tipo === 'receita' || tipo === 'receita_controlada') {
+        document.getElementById('receitaForm').classList.remove('hidden');
+    } else if (tipo === 'atestado') {
+        document.getElementById('atestadoForm').classList.remove('hidden');
+    } else if (tipo === 'atestado_acompanhante') {
+        document.getElementById('atestadoAcompanhanteForm').classList.remove('hidden');
+    } else if (tipo === 'solicitacao_exames') {
+        document.getElementById('solicitacaoExamesForm').classList.remove('hidden');
+    } else if (tipo === 'encaminhamento' || tipo === 'relatorio') {
+        document.getElementById('encaminhamentoRelatorioForm').classList.remove('hidden');
+    } else if (tipo === 'orientacoes') {
+        document.getElementById('orientacoesForm').classList.remove('hidden');
+    } else if (tipo === 'sadt') {
+        document.getElementById('sadtForm').classList.remove('hidden');
+    } else if (tipo === 'outros') {  // Adicionada a exibição do novo formulário
+        document.getElementById('outrosForm').classList.remove('hidden');
+    }
+}
 
         // Função para adicionar medicamento
         function adicionarMedicamento() {
@@ -2985,57 +3007,58 @@ CID: Z763`;
             }
         }
         
-        // Função para limpar formulário
-        function limparFormulario() {
-            // Guarda os dados do médico antes de limpar
-            const dadosMedico = document.getElementById('doctorData').value;
-            
-            document.getElementById('patientName').value = '';
-            document.getElementById('patientAddress').value = '';
-            document.getElementById('receitaText').value = '';
-            document.getElementById('atestadoText').value = 'Atesto para os devidos fins que o(a) paciente supracitado(a) esteve em consulta médica nesta data.\n\n\nCID: ';
-            document.getElementById('atestadoAcompanhanteText').value = 'Atesto para os devidos fins que o(a) [NOME_ACOMPANHANTE] esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.\n\n\nCID: Z763';
-            document.getElementById('nomeAcompanhante').value = '';
-            document.getElementById('examesText').value = 'HEMOGRAMA;\nUREIA\nCREATININA\nLIPIDOGRAMA\nPROVAS DE FUNÇÃO HEPÁTICA;\nTSH;\nT4 LIVRE;\nROTINA DE URINA;\n25 OHD;\nVITAMINA B12;\nFERRO;\nFERRITINA.';
-            document.getElementById('encaminhamentoRelatorioText').value = '';
-            document.getElementById('orientacoesText').value = '';
-            // NÃO limpa os dados do médico
-            
-            document.getElementById('documentoGerado').classList.add('hidden');
-            document.getElementById('documentoAdicional').classList.add('hidden');
-            document.getElementById('additionalDocNotification').style.display = 'none';
-            document.getElementById('printAdditionalButton').style.display = 'none';
-            
-            // Remove a classe 'active' de todas as abas
-            const abas = document.querySelectorAll('.tab-item');
-            abas.forEach(aba => aba.classList.remove('active'));
-            
-            // Esconde todos os formulários
-            document.getElementById('receitaForm').classList.add('hidden');
-            document.getElementById('atestadoForm').classList.add('hidden');
-            document.getElementById('atestadoAcompanhanteForm').classList.add('hidden');
-            document.getElementById('solicitacaoExamesForm').classList.add('hidden');
-            document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
-            document.getElementById('orientacoesForm').classList.add('hidden');
-            document.getElementById('sadtForm').classList.add('hidden');
-            
-            // Redefine os seletores de modelo
-            document.getElementById('modelosReceita').selectedIndex = 0;
-            document.getElementById('modelosAtestado').selectedIndex = 0;
-            document.getElementById('modelosEncaminhamento').selectedIndex = 0;
-            document.getElementById('modelosOrientacoes').selectedIndex = 0;
-            
-            // Limpa o tipo de documento atual
-            tipoDocumentoAtual = '';
-            documentoAdicionalTipo = null;
-            documentoAdicionalModelo = null;
-            
-            // Volta para a primeira aba (configuração padrão)
-            const primeiraAba = document.querySelector('.tab-item');
-            if (primeiraAba) {
-                primeiraAba.click();
-            }
-        }
+        // Modificar na função limparFormulario()
+function limparFormulario() {
+    // Guarda os dados do médico antes de limpar
+    const dadosMedico = document.getElementById('doctorData').value;
+    
+    document.getElementById('patientName').value = '';
+    document.getElementById('patientAddress').value = '';
+    document.getElementById('receitaText').value = '';
+    document.getElementById('atestadoText').value = 'Atesto para os devidos fins que o(a) paciente supracitado(a) esteve em consulta médica nesta data.\n\n\nCID: ';
+    document.getElementById('atestadoAcompanhanteText').value = 'Atesto para os devidos fins que o(a) [NOME_ACOMPANHANTE] esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.\n\n\nCID: Z763';
+    document.getElementById('nomeAcompanhante').value = '';
+    document.getElementById('examesText').value = 'HEMOGRAMA;\nUREIA\nCREATININA\nLIPIDOGRAMA\nPROVAS DE FUNÇÃO HEPÁTICA;\nTSH;\nT4 LIVRE;\nROTINA DE URINA;\n25 OHD;\nVITAMINA B12;\nFERRO;\nFERRITINA.';
+    document.getElementById('encaminhamentoRelatorioText').value = '';
+    document.getElementById('orientacoesText').value = '';
+    // NÃO limpa os dados do médico
+    
+    document.getElementById('documentoGerado').classList.add('hidden');
+    document.getElementById('documentoAdicional').classList.add('hidden');
+    document.getElementById('additionalDocNotification').style.display = 'none';
+    document.getElementById('printAdditionalButton').style.display = 'none';
+    
+    // Remove a classe 'active' de todas as abas
+    const abas = document.querySelectorAll('.tab-item');
+    abas.forEach(aba => aba.classList.remove('active'));
+    
+    // Esconde todos os formulários
+    document.getElementById('receitaForm').classList.add('hidden');
+    document.getElementById('atestadoForm').classList.add('hidden');
+    document.getElementById('atestadoAcompanhanteForm').classList.add('hidden');
+    document.getElementById('solicitacaoExamesForm').classList.add('hidden');
+    document.getElementById('encaminhamentoRelatorioForm').classList.add('hidden');
+    document.getElementById('orientacoesForm').classList.add('hidden');
+    document.getElementById('sadtForm').classList.add('hidden');
+    document.getElementById('outrosForm').classList.add('hidden'); // Adicionado
+    
+    // Redefine os seletores de modelo
+    document.getElementById('modelosReceita').selectedIndex = 0;
+    document.getElementById('modelosAtestado').selectedIndex = 0;
+    document.getElementById('modelosEncaminhamento').selectedIndex = 0;
+    document.getElementById('modelosOrientacoes').selectedIndex = 0;
+    
+    // Limpa o tipo de documento atual
+    tipoDocumentoAtual = '';
+    documentoAdicionalTipo = null;
+    documentoAdicionalModelo = null;
+    
+    // Volta para a primeira aba (configuração padrão)
+    const primeiraAba = document.querySelector('.tab-item');
+    if (primeiraAba) {
+        primeiraAba.click();
+    }
+}
         
         // Função para imprimir documento
         function imprimirDocumento() {
