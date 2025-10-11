@@ -1426,24 +1426,47 @@ CID: Z763</textarea>
         </div>
 
         <!-- Solicitação de Exames -->
-        <div id="solicitacaoExamesForm" class="hidden">
-            <div class="form-group">
-                <label for="examesText">Exames:</label>
-                <div class="formatting-toolbar">
-                    <button type="button" onclick="aplicarFormatacao('examesText', 'bold')" class="bold">B</button>
-                    <button type="button" onclick="aplicarFormatacao('examesText', 'italic')" class="italic">I</button>
-                    <select onchange="alterarTamanhoFonte('examesText', this.value)">
-                        <option value="">Tamanho da fonte</option>
-                        <option value="9">Pequeno</option>
-                        <option value="11" selected>Normal</option>
-                        <option value="13">Médio</option>
-                        <option value="16">Grande</option>
-                    </select>
-                </div>
-                <textarea id="examesText" class="texto-justificado">HEMOGRAMA;
-UREIA
-CREATININA
-LIPIDOGRAMA
+<div id="solicitacaoExamesForm" class="hidden">
+    <div class="form-group">
+        <label for="examesSelect">Exames Disponíveis:</label>
+        <select id="examesSelect">
+            <option value="">Selecione um exame...</option>
+            <option value="40202615 - ENDOSCOPIA DIGESTIVA ALTA COM BIOPSIA E TESTE DE UREASE (PESQUISA HELICOBACTER PYLORI)">40202615 - ENDOSCOPIA DIGESTIVA ALTA COM BIOPSIA E TESTE DE UREASE</option>
+            <option value="40901122 - US - ABDOME TOTAL (ABDOME SUPERIOR, RINS, BEXIGA, AORTA, VEIA CAVA INFERIOR E ADRENAIS)">40901122 - US - ABDOME TOTAL</option>
+            <option value="40901203 - US - ORGAOS SUPERFICIAIS (TIREOIDE OU ESCROTO OU PENIS OU CRANIO)">40901203 - US - ORGAOS SUPERFICIAIS</option>
+            <option value="40901483 - DOPPLER COLORIDO VENOSO DE MEMBRO INFERIOR - UNILATERAL">40901483 - DOPPLER COLORIDO VENOSO DE MEMBRO INFERIOR - UNILATERAL</option>
+            <option value="40901548 - DOPPLER CONVENCIONAL ORGAO/ESTRUTURA ISOLADA">40901548 - DOPPLER CONVENCIONAL ORGAO/ESTRUTURA ISOLADA</option>
+            <option value="40201082 - COLONOSCOPIA (INCLUI A RETOSSIGMOIDOSCOPIA)">40201082 - COLONOSCOPIA</option>
+            <option value="40201104 - ECOENDOSCOPIA ALTA">40201104 - ECOENDOSCOPIA ALTA</option>
+            <option value="40808130 - DENSITOMETRIA OSSEA - ROTINA: COLUNA E FEMUR (OU DOIS SEGMENTOS)">40808130 - DENSITOMETRIA OSSEA - ROTINA</option>
+            <option value="41301048 - BIOIMPEDANCIOMETRIA (AMBULATORIAL) EXAME">41301048 - BIOIMPEDANCIOMETRIA</option>
+            <option value="41101359 - HIDRO-RM (COLANGIO-RM OU URO-RM OU MIELO-RM OU SIALO-RM OU CISTOGRAFIA POR RM)">41101359 - HIDRO-RM</option>
+            <option value="40202240 - ECOENDOSCOPIA COM PUNCAO POR AGULHA">40202240 - ECOENDOSCOPIA COM PUNCAO POR AGULHA</option>
+            <option value="40805026 - RX - TORAX - 2 INCIDENCIAS">40805026 - RX - TORAX - 2 INCIDENCIAS</option>
+            <option value="40101010 - ECG CONVENCIONAL DE ATE 12 DERIVACOES">40101010 - ECG CONVENCIONAL DE ATE 12 DERIVACOES</option>
+            <option value="40105075 - PROVA DE FUNCAO PULMONAR COMPLETA (OU ESPIROMETRIA)">40105075 - PROVA DE FUNCAO PULMONAR COMPLETA</option>
+        </select>
+        <button type="button" onclick="adicionarExame()" class="add-button">Adicionar Exame</button>
+    </div>
+    <div class="form-group">
+        <label for="examesText">Exames:</label>
+        <div class="formatting-toolbar">
+            <button type="button" onclick="aplicarFormatacao('examesText', 'bold')" class="bold">B</button>
+            <button type="button" onclick="aplicarFormatacao('examesText', 'italic')" class="italic">I</button>
+            <select onchange="alterarTamanhoFonte('examesText', this.value)">
+                <option value="">Tamanho da fonte</option>
+                <option value="9">Pequeno</option>
+                <option value="11" selected>Normal</option>
+                <option value="13">Médio</option>
+                <option value="16">Grande</option>
+            </select>
+        </div>
+        <textarea id="examesText" class="texto-justificado">HEMOGRAMA;
+UREIA;
+ACIDO URICO;
+HEMOGLOBINA GLICADA;
+CREATININA;
+LIPIDOGRAMA;
 PROVAS DE FUNÇÃO HEPÁTICA;
 TSH;
 T4 LIVRE;
@@ -1452,8 +1475,8 @@ ROTINA DE URINA;
 VITAMINA B12;
 FERRO;
 FERRITINA.</textarea>
-            </div>
-        </div>
+    </div>
+</div>
 
         <!-- Encaminhamento e Relatório Médico -->
         <div id="encaminhamentoRelatorioForm" class="hidden">
@@ -2184,6 +2207,21 @@ function mostrarDocumento(tipo) {
             }
         }
         
+// Função para adicionar exame
+function adicionarExame() {
+    const examesSelect = document.getElementById('examesSelect');
+    const examesText = document.getElementById('examesText');
+    
+    if (examesSelect.selectedIndex > 0) {
+        const exame = examesSelect.value;
+        
+        // Adiciona o exame com ponto-e-vírgula no final
+        examesText.value += `${exame};\n`;
+        
+        // Reseta o select para a opção padrão
+        examesSelect.selectedIndex = 0;
+    }
+}
         // Função para atualizar nome do acompanhante
         function atualizarNomeAcompanhante() {
             const nomeAcompanhante = document.getElementById('nomeAcompanhante').value;
@@ -3104,6 +3142,7 @@ function limparFormulario() {
     document.getElementById('modelosAtestado').selectedIndex = 0;
     document.getElementById('modelosEncaminhamento').selectedIndex = 0;
     document.getElementById('modelosOrientacoes').selectedIndex = 0;
+document.getElementById('examesSelect').selectedIndex = 0; // Reseta o select de exames
     
     // Limpa o tipo de documento atual
     tipoDocumentoAtual = '';
