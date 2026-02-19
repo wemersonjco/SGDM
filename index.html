@@ -122,7 +122,7 @@ main{max-width:900px;margin:0 auto;padding:24px 16px 80px}
 <div class="form-card">
     <div class="section section-bg" id="sectionPatient">
         <div class="section-title"><span class="material-symbols-outlined">badge</span> Identificação do Paciente</div>
-        <div class="form-grid col-1" style="margin-bottom:16px"><div class="form-group"><label>Instituição</label><select id="selInstituicao"><option value="">Selecione a instituição</option><option value="metro">Hospital Metropolitano</option><option value="ioci">Clínica IOCI</option></select></div></div>
+        <div class="form-grid col-1" style="margin-bottom:16px"><div class="form-group"><label>Instituição</label><select id="selInstituicao"><option value="metro" selected>Hospital Metropolitano</option><option value="ioci">Clínica IOCI</option></select></div></div>
         <div class="form-grid">
             <div class="form-group"><label>Nome do Paciente</label><input type="text" id="nomePaciente" placeholder="Nome completo"></div>
             <div class="form-group"><label>Endereço do Paciente</label><input type="text" id="enderecoPaciente" placeholder="Rua, número, bairro"></div>
@@ -162,7 +162,7 @@ main{max-width:900px;margin:0 auto;padding:24px 16px 80px}
                     <option>DIPIRONA GOTAS - Tomar 40 gotas de 6/6h por 03 dias, após em caso de dor ou febre</option>
                     <option>DIVENA OU INILOK - TOMAR 01 CP EM JEJUM POR 8 SEMANAS</option>
                     <option>DIVENA OU INILOK 40MG - 06 MESES conforme protocolo</option>
-                    <option>ESOGASTRO IBP 14 - Tomar conforme cartela (azul claro manhã/azul escuro noite) por 14 dias</option>
+                    <option value="ESOGASTRO_IBP_14">ESOGASTRO IBP 14</option>
                     <option>FLAGASS GOTAS - Tomar 40 gotas de 8/8h por 03 dias, após em caso de gases</option>
                     <option>FLAGYL OU METRONIDAZOL 400 MG - TOMAR 01 CP DE 8/8H POR 7 DIAS</option>
                     <option>FLORATIL 200 MG - TOMAR 01 CP DE 12/12H POR 05 DIAS</option>
@@ -181,7 +181,7 @@ main{max-width:900px;margin:0 auto;padding:24px 16px 80px}
                     <option>NAUTEX ODG 8 MG - COLOCAR O CONTEUDO DE UM SACHE NA LINGUA DE 8/8H SE NAUSEAS OU VOMITOS</option>
                     <option>NEUTROFER 500 MG - TOMAR 01 CP ANTES DO ALMOÇO E JANTAR POR 60 DIAS</option>
                     <option>NIMESULIDA 100 MG - TOMAR 01 CP DE 12/12H POR 03 DIAS</option>
-                    <option>NORIPURUM 100 MG/5ML - 8 AMP - Diluir 02 ampolas em 200ml de SF0,9% e administrar EV em 1 hora, em dias alternados</option>
+                    <option>NORIPURUM 100 MG/5ML-----------8 AMP - Diluir 02 ampolas em 200ml de SF0,9% e administrar EV em 1 hora, em dias alternados. Medicação de uso intra-hospitalar ou em centro de infusão obrigatoriamente.</option>
                     <option>OMEPRAZOL 20 MG - TOMAR 01 CP PELA MANHÃ EM JEJUM POR 28 DIAS</option>
                     <option>ONDANSETRONA 8 MG - TOMAR 01 CP DE 8/8H SE NÁUSEAS OU VÔMITOS</option>
                     <option>PANTOGAR - TOMAR 01 CP 3X AO DIA POR 03 MESES</option>
@@ -210,7 +210,7 @@ main{max-width:900px;margin:0 auto;padding:24px 16px 80px}
             <div class="section-title"><span class="material-symbols-outlined">medication</span> Prescrição Controlada</div>
             <div class="med-row">
                 <div class="form-group"><label>Via de Administração</label><select id="viaAdminCtrl"><option value="">Selecione...</option><option value="USO ORAL">USO ORAL</option><option value="USO INTRAMUSCULAR">USO INTRAMUSCULAR</option><option value="USO ENDOVENOSO">USO ENDOVENOSO</option><option value="USO SUBCUTÂNEO">USO SUBCUTÂNEO</option></select></div>
-                <div class="form-group"><label>Medicações</label><select id="medSelectCtrl"><option value="">Selecione...</option><option>TRAMADOL 50MG - Tomar 01 cp de 8/8h se dor forte</option><option>CODEÍNA 30MG - Tomar 01 cp de 6/6h se dor</option></select></div>
+                <div class="form-group"><label>Medicações</label><select id="medSelectCtrl"><option value="">Selecione...</option><option>CIPRO OU FORITUS 500 MG - TOMAR 01 CP DE 12/12H POR 7 DIAS</option><option>CIPROFLOXACINO 500 MG - TOMAR 01 CP DE 12/12H POR 7 DIAS</option><option>CODEÍNA 30MG - Tomar 01 cp de 6/6h se dor</option><option>FLAGYL OU METRONIDAZOL 400 MG - TOMAR 01 CP DE 8/8H POR 7 DIAS</option><option>METRONIDAZOL 400 MG - TOMAR 01 CP DE 8/8H POR 7 DIAS</option><option>TRAMADOL 50MG - Tomar 01 cp de 8/8h se dor forte</option></select></div>
                 <button class="btn-add" onclick="addMedCtrl()"><span class="material-symbols-outlined">add_circle</span> Adicionar</button>
             </div>
             <div class="med-list" id="medListCtrl"></div>
@@ -227,7 +227,7 @@ main{max-width:900px;margin:0 auto;padding:24px 16px 80px}
 
 CID: Z763</textarea></div></div></div>
     <!-- TAB: ENCAMINHAMENTO -->
-    <div class="tab-content" id="tab-encaminhamento"><div class="section"><div class="predefined-row"><div class="section-title"><span class="material-symbols-outlined">edit_note</span> Encaminhamento</div><div class="predefined-select-wrap"><label>Textos pré-definidos:</label><select id="predefEncaminhamento" onchange="loadPredef('encaminhamento')"><option value="">Nenhum</option><option value="cirurgia_reparadora">CIRURGIA REPARADORA</option><option value="pre_op_bariatrico">PRÉ-OP BARIÁTRICO</option><option value="renovacao_risco">RENOVAÇÃO RISCO BARIÁTRICA</option><option value="risco_colecistectomia">RISCO COLECISTECTOMIA</option><option value="risco_hernioplastia">RISCO HERNIOPLASTIA</option><option value="solic_colecistectomia">SOLIC. COLECISTECTOMIA</option><option value="solic_hernioplastia">SOLIC. HERNIOPLASTIA</option></select></div></div><div class="form-group"><textarea id="encaminhamentoText" placeholder="Selecione um modelo ou digite..."></textarea></div></div></div>
+    <div class="tab-content" id="tab-encaminhamento"><div class="section"><div class="predefined-row"><div class="section-title"><span class="material-symbols-outlined">edit_note</span> Encaminhamento</div><div class="predefined-select-wrap"><label>Textos pré-definidos:</label><select id="predefEncaminhamento" onchange="loadPredef('encaminhamento')"><option value="">Nenhum</option><option value="cirurgia_reparadora">CIRURGIA REPARADORA</option><option value="pre_op_bariatrico">PRÉ-OP BARIÁTRICO</option><option value="renovacao_risco">RENOVAÇÃO RISCO BARIÁTRICA</option><option value="risco_colecistectomia">RISCO COLECISTECTOMIA</option><option value="risco_hernioplastia">RISCO HERNIOPLASTIA</option><option value="solic_colecistectomia">SOLIC. COLECISTECTOMIA</option><option value="solic_hernioplastia">SOLIC. HERNIOPLASTIA</option></select></div></div><div class="form-group"><textarea id="encaminhamentoText" placeholder="Selecione um modelo ou digite..."></textarea></div><div class="adicional-badge" id="badgeAdicionalEnc"><span class="material-symbols-outlined" style="font-size:18px;color:#16a34a">check_circle</span> Orientações PRÉ-OPERATÓRIO serão impressas automaticamente junto com este encaminhamento.</div></div></div>
     <!-- TAB: RELATÓRIO -->
     <div class="tab-content" id="tab-relatorio"><div class="section"><div class="section-title"><span class="material-symbols-outlined">edit_note</span> Relatório</div><div class="form-group"><textarea id="relatorioText" placeholder="Digite o relatório médico..."></textarea></div></div></div>
     <!-- TAB: EXAMES -->
@@ -559,13 +559,27 @@ function selectDocType(btn, type) {
     document.getElementById('sectionPatient').style.display = isAdmin ? 'none' : '';
 }
 
+// Special medications with multi-line text
+const MEDS_SPECIAL = {
+    'ESOGASTRO_IBP_14': {
+        nome: 'ESOGASTRO IBP 14',
+        texto: 'ESOGASTRO IBP 14\nPELA MANHÃ: Tome 2 cápsulas de amoxicilina, 1 comprimido de claritromicina e 1 comprimido de esomeprazol de uma só vez em jejum. Engolir um a um, no mesmo horário.\nÀ NOITE: Tome 2 cápsulas de amoxicilina, 1 comprimido de claritromicina e 1 comprimido de esomeprazol de uma só vez antes do jantar. Engolir um a um, no mesmo horário.\nApós os 14 dias iniciais, tome 1 comprimido de esomeprazol em jejum pela manhã por mais 14 dias.'
+    }
+};
+
 function addMed() {
     const v = document.getElementById('viaAdmin').value, m = document.getElementById('medSelect').value;
     if (!v || !m) return alert('Selecione via e medicamento.');
-    medItems.push({ via: v, med: m }); renderMeds();
-    const ta = document.getElementById('receitaText'), p = m.split(' - ');
+    const displayName = MEDS_SPECIAL[m] ? MEDS_SPECIAL[m].nome : m;
+    medItems.push({ via: v, med: displayName }); renderMeds();
+    const ta = document.getElementById('receitaText');
     if (ta.value && !ta.value.endsWith('\n')) ta.value += '\n\n';
-    ta.value += p.length > 1 ? p[0] + '\n' + p.slice(1).join(' - ') : m;
+    if (MEDS_SPECIAL[m]) {
+        ta.value += MEDS_SPECIAL[m].texto;
+    } else {
+        const p = m.split(' - ');
+        ta.value += p.length > 1 ? p[0] + '\n' + p.slice(1).join(' - ') : m;
+    }
 }
 function removeMed(i) { medItems.splice(i, 1); renderMeds(); }
 function renderMeds() { document.getElementById('medList').innerHTML = medItems.map((m, i) => '<div class="med-item"><div class="med-info"><p>' + m.med.split(' - ')[0] + '</p><p>' + m.via + ' · ' + (m.med.split(' - ').slice(1).join('') || '') + '</p></div><button class="btn-del" onclick="removeMed(' + i + ')"><span class="material-symbols-outlined">delete</span></button></div>').join(''); }
@@ -607,6 +621,11 @@ function loadPredef(type) {
         } else {
             badge.classList.remove('show');
         }
+    }
+    // Encaminhamento badge
+    const badgeEnc = document.getElementById('badgeAdicionalEnc');
+    if (type === 'encaminhamento') {
+        badgeEnc.classList.toggle('show', sel.value === 'pre_op_bariatrico');
     }
 }
 
@@ -656,8 +675,11 @@ function isVitaminasPredef() {
 function isPosOpGastroPredef() {
     return currentDocType === 'receita' && document.getElementById('predefReceita').value === 'pos_op_gastro';
 }
+function isPreOpBariatricoPredef() {
+    return currentDocType === 'encaminhamento' && document.getElementById('predefEncaminhamento').value === 'pre_op_bariatrico';
+}
 function hasAutoExtras() {
-    return isVitaminasPredef() || isPosOpGastroPredef();
+    return isVitaminasPredef() || isPosOpGastroPredef() || isPreOpBariatricoPredef();
 }
 
 function buildDocHTML(d, overrideTitle, overrideContent, contentFontSize) {
@@ -753,12 +775,15 @@ function showPreview() {
     }
     // PÓS-OP GASTRO → add Atestado PÓS-OP (dia anterior) + Orientações PÓS-OP IMEDIATO
     if (isPosOpGastroPredef()) {
-        // Atestado with previous day date
         const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
         const yDateStr = yesterday.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
         const dAtestado = Object.assign({}, d, { dateStr: yDateStr });
         html += sep + wrap(buildDocHTML(dAtestado, 'ATESTADO MÉDICO', PREDEFS.pos_op));
         html += sep + wrap(buildDocHTML(d, 'ORIENTAÇÕES AO PACIENTE', PREDEFS.pos_op_imediato, '10pt'));
+    }
+    // PRÉ-OP BARIÁTRICO → add Orientações PRÉ-OPERATÓRIO
+    if (isPreOpBariatricoPredef()) {
+        html += sep + wrap(buildDocHTML(d, 'ORIENTAÇÕES AO PACIENTE', PREDEFS.pre_operatorio, '10pt'));
     }
 
     document.getElementById('previewBody').innerHTML = html;
@@ -793,6 +818,10 @@ function printDoc() {
         const dAtestado = Object.assign({}, d, { dateStr: yDateStr });
         pages.push(buildDocHTML(dAtestado, 'ATESTADO MÉDICO', PREDEFS.pos_op));
         pages.push(buildDocHTML(d, 'ORIENTAÇÕES AO PACIENTE', PREDEFS.pos_op_imediato, '10pt'));
+    }
+    // PRÉ-OP BARIÁTRICO → append Orientações PRÉ-OPERATÓRIO
+    if (isPreOpBariatricoPredef()) {
+        pages.push(buildDocHTML(d, 'ORIENTAÇÕES AO PACIENTE', PREDEFS.pre_operatorio, '10pt'));
     }
 
     // Build combined HTML
@@ -1163,6 +1192,7 @@ function clearForm() {
     medItems = []; renderMeds(); medItemsCtrl = []; renderMedsCtrl();
     document.querySelectorAll('select[id^="predef"]').forEach(s => s.value = '');
     document.getElementById('badgeAdicional').classList.remove('show');
+    document.getElementById('badgeAdicionalEnc').classList.remove('show');
 }
 </script>
 </body>
