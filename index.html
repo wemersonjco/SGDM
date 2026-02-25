@@ -227,7 +227,7 @@ main{max-width:900px;margin:0 auto;padding:24px 16px 80px}
 
 CID: Z763</textarea></div></div></div>
     <!-- TAB: ENCAMINHAMENTO -->
-    <div class="tab-content" id="tab-encaminhamento"><div class="section"><div class="predefined-row"><div class="section-title"><span class="material-symbols-outlined">edit_note</span> Encaminhamento</div><div class="predefined-select-wrap"><label>Textos pré-definidos:</label><select id="predefEncaminhamento" onchange="loadPredef('encaminhamento')"><option value="">Nenhum</option><option value="cirurgia_reparadora">CIRURGIA REPARADORA</option><option value="pre_op_bariatrico">PRÉ-OP BARIÁTRICO</option><option value="renovacao_risco">RENOVAÇÃO RISCO BARIÁTRICA</option><option value="risco_colecistectomia">RISCO COLECISTECTOMIA</option><option value="risco_hernioplastia">RISCO HERNIOPLASTIA</option><option value="solic_colecistectomia">SOLIC. COLECISTECTOMIA</option><option value="solic_hernioplastia">SOLIC. HERNIOPLASTIA</option></select></div></div><div class="form-group"><textarea id="encaminhamentoText" placeholder="Selecione um modelo ou digite..."></textarea></div><div class="adicional-badge" id="badgeAdicionalEnc"><span class="material-symbols-outlined" style="font-size:18px;color:#16a34a">check_circle</span> Orientações PRÉ-OPERATÓRIO serão impressas automaticamente junto com este encaminhamento.</div></div></div>
+    <div class="tab-content" id="tab-encaminhamento"><div class="section"><div class="predefined-row"><div class="section-title"><span class="material-symbols-outlined">edit_note</span> Encaminhamento</div><div class="predefined-select-wrap"><label>Textos pré-definidos:</label><select id="predefEncaminhamento" onchange="loadPredef('encaminhamento')"><option value="">Nenhum</option><option value="cirurgia_reparadora">CIRURGIA REPARADORA</option><option value="pre_op_bariatrico">PRÉ-OP BARIÁTRICO</option><option value="renovacao_risco">RENOVAÇÃO RISCO BARIÁTRICA</option><option value="risco_colecistectomia">RISCO COLECISTECTOMIA</option><option value="risco_hernioplastia">RISCO HERNIOPLASTIA</option><option value="solic_colecistectomia">SOLIC. COLECISTECTOMIA</option><option value="solic_hernioplastia">SOLIC. HERNIOPLASTIA</option><option value="cirurgia_geral">CIRURGIA GERAL</option></select></div></div><div class="form-group"><textarea id="encaminhamentoText" placeholder="Selecione um modelo ou digite..."></textarea></div><div class="adicional-badge" id="badgeAdicionalEnc"><span class="material-symbols-outlined" style="font-size:18px;color:#16a34a">check_circle</span> Orientações PRÉ-OPERATÓRIO serão impressas automaticamente junto com este encaminhamento.</div></div></div>
     <!-- TAB: RELATÓRIO -->
     <div class="tab-content" id="tab-relatorio"><div class="section"><div class="section-title"><span class="material-symbols-outlined">edit_note</span> Relatório</div><div class="form-group"><textarea id="relatorioText" placeholder="Digite o relatório médico..."></textarea></div></div></div>
     <!-- TAB: EXAMES -->
@@ -427,6 +427,12 @@ OPME:
 
 CID: K802
 Grato.`,
+
+cirurgia_geral: `ENCAMINHAMENTO A CIRURGIA GERAL
+
+ENCAMINHO PACIENE EM POS OPERATÓRIO DE CIRURGIA BARIATRICA (BYPASS GASTRICO), APRESENTANDO COLELITIASE COM NECESSIDADE DE COLECISTECTOMIA (DEVIDO DESVIO INTESTINAL QUEM IMPEDE ACESSO A VIA BILIAR VIA ENDOSCÓPICA CONVENCIONAL).
+
+CID: K802`,
 
 solic_hernioplastia: `AO CONVÊNIO
 
