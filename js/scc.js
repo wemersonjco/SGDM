@@ -56,8 +56,14 @@ async function sccRenumber(months) {
 
 /* ---------- telas ---------- */
 function cirOpts(sel, first) { return `<option value="">${first}</option>` + SC.cirurgioes.map(c => `<option value="${c.id}" ${String(sel) === String(c.id) ? 'selected' : ''}>${esc(c.nome)}</option>`).join(''); }
+function sccNotice(type, text) {
+  SC.msg = { type, text };
+  clearTimeout(sccNotice.t);
+  sccNotice.t = setTimeout(() => { SC.msg = null; const b = $('#scBanner'); if (b) b.remove(); }, 9000);
+}
+const sccBanner = () => SC.msg ? `<div id="scBanner" class="banner ${SC.msg.type}" role="status"><span class="ms">${SC.msg.type === 'ok' ? 'check_circle' : 'error'}</span><div>${SC.msg.text}</div></div>` : '';
 function renderCirurgias() {
-  const tabs = `<div class="sub" role="tablist">${[['dash', 'Dashboard'], ['lanc', 'Lançamento'], ['cir', 'Cirurgiões']].map(([k, l]) => `<button role="tab" aria-selected="${SC.tab === k}" data-sctab="${k}">${l}</button>`).join('')}</div>`;
+  const tabs = `<div class="sub" role="tablist">${[['dash', 'Dashboard'], ['lanc', 'Lançamento'], ['cir', 'Cirurgiões']].map(([k, l]) => `<button role="tab" aria-selected="${SC.tab === k}" data-sctab="${k}">${l}</button>`).join('')}</div>` + sccBanner();
   if (!SC.loaded) {
     $('#view').innerHTML = tabs + '<div class="empty">Carregando…</div>';
     if (!SC.loading) sccLoad().then(() => { if (S.mod === 'cir') renderCirurgias(); });
@@ -156,16 +162,20 @@ async function sccSave(e) {
   e.preventDefault();
   const c = getDb(), paciente = $('#scP').value.trim(), data = $('#scD').value, cir = $('#scC').value;
   if (!paciente || !data || !cir) return;
-  if (SC.list.some(x => x.data === data && norm(x.paciente) === norm(paciente))) return toast('Este paciente já tem cirurgia registrada nesta data.');
+  const btn = $('#scForm button[type=submit]');
+  if (SC.list.some(x => x.data === data && norm(x.paciente) === norm(paciente))) { sccNotice('err', 'Este paciente já tem cirurgia registrada nesta data. Nada foi salvo.'); return renderCirurgias(); }
+  btn.disabled = true; btn.textContent = 'Salvando…';
   const doMes = SC.list.filter(x => ymOf(x.data) === ymOf(data));
   const numero = doMes.reduce((m, x) => Math.max(m, x.numero_mes || 0), 0) + 1;
-  if (numero > META_MES) return toast('Limite de ' + META_MES + ' cirurgias por mês atingido.');
+  if (numero > META_MES) { sccNotice('err', 'Limite de ' + META_MES + ' cirurgias por mês atingido. Nada foi salvo.'); return renderCirurgias(); }
   const a1 = $('#scA1').value, a2 = $('#scA2').value;
   const { error } = await c.from('cirurgias').insert([{ paciente, data, numero_mes: numero, cirurgiao_id: +cir, auxiliar1_id: a1 ? +a1 : null, auxiliar2_id: a2 ? +a2 : null, observacoes: $('#scO').value.trim() }]);
-  if (error) return toast('Erro: ' + error.message);
+  if (error) { sccNotice('err', 'Não foi possível salvar: ' + esc(error.message)); return renderCirurgias(); }
   await sccLoad(true); await sccRenumber([ymOf(data)]);
-  toast('Cirurgia registrada. Nº ' + (SC.list.find(x => x.data === data && norm(x.paciente) === norm(paciente)) || {}).numero_mes);
-  SC.tab = 'lanc'; renderCirurgias();
+  const novo = SC.list.find(x => x.data === data && norm(x.paciente) === norm(paciente)) || {};
+  sccNotice('ok', `<b>Cirurgia lançada com sucesso.</b><br>Nº ${novo.numero_mes || numero} · ${esc(paciente)} · ${fdate(data)}`);
+  toast('Cirurgia lançada com sucesso.');
+  SC.tab = 'lanc'; renderCirurgias(); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function sccEditModal(id) {
   const c = SC.list.find(x => String(x.id) === String(id)); if (!c) return;
@@ -181,11 +191,14 @@ function sccEditModal(id) {
 async function sccEditSave(e) {
   e.preventDefault();
   const c = M.scEdit, data = $('#eDt').value, a1 = $('#eA1').value, a2 = $('#eA2').value;
+  const eb = $('#scEditForm button[type=submit]'); eb.disabled = true; eb.textContent = 'Salvando…';
+  const novoNome = $('#eP').value.trim();
   const { error } = await getDb().from('cirurgias').update({ paciente: $('#eP').value.trim(), data, cirurgiao_id: +$('#eC1').value, auxiliar1_id: a1 ? +a1 : null, auxiliar2_id: a2 ? +a2 : null, observacoes: $('#eO').value.trim() }).eq('id', c.id);
-  if (error) return toast('Erro: ' + error.message);
+  if (error) { eb.disabled = false; eb.textContent = 'Salvar'; toast('Não foi possível salvar: ' + error.message); return; }
   const meses = new Set([ymOf(c.data), ymOf(data)]);
   await sccLoad(true); await sccRenumber([...meses]);
-  closeModal(); toast('Cirurgia atualizada.'); renderCirurgias();
+  closeModal(); sccNotice('ok', `<b>Cirurgia alterada e salva com sucesso.</b><br>${esc(novoNome)} · ${fdate(data)}`);
+  toast('Cirurgia alterada e salva com sucesso.'); renderCirurgias(); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 document.addEventListener('submit', e => {
@@ -196,7 +209,7 @@ document.addEventListener('submit', e => {
     const n = $('#scN').value.trim(); if (!n) return;
     getDb().from('cirurgioes').insert([{ nome: n }]).then(async ({ error }) => {
       if (error) return toast('Erro: ' + error.message);
-      toast('Cirurgião cadastrado.'); await sccLoad(true); renderCirurgias();
+      await sccLoad(true); sccNotice('ok', `<b>Cirurgião cadastrado com sucesso.</b><br>${esc(n)}`); toast('Cirurgião cadastrado.'); renderCirurgias();
     });
   }
 });
@@ -215,7 +228,7 @@ document.addEventListener('click', async e => {
     const { error } = await getDb().from('cirurgias').delete().eq('id', d.scdel);
     if (error) return toast('Erro: ' + error.message);
     await sccLoad(true); if (c) await sccRenumber([ymOf(c.data)]);
-    toast('Cirurgia excluída.'); renderCirurgias();
+    sccNotice('ok', '<b>Cirurgia excluída.</b>'); toast('Cirurgia excluída.'); renderCirurgias();
   }
   else if (d.sccdel) {
     if (!confirm('Excluir este cirurgião? As cirurgias dele ficam sem nome.')) return;

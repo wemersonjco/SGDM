@@ -171,3 +171,9 @@ textarea{resize:vertical;line-height:1.6}
 .med-item{display:flex;gap:10px;align-items:center;background:var(--bg);border-radius:8px;padding:6px 10px;font-size:13px}
 .med-item span{flex:1;min-width:0}
 .pt .f.ctl{display:none}
+
+.banner{display:flex;gap:12px;align-items:flex-start;border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:1.45;border:1px solid}
+.banner.ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.banner.err{background:var(--warn-soft);color:var(--danger);border-color:var(--danger)}
+.banner .ms{font-size:24px}
+.toast{max-width:min(92vw,420px);text-align:center}

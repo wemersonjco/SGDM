@@ -68,7 +68,7 @@ function getDb() {
 }
 
 /* ---------- utilitários ---------- */
-function toast(m) { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3200); }
+function toast(m) { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 4500); }
 function copyText(v, okMsg) {
   const fb = () => toast('Selecione o texto e copie com Ctrl+C.');
   try { navigator.clipboard.writeText(v).then(() => toast(okMsg || 'Copiado.'), fb); } catch (_) { fb(); }
