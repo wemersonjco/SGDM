@@ -161,10 +161,21 @@ textarea{resize:vertical;line-height:1.6}
 .pvpage .of{height:1123px}
 .timbre-ph{position:absolute;left:0;right:0;top:0;border-bottom:1px dashed #bbb;color:#999;font:12px Inter,sans-serif;display:flex;align-items:center;justify-content:center}
 /* login */
-.login{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;padding:16px;z-index:100}
-.login .box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;width:min(380px,100%);display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
-.login h1{margin:0;font-size:20px}
-.login .err{color:var(--danger);font-size:13px}
+.login{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#2d006e,#5600b2 50%,#7c3aed);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:16px;overflow:auto}
+.login-card{background:#fff;color:#1d1a29;width:400px;max-width:100%;padding:40px;border-radius:16px;box-shadow:0 25px 60px rgba(0,0,0,.3);text-align:center}
+.login-logo-icon{width:80px;height:80px;background:linear-gradient(135deg,#5600b2,#7c3aed);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 10px 40px rgba(86,0,178,.3)}
+.login-logo-icon .ms{font-size:42px;color:#fff}
+.login-title{font-size:24px;font-weight:700;margin-bottom:4px}
+.login-subtitle{font-size:13px;color:#6a6680;margin-bottom:32px}
+.login-form{display:flex;flex-direction:column;gap:16px}
+.login-form .input-group{text-align:left}
+.login-form label{font-size:13px;font-weight:500;color:#374151;margin-bottom:6px}
+.login-form input{padding:12px 16px;border:2px solid #e5e7eb;border-radius:10px;font-size:15px;outline:none;transition:all .2s;background:#fff;color:#1d1a29}
+.login-form input:focus{border-color:#5600b2;box-shadow:0 0 0 3px rgba(86,0,178,.1);outline:none}
+.login-btn{width:100%;padding:14px;margin-top:8px;background:linear-gradient(135deg,#5600b2,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(86,0,178,.3)}
+.login .err{color:#b91c1c;font-size:14px;padding:10px;background:#fef2f2;border-radius:8px}
+.login-info{margin-top:32px;color:rgba(255,255,255,.7);font-size:12px}
 .empty{padding:28px;text-align:center;color:var(--muted)}
 .tbl .x{border:0;background:none;color:var(--muted)}
 .tbl .x:hover{color:var(--danger)}

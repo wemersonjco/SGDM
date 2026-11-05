@@ -1,4 +1,4 @@
-/* SGDM 3: telas, estado e fluxos. Dados do paciente ficam só em memória; só a AIH grava 4 campos no Supabase. */
+/* SGDM: telas, estado e fluxos. Dados do paciente ficam só em memória; só a AIH grava 4 campos no Supabase. */
 const $ = s => document.querySelector(s);
 const LS = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (_) { return d; } },

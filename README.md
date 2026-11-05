@@ -1,4 +1,4 @@
-# SGDM 3
+# SGDM
 
 Sistema único da equipe cirúrgica (Clínica IOCI e Hospital Metropolitano de Várzea Grande). Reúne em um só lugar o SGDM atual, o laudo de antimicrobianos, a AIH e a APAC.
 

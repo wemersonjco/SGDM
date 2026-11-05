@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SGDM 3</title>
+<title>SGDM</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235600b2'/%3E%3Cpath d='M14 7h4v7h7v4h-7v7h-4v-7H7v-4h7z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,20 +13,24 @@
 </head>
 <body>
 <div class="login" id="login" hidden>
-  <form class="box" id="loginForm">
-    <h1>SGDM 3</h1>
-    <div style="color:var(--muted);font-size:13px">Sistema de gestão médica</div>
-    <div><label for="lu">Usuário</label><input id="lu" autocomplete="username" autofocus></div>
-    <div><label for="lp">Senha</label><input id="lp" type="password" autocomplete="current-password"></div>
-    <div class="err" id="lerr" hidden>Usuário ou senha incorretos.</div>
-    <button class="btn" type="submit">Entrar</button>
-  </form>
+  <div class="login-card">
+    <div class="login-logo-icon"><span class="ms">local_hospital</span></div>
+    <div class="login-title">SGDM</div>
+    <div class="login-subtitle">Sistema de Gestão de Documentos Médicos</div>
+    <form class="login-form" id="loginForm">
+      <div class="input-group"><label for="lu">Usuário</label><input id="lu" placeholder="Digite seu usuário" autocomplete="username" autofocus></div>
+      <div class="input-group"><label for="lp">Senha</label><input id="lp" type="password" placeholder="Digite sua senha" autocomplete="current-password"></div>
+      <button class="login-btn" type="submit">Entrar</button>
+      <div class="err" id="lerr" hidden>Usuário ou senha incorretos.</div>
+    </form>
+  </div>
+  <div class="login-info">SGDM</div>
 </div>
 
 <div class="app" id="app" hidden>
   <header class="top">
     <div class="top-row">
-      <div class="brand"><i><span class="ms">medical_services</span></i><div>SGDM 3<small>Gestão médica</small></div></div>
+      <div class="brand"><i><span class="ms">medical_services</span></i><div>SGDM<small>Gestão médica</small></div></div>
       <div class="unit-wrap"><span class="unit-l">Local</span><div class="seg" id="unit" aria-label="Local de atendimento"></div></div>
       <div class="spacer"></div>
       <button class="ghost" id="themeBtn" title="Alternar tema"><span class="ms">contrast</span></button>
