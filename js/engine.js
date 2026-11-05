@@ -110,6 +110,7 @@ const PRINT_CSS = `
 @page doc-ioci{size:A4;margin:70mm 15mm 20mm}
 @page rawatb{size:A4;margin:5mm}
 @page rawof{size:A4;margin:0}
+@page rawrep{size:A4;margin:15mm}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#fff}
 section.s{break-after:page}
@@ -117,6 +118,7 @@ section.s:last-child{break-after:auto}
 section.doc-metro{page:doc-metro}
 section.doc-ioci{page:doc-ioci}
 section.rawatb{page:rawatb}
+section.rawrep{page:rawrep}
 section.rawof{page:rawof;height:296.5mm;overflow:hidden}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 `;

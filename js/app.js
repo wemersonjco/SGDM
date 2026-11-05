@@ -25,7 +25,7 @@ const BIZ_OPTS = [['biz_primeira', 'Primeira Consulta'], ['biz_retorno_1sem', 'R
 
 const MEIA = 'USO EXTERNO\n\n1. Meia compressiva de média compressão\n\nUsar conforme orientação médica, durante a cirurgia e após a cirurgia por 15 dias.';
 const PREVIA = 'ESTA RECEITA É APENAS UMA PRÉVIA DO QUE PODERÁ SER UTILIZADO NO PÓS-OPERATÓRIO. PODERÁ SOFRER ALTERAÇÕES PELA EQUIPE CIRÚRGICA COM BASE NAS AVALIAÇÕES REALIZADAS APÓS A CIRURGIA.';
-const DOCTOR_DEFAULT = 'Dr. Wemerson José Correa de Oliveira\nCirurgião Geral · CRM/MT 10203 · RQE 6858';
+const DOCTOR_DEFAULT = '';
 const ACOMP_TXT = n => 'Atesto para os devidos fins que o(a) ' + (n || '[NOME_ACOMPANHANTE]') + ' esteve como acompanhante do(a) paciente supracitado(a) em consulta médica nesta data.\n\nCID: Z763';
 const dShort = () => new Date().toLocaleDateString('pt-BR');
 const isoHoje = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
@@ -56,7 +56,7 @@ const S = {
   atb: { antimicrobiano: 'CEFAZOLINA 1g', via: 'EV', posologia: '8/8H', duracao: '24h', justificativa: 'PROFILAXIA CIRURGICA - GASTROPLASTIA' },
   aihTab: 'emitir', aihPage: 'aih', aihBusy: false,
   aih: { f20: 'PACIENTE PORTADOR DE OBESIDADE GRAU III, REFRATÁRIO A TRATAMENTO CLÍNICO ASSOCIADO A COMORBIDADE (ESTEATOSE HEPÁTICA, ).', f21: 'NECESSIDADE DE TRATAMENTO CIRÚRGICO PARA OBESIDADE', f22: 'ANAMNESE + EXAME FÍSICO + EXAMES DE IMAGEM', f23: 'OBESIDADE', f24: 'E66-0', f27: 'CIRURGIA BARIÁTRICA POR VIDEOLAPAROSCOPIA', f28: '0407010386' },
-  aihMedico: LS.get('sgdm3_aih_medico', 'WEMERSON JOSE C OLIVEIRA'),
+  aihMedico: LS.get('sgdm3_aih_medico', ''),
   doctor: LS.get('sgdm3_doctor', DOCTOR_DEFAULT),
   apacTab: 'eda', admin: { desc: '', evo: '', biz: '' },
   aihList: null, cirList: null, aihQ: '', aihStatus: 'todos'
@@ -214,7 +214,7 @@ function renderDocs() {
     editor = `${endBox}${acomp}${exames}${isRec ? medBlock(doc === 'controlado') : ''}<div class="sec"><h4><span class="ms" style="font-size:16px">edit_note</span>Conteúdo do documento</h4><div class="stack">${protChip()}${predefOpts ? `<div><label for="pre">Texto pré-definido</label><select id="pre">${optsHTML(predefOpts, S.predef[doc])}</select></div>` : ''}<textarea id="txt" rows="${isRec ? 13 : 10}" aria-label="Conteúdo">${esc(getText(doc))}</textarea></div></div>`;
   }
   const pack = list.length ? `<div class="sec"><div class="pack"><h5><span class="ms">layers</span>Este modelo imprime ${pages.length} ${pages.length === 1 ? 'página' : 'páginas'} juntas</h5><p>Marque o que vai no pacote. Paciente e médico entram em todas as páginas.</p>${list.map((p, i) => `<div class="pg"><input type="checkbox" data-pk="${p[0]}" ${S.bundle[p[0]] ? 'checked' : ''} aria-label="Incluir ${esc(p[1])}"><span class="n">${i + 1}</span><div class="t">${esc(p[1])}<small>${esc(p[2])}</small></div>${p[3] ? `<span class="tag">${p[3]}</span>` : ''}<button class="view" data-page="${p[0]}"><span class="ms" style="font-size:16px">visibility</span>Ver</button></div>`).join('')}</div></div>` : '';
-  const doctorBox = isAdmin ? '' : `<div class="sec"><h4><span class="ms" style="font-size:16px">draw</span>Assinatura do médico</h4><textarea id="doctor" rows="2" placeholder="Nome, CRM, RQE, especialidade...">${esc(S.doctor)}</textarea></div>`;
+  const doctorBox = isAdmin ? '' : `<div class="sec"><h4><span class="ms" style="font-size:16px">draw</span>Assinatura do médico</h4><textarea id="doctor" rows="2" placeholder="Seu nome, especialidade, CRM e RQE (aparece como assinatura nos documentos)">${esc(S.doctor)}</textarea></div>`;
   const actions = isAdmin ? `<div class="actions"><button class="btn line" id="copy"><span class="ms">content_copy</span>Copiar texto</button></div>` : `<div class="actions"><button class="btn quiet" id="clr"><span class="ms">delete_sweep</span>Limpar</button>${isAtb || isAdmin ? '' : '<button class="btn line" id="copy"><span class="ms">content_copy</span>Copiar texto</button>'}<button class="btn" id="print"><span class="ms">print</span>Imprimir${pages.length > 1 ? ` pacote (${pages.length} páginas)` : ''}</button></div>`;
   const side = isAdmin ? '' : `<div class="sheet-wrap">${tabs}<div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">description</span>Folha A4 · ${S.unit === 'metro' ? 'Hospital Metropolitano' : 'Clínica IOCI'}</div></div>`;
   $('#view').innerHTML = `<div class="work" ${isAdmin ? 'style="grid-template-columns:minmax(0,1fr)"' : ''}><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">category</span>Tipo de documento</h4><div class="tiles">${DOCS.map(([k, i, l, n]) => `<button class="tile ${n || ''}" data-doc="${k}" aria-pressed="${S.doc === k}"><span class="ms">${i}</span>${l}</button>`).join('')}</div></div>${editor}${pack}${doctorBox}${actions}</div>${side}</div>`;
@@ -250,7 +250,7 @@ function renderAIH() {
     const I = (id, l, k, w = '') => `<div style="${w}"><label for="${id}">${l}</label><input id="${id}" data-af="${k}" value="${esc(a[k])}"></div>`;
     const pg = [['aih', 'AIH', 'Formulário oficial do SUS'], ['meia', 'Receita da meia', 'Meia de média compressão, 15 dias'], ['aihrx', 'Receita pós-op', 'Enoxaparina conforme IMC e TEV, com aviso de prévia']];
     $('#view').innerHTML = tabs + `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">edit_note</span>Campos da AIH</h4><div class="stack"><p style="margin:0;color:var(--muted);font-size:13px">Estabelecimento, CNES, clínica e caráter vêm preenchidos. O nome do paciente vem da faixa acima. O restante do formulário oficial sai em branco para preenchimento à mão.</p>
-      <div><label for="aMed">Profissional solicitante</label><input id="aMed" value="${esc(S.aihMedico)}"></div>
+      <div><label for="aMed">Profissional solicitante *</label><input id="aMed" value="${esc(S.aihMedico)}" placeholder="Nome do médico solicitante"></div>
       ${T('f20', '20 · Principais sinais e sintomas clínicos', 'f20', 4)}${T('f21', '21 · Condições que justificam a internação', 'f21')}${T('f22', '22 · Principais resultados de provas diagnósticas', 'f22')}
       <div class="row">${I('f23', '23 · Diagnóstico inicial', 'f23', 'flex:2 1 200px')}${I('f24', '24 · CID-10 principal', 'f24')}</div><div class="row">${I('f27', '27 · Procedimento solicitado', 'f27', 'flex:2 1 260px')}${I('f28', '28 · Código', 'f28')}</div></div></div>
       <div class="sec"><div class="pack"><h5><span class="ms">layers</span>Ao emitir, imprime 3 documentos</h5><p>AIH, receita da meia compressiva e receita de pós-operatório, com o nome do paciente em todas.</p>${pg.map((p, i) => `<div class="pg"><span class="n">${i + 1}</span><div class="t">${p[1]}<small>${p[2]}</small></div><button class="view" data-aihpage="${p[0]}"><span class="ms" style="font-size:16px">visibility</span>Ver</button></div>`).join('')}</div></div>
@@ -275,6 +275,7 @@ function renderAIH() {
 
 async function emitirAih() {
   const nome = pNome().trim();
+  if (!S.aihMedico.trim()) return toast('Informe o profissional solicitante.');
   const c = getDb();
   if (!c) return toast('Sem conexão com o banco. A AIH não foi emitida.');
   S.aihBusy = true;
@@ -288,9 +289,6 @@ async function emitirAih() {
 }
 
 /* ---------- Cirurgias e Cadastros (fase 2) ---------- */
-function renderCir() {
-  $('#view').innerHTML = `<div class="card" style="padding:28px;max-width:640px"><span class="ms" style="color:var(--accent-text)">monitor_heart</span><h3 style="margin:8px 0 4px">Controle de Cirurgias</h3><p style="color:var(--muted);margin:0 0 16px">Esta tela entra na próxima etapa, com os mesmos dados do SCC. Por enquanto, siga usando o sistema atual. O cruzamento com as AIH já funciona na aba "AIH × Cirurgias".</p><a class="btn" href="https://wemersonjco.github.io/SCC/" target="_blank" rel="noopener"><span class="ms">open_in_new</span>Abrir o SCC atual</a></div>`;
-}
 function renderCad() {
   $('#view').innerHTML = `<div class="grid2">${[['badge', 'Médicos', 'Nome, CRM, RQE, CNS e CPF'], ['apartment', 'Unidades', 'CNES, endereço, timbre e rodapé'], ['article', 'Modelos e textos', 'Receitas, atestados, orientações'], ['medication', 'Medicamentos e exames', 'Listas usadas nos documentos']].map(x => `<div class="card" style="padding:18px 20px"><span class="ms" style="color:var(--accent-text)">${x[0]}</span><h3 style="margin:8px 0 2px;font-size:15px">${x[1]}</h3><div style="color:var(--muted);font-size:13px">${x[2]} · próxima etapa</div></div>`).join('')}</div>`;
 }
@@ -300,7 +298,7 @@ function renderAPAC() {
   const eda = S.apacTab === 'eda';
   $('#view').innerHTML = `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">request_page</span>APAC</h4><div class="stack"><p style="margin:0;color:var(--muted);font-size:13px">Formulário oficial do SUS. Vêm preenchidos o estabelecimento, o CNES, o procedimento, o diagnóstico, o CID e as observações do modelo escolhido. O nome do paciente vem da faixa acima. O resto fica em branco.</p>
   <div><label>Modelo</label><div class="opt"><label><input type="radio" name="apm" value="eda" ${eda ? 'checked' : ''}>Endoscopia (EDA)</label><label><input type="radio" name="apm" value="cir" ${!eda ? 'checked' : ''}>Consulta cirurgia geral</label></div></div>
-  <div><label for="aMed">Profissional solicitante</label><input id="aMed" value="${esc(S.aihMedico)}"></div></div></div>
+  <div><label for="aMed">Profissional solicitante *</label><input id="aMed" value="${esc(S.aihMedico)}" placeholder="Nome do médico solicitante"></div></div></div>
   <div class="actions"><button class="btn" id="printApac"><span class="ms">print</span>Imprimir</button></div></div>
   <div class="sheet-wrap"><div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">info</span>Não grava nada.</div></div></div>`;
   refreshPreview();
@@ -345,14 +343,15 @@ const closeModal = () => { $('#modal').hidden = true; };
 
 function render() {
   chrome();
-  ({ docs: renderDocs, aih: renderAIH, apac: renderAPAC, cir: renderCir, cad: renderCad })[S.mod]();
+  document.querySelector('.pt').hidden = S.mod === 'cir' || S.mod === 'cad';
+  ({ docs: renderDocs, aih: renderAIH, apac: renderAPAC, cir: () => renderCirurgias(), cad: renderCad })[S.mod]();
 }
 
 /* ---------- eventos ---------- */
 document.addEventListener('click', async e => {
   const t = e.target.closest('button,[data-close]'); if (!t) return;
   const d = t.dataset;
-  if (d.mod) { S.mod = d.mod; if (S.mod === 'aih') S.aihList = null; render(); }
+  if (d.mod) { S.mod = d.mod; if (S.mod === 'aih') S.aihList = null; if (S.mod === 'cir') SC.loaded = false; render(); }
   else if (d.unit) { S.unit = d.unit; render(); }
   else if (d.doc) { S.doc = d.doc; S.page = 'main'; render(); }
   else if (d.page) { S.page = d.page; render(); }
