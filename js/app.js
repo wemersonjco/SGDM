@@ -259,7 +259,7 @@ function renderAIH() {
     const I = (id, l, k, w = '') => `<div style="${w}"><label for="${id}">${l}</label><input id="${id}" data-af="${k}" value="${esc(a[k])}"></div>`;
     const pg = [['aih', 'AIH', 'Formulário oficial do SUS'], ['meia', 'Receita da meia', 'Meia de média compressão, 15 dias'], ['aihrx', 'Receita pós-op', 'Enoxaparina conforme IMC e TEV, com aviso de prévia']];
     $('#view').innerHTML = tabs + `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">edit_note</span>Campos da AIH</h4><div class="stack"><p style="margin:0;color:var(--muted);font-size:13px">Estabelecimento, CNES, clínica e caráter vêm preenchidos. O nome do paciente vem da faixa acima. O restante do formulário oficial sai em branco para preenchimento à mão.</p>
-      ${medSelect('medSelAih', 'Profissional solicitante')}
+      ${medSelect('medSelAih', 'Profissional solicitante *')}
       ${T('f20', '20 · Principais sinais e sintomas clínicos', 'f20', 4)}${T('f21', '21 · Condições que justificam a internação', 'f21')}${T('f22', '22 · Principais resultados de provas diagnósticas', 'f22')}
       <div class="row">${I('f23', '23 · Diagnóstico inicial', 'f23', 'flex:2 1 200px')}${I('f24', '24 · CID-10 principal', 'f24')}</div><div class="row">${I('f27', '27 · Procedimento solicitado', 'f27', 'flex:2 1 260px')}${I('f28', '28 · Código', 'f28')}</div></div></div>
       <div class="sec"><div class="pack"><h5><span class="ms">layers</span>Ao emitir, imprime 3 documentos</h5><p>AIH, receita da meia compressiva e receita de pós-operatório, com o nome do paciente em todas.</p>${pg.map((p, i) => `<div class="pg"><span class="n">${i + 1}</span><div class="t">${p[1]}<small>${p[2]}</small></div><button class="view" data-aihpage="${p[0]}"><span class="ms" style="font-size:16px">visibility</span>Ver</button></div>`).join('')}</div></div>
@@ -284,7 +284,7 @@ function renderAIH() {
 
 async function emitirAih() {
   const nome = pNome().trim();
-  if (!S.aihMedico.trim() && !confirm('Nenhum profissional solicitante foi escolhido. Emitir a AIH assim mesmo, com esse campo em branco?')) return;
+  if (!S.aihMedico.trim()) { toast('Escolha o profissional solicitante antes de emitir a AIH.'); return; }
   const c = getDb();
   if (!c) return toast('Sem conexão com o banco. A AIH não foi emitida.');
   S.aihBusy = true;
@@ -315,6 +315,7 @@ function openModal(kind) {
   const m = $('#modal');
   if (kind === 'prot-doc' || kind === 'prot-aih') {
     if (kind === 'prot-aih' && !pNome().trim()) { toast('Informe o nome do paciente na faixa acima.'); return; }
+    if (kind === 'prot-aih' && !S.aihMedico.trim()) { toast('Escolha o profissional solicitante antes de emitir a AIH.'); const sel = $('#medSelAih'); if (sel) { sel.focus(); sel.scrollIntoView({ block: 'center' }); } return; }
     M = { imc: S.prot ? S.prot.imc : '', tev: S.prot ? S.prot.tev : 'nao', then: kind, msg: '' };
     m.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><header><h2 id="mt">Protocolo de tromboprofilaxia</h2><p>Responda para definir a dose de enoxaparina da receita de pós-operatório.</p></header>
     <div class="mb"><div><label for="mImc">IMC do paciente (kg/m²)</label><input id="mImc" inputmode="decimal" value="${esc(M.imc)}" placeholder="ex.: 44,5"></div>
