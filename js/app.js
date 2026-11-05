@@ -58,8 +58,8 @@ const S = {
   atb: { antimicrobiano: 'CEFAZOLINA 1g', via: 'EV', posologia: '8/8H', duracao: '24h', justificativa: 'PROFILAXIA CIRURGICA - GASTROPLASTIA' },
   aihTab: 'emitir', aihPage: 'aih', aihBusy: false,
   aih: { f20: 'PACIENTE PORTADOR DE OBESIDADE GRAU III, REFRATÁRIO A TRATAMENTO CLÍNICO ASSOCIADO A COMORBIDADE (ESTEATOSE HEPÁTICA, ).', f21: 'NECESSIDADE DE TRATAMENTO CIRÚRGICO PARA OBESIDADE', f22: 'ANAMNESE + EXAME FÍSICO + EXAMES DE IMAGEM', f23: 'OBESIDADE', f24: 'E66-0', f27: 'CIRURGIA BARIÁTRICA POR VIDEOLAPAROSCOPIA', f28: '0407010386' },
-  aihMedico: LS.get('sgdm3_aih_medico', ''),
-  doctor: LS.get('sgdm3_doctor', DOCTOR_DEFAULT),
+  aihMedico: '', medicos: [], medicoId: LS.get('sgdm3_medico_id', ''),
+  doctor: '',
   apacTab: 'eda', admin: { desc: '', evo: '', biz: '' },
   aihList: null, cirList: null, aihQ: '', aihStatus: 'todos'
 };
@@ -68,6 +68,13 @@ function getDb() {
   if (!db && window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   return db;
 }
+
+/* ---------- médico escolhido (lista vem do banco) ---------- */
+function applyMedico() {
+  const m = S.medicos.find(x => String(x.id) === String(S.medicoId));
+  S.doctor = m ? (m.assinatura || '') : ''; S.aihMedico = m ? m.nome : '';
+}
+const medSelect = (id, label) => `<div><label for="${id}">${label}</label><select id="${id}" class="medsel"><option value="">Nenhum (deixar em branco)</option>${S.medicos.map(m => `<option value="${m.id}" ${String(S.medicoId) === String(m.id) ? 'selected' : ''}>${esc(m.nome)}</option>`).join('')}</select>${S.medicos.length ? '' : '<div class="hint">Nenhum médico cadastrado. Cadastre em Cadastros → Médicos.</div>'}</div>`;
 
 /* ---------- utilitários ---------- */
 function toast(m) { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 4500); }
@@ -216,7 +223,7 @@ function renderDocs() {
     editor = `${endBox}${acomp}${exames}${isRec ? medBlock(doc === 'controlado') : ''}<div class="sec"><h4><span class="ms" style="font-size:16px">edit_note</span>Conteúdo do documento</h4><div class="stack">${protChip()}${predefOpts ? `<div><label for="pre">Texto pré-definido</label><select id="pre">${optsHTML(predefOpts, S.predef[doc])}</select></div>` : ''}<textarea id="txt" rows="${isRec ? 13 : 10}" aria-label="Conteúdo">${esc(getText(doc))}</textarea></div></div>`;
   }
   const pack = list.length ? `<div class="sec"><div class="pack"><h5><span class="ms">layers</span>Este modelo imprime ${pages.length} ${pages.length === 1 ? 'página' : 'páginas'} juntas</h5><p>Marque o que vai no pacote. Paciente e médico entram em todas as páginas.</p>${list.map((p, i) => `<div class="pg"><input type="checkbox" data-pk="${p[0]}" ${S.bundle[p[0]] ? 'checked' : ''} aria-label="Incluir ${esc(p[1])}"><span class="n">${i + 1}</span><div class="t">${esc(p[1])}<small>${esc(p[2])}</small></div>${p[3] ? `<span class="tag">${p[3]}</span>` : ''}<button class="view" data-page="${p[0]}"><span class="ms" style="font-size:16px">visibility</span>Ver</button></div>`).join('')}</div></div>` : '';
-  const doctorBox = isAdmin ? '' : `<div class="sec"><h4><span class="ms" style="font-size:16px">draw</span>Assinatura do médico</h4><textarea id="doctor" rows="2" placeholder="Seu nome, especialidade, CRM e RQE (aparece como assinatura nos documentos)">${esc(S.doctor)}</textarea></div>`;
+  const doctorBox = isAdmin ? '' : `<div class="sec"><h4><span class="ms" style="font-size:16px">draw</span>Assinatura do médico</h4>${medSelect('medSelDoc', 'Médico que assina os documentos')}</div>`;
   const actions = isAdmin ? `<div class="actions"><button class="btn line" id="copy"><span class="ms">content_copy</span>Copiar texto</button></div>` : `<div class="actions"><button class="btn quiet" id="clr"><span class="ms">delete_sweep</span>Limpar</button>${isAtb || isAdmin ? '' : '<button class="btn line" id="copy"><span class="ms">content_copy</span>Copiar texto</button>'}<button class="btn" id="print"><span class="ms">print</span>Imprimir${pages.length > 1 ? ` pacote (${pages.length} páginas)` : ''}</button></div>`;
   const side = isAdmin ? '' : `<div class="sheet-wrap">${tabs}<div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">description</span>Folha A4 · ${S.unit === 'metro' ? 'Hospital Metropolitano' : 'Clínica IOCI'}</div></div>`;
   $('#view').innerHTML = `<div class="work" ${isAdmin ? 'style="grid-template-columns:minmax(0,1fr)"' : ''}><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">category</span>Tipo de documento</h4><div class="tiles">${DOCS.map(([k, i, l, n]) => `<button class="tile ${n || ''}" data-doc="${k}" aria-pressed="${S.doc === k}"><span class="ms">${i}</span>${l}</button>`).join('')}</div></div>${editor}${pack}${doctorBox}${actions}</div>${side}</div>`;
@@ -252,7 +259,7 @@ function renderAIH() {
     const I = (id, l, k, w = '') => `<div style="${w}"><label for="${id}">${l}</label><input id="${id}" data-af="${k}" value="${esc(a[k])}"></div>`;
     const pg = [['aih', 'AIH', 'Formulário oficial do SUS'], ['meia', 'Receita da meia', 'Meia de média compressão, 15 dias'], ['aihrx', 'Receita pós-op', 'Enoxaparina conforme IMC e TEV, com aviso de prévia']];
     $('#view').innerHTML = tabs + `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">edit_note</span>Campos da AIH</h4><div class="stack"><p style="margin:0;color:var(--muted);font-size:13px">Estabelecimento, CNES, clínica e caráter vêm preenchidos. O nome do paciente vem da faixa acima. O restante do formulário oficial sai em branco para preenchimento à mão.</p>
-      <div><label for="aMed">Profissional solicitante *</label><input id="aMed" value="${esc(S.aihMedico)}" placeholder="Nome do médico solicitante"></div>
+      ${medSelect('medSelAih', 'Profissional solicitante')}
       ${T('f20', '20 · Principais sinais e sintomas clínicos', 'f20', 4)}${T('f21', '21 · Condições que justificam a internação', 'f21')}${T('f22', '22 · Principais resultados de provas diagnósticas', 'f22')}
       <div class="row">${I('f23', '23 · Diagnóstico inicial', 'f23', 'flex:2 1 200px')}${I('f24', '24 · CID-10 principal', 'f24')}</div><div class="row">${I('f27', '27 · Procedimento solicitado', 'f27', 'flex:2 1 260px')}${I('f28', '28 · Código', 'f28')}</div></div></div>
       <div class="sec"><div class="pack"><h5><span class="ms">layers</span>Ao emitir, imprime 3 documentos</h5><p>AIH, receita da meia compressiva e receita de pós-operatório, com o nome do paciente em todas.</p>${pg.map((p, i) => `<div class="pg"><span class="n">${i + 1}</span><div class="t">${p[1]}<small>${p[2]}</small></div><button class="view" data-aihpage="${p[0]}"><span class="ms" style="font-size:16px">visibility</span>Ver</button></div>`).join('')}</div></div>
@@ -277,7 +284,7 @@ function renderAIH() {
 
 async function emitirAih() {
   const nome = pNome().trim();
-  if (!S.aihMedico.trim()) return toast('Informe o profissional solicitante.');
+  if (!S.aihMedico.trim() && !confirm('Nenhum profissional solicitante foi escolhido. Emitir a AIH assim mesmo, com esse campo em branco?')) return;
   const c = getDb();
   if (!c) return toast('Sem conexão com o banco. A AIH não foi emitida.');
   S.aihBusy = true;
@@ -296,7 +303,7 @@ function renderAPAC() {
   const eda = S.apacTab === 'eda';
   $('#view').innerHTML = `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">request_page</span>APAC</h4><div class="stack"><p style="margin:0;color:var(--muted);font-size:13px">Formulário oficial do SUS. Vêm preenchidos o estabelecimento, o CNES, o procedimento, o diagnóstico, o CID e as observações do modelo escolhido. O nome do paciente vem da faixa acima. O resto fica em branco.</p>
   <div><label>Modelo</label><div class="opt"><label><input type="radio" name="apm" value="eda" ${eda ? 'checked' : ''}>Endoscopia (EDA)</label><label><input type="radio" name="apm" value="cir" ${!eda ? 'checked' : ''}>Consulta cirurgia geral</label></div></div>
-  <div><label for="aMed">Profissional solicitante *</label><input id="aMed" value="${esc(S.aihMedico)}" placeholder="Nome do médico solicitante"></div></div></div>
+  ${medSelect('medSelAih', 'Profissional solicitante')}</div></div>
   <div class="actions"><button class="btn" id="printApac"><span class="ms">print</span>Imprimir</button></div></div>
   <div class="sheet-wrap"><div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">info</span>Não grava nada.</div></div></div>`;
   refreshPreview();
@@ -342,7 +349,7 @@ const closeModal = () => { $('#modal').hidden = true; };
 function render() {
   chrome();
   document.querySelector('.pt').hidden = S.mod === 'cir' || S.mod === 'cad';
-  ({ docs: renderDocs, aih: renderAIH, apac: renderAPAC, cir: () => renderCirurgias(), cad: renderCad })[S.mod]();
+  ({ docs: renderDocs, aih: renderAIH, apac: renderAPAC, cir: () => renderCirurgias(), cad: () => renderCad() })[S.mod]();
 }
 
 /* ---------- eventos ---------- */
@@ -409,6 +416,7 @@ document.addEventListener('click', async e => {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); if (e.key === 'Enter' && e.target.id === 'mImc' && !$('#mOk').disabled) $('#mOk').click(); });
 document.addEventListener('change', e => {
   const t = e.target;
+  if (t.classList && t.classList.contains('medsel')) { S.medicoId = t.value; LS.set('sgdm3_medico_id', t.value); applyMedico(); refreshPreview(); return; }
   if (t.dataset.pk) { S.bundle[t.dataset.pk] = t.checked; renderDocs(); }
   else if (t.id === 'pre') {
     S.predef[S.doc] = t.value; delete S.text[S.doc];
@@ -429,13 +437,11 @@ document.addEventListener('input', e => {
   const t = e.target;
   if (t.id === 'mImc') { M.imc = t.value; updRes(); }
   else if (t.id === 'txt') { S.text[S.doc] = t.value; refreshPreview(); }
-  else if (t.id === 'doctor') { S.doctor = t.value; LS.set('sgdm3_doctor', t.value); refreshPreview(); }
   else if (t.id === 'cEnd') { S.end = t.value; refreshPreview(); }
   else if (t.id === 'cCpf') { t.value = maskCpf(t.value); S.cpf = t.value; refreshPreview(); }
   else if (t.id === 'aNome') { S.acomp = t.value; if (S.text.acompanhante == null || /esteve como acompanhante/.test(S.text.acompanhante)) delete S.text.acompanhante; const tx = $('#txt'); if (tx) tx.value = getText('acompanhante'); refreshPreview(); }
   else if (t.dataset.atb) { S.atb[t.dataset.atb] = t.value; refreshPreview(); }
   else if (t.dataset.af) { S.aih[t.dataset.af] = t.value; refreshPreview(); }
-  else if (t.id === 'aMed') { S.aihMedico = t.value; LS.set('sgdm3_aih_medico', t.value); refreshPreview(); }
   else if (t.id === 'bq') { S.aihQ = t.value; const pos = t.selectionStart; renderAIH(); const n = $('#bq'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }
   else if (t.id === 'pNome') refreshPreview();
 });

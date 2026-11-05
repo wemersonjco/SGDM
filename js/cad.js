@@ -11,7 +11,7 @@ const GRUPO_LABELS = () => ({
   PREDEFS: Object.fromEntries(Object.values(PREDEF_OPTS).flat().concat([['pos_op', 'Atestado pós-operatório']])),
   DESCRICOES: Object.fromEntries(DESC_OPTS), EVOLUCOES: Object.fromEntries(EVO_OPTS), BIZUARIO: Object.fromEntries(BIZ_OPTS)
 });
-const CFG = { tab: 'perfil', grupo: 'PREDEFS', modelo: 'pos_op_gastro', modelos: {}, msg: null, loaded: false };
+const CFG = { tab: 'medicos', editId: null, grupo: 'PREDEFS', modelo: 'pos_op_gastro', modelos: {}, msg: null, loaded: false };
 
 function setList(target, pairs) { target.splice(0, target.length, ...pairs); }
 function applyConfig(m) {
@@ -23,12 +23,18 @@ function applyConfig(m) {
   if (m.estab) { if (m.estab.nome) { HOSP = m.estab.nome; HOSP_APAC = m.estab.nome; } if (m.estab.cnes) CNES_HOSP = m.estab.cnes; }
 }
 async function cfgLoad() {
+  try { await cfgLoadInner(); } catch (_) { /* sem configuração compartilhada: segue com os padrões */ }
+}
+async function cfgLoadInner() {
   const c = getDb(); if (!c) return;
-  const r = await c.from('sgdm_config').select('chave,valor');
-  if (r.error) return;
-  const m = {}; (r.data || []).forEach(x => { m[x.chave] = x.valor; });
-  applyConfig(m); CFG.loaded = true;
-  if (S.mod === 'docs' || S.mod === 'cad') { const a = document.activeElement; if (!a || a === document.body) render(); }
+  const [r, rm] = await Promise.all([c.from('sgdm_config').select('chave,valor'), c.from('sgdm_medicos').select('id,nome,assinatura').order('nome')]);
+  if (!r.error) { const m = {}; (r.data || []).forEach(x => { m[x.chave] = x.valor; }); applyConfig(m); CFG.loaded = true; }
+  if (!rm.error) { S.medicos = rm.data || []; if (!S.medicos.some(x => String(x.id) === String(S.medicoId))) S.medicoId = ''; applyMedico(); }
+  if (['docs', 'cad', 'aih', 'apac'].includes(S.mod)) { const a = document.activeElement; if (!a || a === document.body || a.tagName === 'BUTTON') render(); }
+}
+async function reloadMedicos() {
+  const r = await getDb().from('sgdm_medicos').select('id,nome,assinatura').order('nome');
+  if (!r.error) { S.medicos = r.data || []; if (!S.medicos.some(x => String(x.id) === String(S.medicoId))) { S.medicoId = ''; LS.set('sgdm3_medico_id', ''); } applyMedico(); }
 }
 async function cfgSave(chave, valor) {
   const r = await getDb().from('sgdm_config').upsert({ chave, valor, atualizado_em: new Date().toISOString() });
@@ -49,14 +55,16 @@ async function cadDone(erro, okText) {
 /* ---------- telas ---------- */
 const lines = txt => txt.split('\n').map(x => x.trim()).filter(Boolean);
 function renderCad() {
-  const tabs = `<div class="sub" role="tablist">${[['perfil', 'Meu perfil'], ['listas', 'Medicamentos e exames'], ['modelos', 'Modelos de texto'], ['unid', 'Unidades']].map(([k, l]) => `<button role="tab" aria-selected="${CFG.tab === k}" data-cadtab="${k}">${l}</button>`).join('')}</div>` + cadBanner();
+  const tabs = `<div class="sub" role="tablist">${[['medicos', 'Médicos'], ['listas', 'Medicamentos e exames'], ['modelos', 'Modelos de texto'], ['unid', 'Unidades']].map(([k, l]) => `<button role="tab" aria-selected="${CFG.tab === k}" data-cadtab="${k}">${l}</button>`).join('')}</div>` + cadBanner();
   const shared = '<p style="margin:0;color:var(--muted);font-size:13px">Compartilhado: a alteração vale para todos os médicos que usam o sistema.</p>';
-  if (CFG.tab === 'perfil') {
-    $('#view').innerHTML = tabs + `<div class="card" style="max-width:640px"><div class="sec"><h4><span class="ms" style="font-size:16px">badge</span>Meu perfil</h4><div class="stack">
-      <p style="margin:0;color:var(--muted);font-size:13px">Fica salvo só neste navegador. Cada médico preenche o seu.</p>
-      <div><label for="pfDoc">Assinatura nos documentos</label><textarea id="pfDoc" rows="3" placeholder="Seu nome, especialidade, CRM e RQE">${esc(S.doctor)}</textarea></div>
-      <div><label for="pfMed">Profissional solicitante (AIH e APAC)</label><input id="pfMed" value="${esc(S.aihMedico)}" placeholder="Nome como no cadastro do hospital"></div>
-      <div><button class="btn" data-cadsave="perfil"><span class="ms">save</span>Salvar perfil</button></div></div></div></div>`;
+  if (CFG.tab === 'medicos') {
+    const ed = S.medicos.find(m => String(m.id) === String(CFG.editId));
+    $('#view').innerHTML = tabs + `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">badge</span>Médicos cadastrados</h4><div class="stack">${shared}
+      ${S.medicos.length ? S.medicos.map(m => `<div class="med-item"><span><b>${esc(m.nome)}</b><br>${esc((m.assinatura || '').replace(/\n/g, ' · '))}</span><button class="x" data-cadedit="${m.id}" aria-label="Editar"><span class="ms">edit</span></button><button class="x" data-caddel="${m.id}" aria-label="Excluir"><span class="ms">delete</span></button></div>`).join('') : '<div class="empty">Nenhum médico cadastrado ainda.</div>'}</div></div></div>
+      <div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">${ed ? 'edit' : 'person_add'}</span>${ed ? 'Editar médico' : 'Novo médico'}</h4><div class="stack">
+      <div><label for="pfMed">Nome (aparece como profissional solicitante na AIH e APAC)</label><input id="pfMed" value="${esc(ed ? ed.nome : '')}" placeholder="Nome como no cadastro do hospital"></div>
+      <div><label for="pfDoc">Assinatura nos documentos</label><textarea id="pfDoc" rows="3" placeholder="Nome, especialidade, CRM e RQE (uma linha por item)">${esc(ed ? ed.assinatura : '')}</textarea></div>
+      <div class="row"><div class="fit"><button class="btn" data-cadsave="medico"><span class="ms">save</span>${ed ? 'Salvar alterações' : 'Cadastrar médico'}</button></div>${ed ? '<div class="fit"><button class="btn quiet" data-cadtab="medicos" data-canceledit>Cancelar</button></div>' : ''}</div></div></div></div></div>`;
   } else if (CFG.tab === 'listas') {
     const L = (id, t, list) => `<div><label for="${id}">${t} <span style="font-weight:400">(${list.length} itens, um por linha)</span></label><textarea id="${id}" rows="12" style="font-size:12.5px">${esc(list.map(x => x[1]).join('\n'))}</textarea></div>`;
     $('#view').innerHTML = tabs + `<div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">medication</span>Medicamentos e exames</h4><div class="stack">${shared}
@@ -91,13 +99,24 @@ const toPairs = (txt, special) => lines(txt).map(l => { const k = special && Obj
 document.addEventListener('click', async e => {
   const t = e.target.closest('button'); if (!t) return;
   const d = t.dataset;
-  if (d.cadtab) { CFG.tab = d.cadtab; renderCad(); }
+  if (d.cadtab) { CFG.tab = d.cadtab; if ('canceledit' in d) CFG.editId = null; renderCad(); }
+  else if (d.cadedit) { CFG.editId = d.cadedit; renderCad(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  else if (d.caddel) {
+    const m = S.medicos.find(x => String(x.id) === d.caddel);
+    if (!m || !confirm('Excluir ' + m.nome + '? Isso vale para todos os usuários.')) return;
+    const r = await getDb().from('sgdm_medicos').delete().eq('id', d.caddel);
+    if (!r.error) await reloadMedicos();
+    cadDone(r.error, '<b>Médico excluído.</b>');
+  }
   else if (d.cadsave) {
     t.disabled = true;
-    if (d.cadsave === 'perfil') {
-      S.doctor = $('#pfDoc').value; S.aihMedico = $('#pfMed').value.trim();
-      LS.set('sgdm3_doctor', S.doctor); LS.set('sgdm3_aih_medico', S.aihMedico);
-      cadNotice('ok', '<b>Perfil salvo neste navegador.</b>'); toast('Perfil salvo.'); renderCad();
+    if (d.cadsave === 'medico') {
+      const nome = $('#pfMed').value.trim(), ass = $('#pfDoc').value.trim();
+      if (!nome) { t.disabled = false; return toast('Informe o nome do médico.'); }
+      const c = getDb(), ed = CFG.editId;
+      const r = ed ? await c.from('sgdm_medicos').update({ nome, assinatura: ass }).eq('id', ed) : await c.from('sgdm_medicos').insert([{ nome, assinatura: ass }]);
+      if (!r.error) { CFG.editId = null; await reloadMedicos(); }
+      cadDone(r.error, `<b>${ed ? 'Médico atualizado' : 'Médico cadastrado'} com sucesso.</b><br>${esc(nome)}`);
     } else if (d.cadsave === 'listas') {
       const meds = toPairs($('#lsMeds').value, true), ctrl = toPairs($('#lsCtrl').value), ex = toPairs($('#lsEx').value);
       const errs = [await cfgSave('meds', meds), await cfgSave('meds_ctrl', ctrl), await cfgSave('exames', ex)].find(Boolean);
