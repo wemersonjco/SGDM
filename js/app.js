@@ -43,7 +43,9 @@ function posOpTexto(p) {
   const bloco = p
     ? `1) ENOXAPARINA (VOLARE) 40 MG — ${protocolo(p).qtd}\nAplicar no subcutâneo ${protocolo(p).poso}.`
     : '1) ENOXAPARINA (VOLARE) 40 MG — (seringas conforme o protocolo)\nAplicar no subcutâneo (posologia definida pelo protocolo: IMC e história de TEV).';
-  return PREDEFS.pos_op_gastro.replace(ENOX_ORIG, bloco);
+  const base = PREDEFS.pos_op_gastro;
+  if (base.includes(ENOX_ORIG)) return base.replace(ENOX_ORIG, bloco);
+  return base.replace(/(USO INJETÁVEL:\s*\n)1\) [^\n]*\n[^\n]*/, '$1' + bloco);
 }
 
 /* ---------- estado ---------- */
@@ -78,7 +80,7 @@ const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ
 const maskCpf = v => { v = v.replace(/\D/g, '').slice(0, 11); if (v.length > 9) return v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4'); if (v.length > 6) return v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3'); if (v.length > 3) return v.replace(/(\d{3})(\d{1,3})/, '$1.$2'); return v; };
 
 /* ---------- login ---------- */
-function showApp() { $('#login').hidden = true; $('#app').hidden = false; render(); }
+function showApp() { $('#login').hidden = true; $('#app').hidden = false; render(); if (window.cfgLoad) cfgLoad(); }
 function initLogin() {
   if (SS.get('sgdm3_ok') === '1') return showApp();
   $('#login').hidden = false;
@@ -289,10 +291,6 @@ async function emitirAih() {
 }
 
 /* ---------- Cirurgias e Cadastros (fase 2) ---------- */
-function renderCad() {
-  $('#view').innerHTML = `<div class="grid2">${[['badge', 'Médicos', 'Nome, CRM, RQE, CNS e CPF'], ['apartment', 'Unidades', 'CNES, endereço, timbre e rodapé'], ['article', 'Modelos e textos', 'Receitas, atestados, orientações'], ['medication', 'Medicamentos e exames', 'Listas usadas nos documentos']].map(x => `<div class="card" style="padding:18px 20px"><span class="ms" style="color:var(--accent-text)">${x[0]}</span><h3 style="margin:8px 0 2px;font-size:15px">${x[1]}</h3><div style="color:var(--muted);font-size:13px">${x[2]} · próxima etapa</div></div>`).join('')}</div>`;
-}
-
 /* ---------- APAC ---------- */
 function renderAPAC() {
   const eda = S.apacTab === 'eda';

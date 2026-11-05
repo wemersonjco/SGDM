@@ -10,7 +10,13 @@ const DOC_TITLES = {
   orientacoes: 'ORIENTAÇÕES AO PACIENTE'
 };
 const MARGINS = { metro: { top: 20, bottom: 25 }, ioci: { top: 70, bottom: 20 } };
-const FOOT_METRO = '<div style="text-align:center;font-size:9pt;color:#555;border-top:1px solid #999;padding-top:6px;margin-top:auto">Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187.</div>';
+const UNITS_DEFAULT = {
+  metro: { cab: 'SECRETARIA ESTADUAL DE SAÚDE\nHOSPITAL METROPOLITANO\nSERVIÇO DE CIRURGIA BARIÁTRICA', emitente: 'Hospital Metropolitano\nAv. Dom Orlando Chaves, S/N\nVárzea Grande - MT, 78118-187', rodape: 'Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187.', cidade: 'Várzea Grande - MT' },
+  ioci: { cab: '', emitente: 'IOCI - Instituto de Obesidade e Cirurgia\nAv. Érico Gonçalves Preza Filho, 76\nJardim Itália, Cuiabá - MT, 78060-758\n(65) 3028-7000', rodape: '', cidade: 'Cuiabá - MT' }
+};
+const UNITS = JSON.parse(JSON.stringify(UNITS_DEFAULT));
+const footHTML = u => UNITS[u].rodape ? `<div style="text-align:center;font-size:9pt;color:#555;border-top:1px solid #999;padding-top:6px;margin-top:auto">${esc(UNITS[u].rodape)}</div>` : '';
+const _OLD_FOOT = '<div style="text-align:center;font-size:9pt;color:#555;border-top:1px solid #999;padding-top:6px;margin-top:auto">Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187.</div>';
 
 const fmtLong = d => d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 const dayShift = n => { const d = new Date(); d.setDate(d.getDate() + n); return d; };
@@ -23,7 +29,7 @@ function baseData(inst) {
     endereco: (S.end || '').trim(),
     cpf: (S.cpf || '').trim(),
     doctor: (S.doctor || '').trim(),
-    city: inst === 'metro' ? 'Várzea Grande - MT' : 'Cuiabá - MT',
+    city: UNITS[inst].cidade,
     dateStr: fmtLong(new Date())
   };
 }
@@ -35,17 +41,16 @@ function buildDocHTML(d, title, content, fontSize, lh) {
   const fs = fontSize || '11pt';
   const e = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
   let h = '';
-  if (isM) {
+  const cab = (UNITS[d.inst].cab || '').split('\n').map(x => x.trim()).filter(Boolean);
+  if (cab.length) {
     h += '<div style="text-align:center;padding-bottom:8px;border-bottom:2px solid #333;margin-bottom:20px">';
-    h += '<h2 style="font-size:12pt;margin:2px 0;font-weight:700">SECRETARIA ESTADUAL DE SAÚDE</h2>';
-    h += '<h2 style="font-size:12pt;margin:2px 0;font-weight:700">HOSPITAL METROPOLITANO</h2>';
-    h += '<p style="font-size:10pt;margin:1px 0">SERVIÇO DE CIRURGIA BARIÁTRICA</p></div>';
+    cab.forEach((l, i) => { h += i < 2 ? '<h2 style="font-size:12pt;margin:2px 0;font-weight:700">' + e(l) + '</h2>' : '<p style="font-size:10pt;margin:1px 0">' + e(l) + '</p>'; });
+    h += '</div>';
   }
   if (isC) {
     h += '<div style="border:1px solid #000;padding:10px;font-size:9pt;text-align:center;float:right;width:220px;margin-left:20px;margin-bottom:10px">';
     h += '<strong>IDENTIFICAÇÃO DO EMITENTE</strong><br>';
-    if (isM) h += 'Hospital Metropolitano<br>Av. Dom Orlando Chaves, S/N<br>Várzea Grande - MT, 78118-187';
-    else h += 'IOCI - Instituto de Obesidade e Cirurgia<br>Av. Érico Gonçalves Preza Filho, 76<br>Jardim Itália, Cuiabá - MT, 78060-758<br>(65) 3028-7000';
+    h += e(UNITS[d.inst].emitente);
     h += '</div>';
   }
   h += '<div style="text-align:center;font-size:14pt;font-weight:700;text-decoration:underline;margin:10px 0 20px">' + title + '</div>';
@@ -80,7 +85,7 @@ function pageInner(p, forPrint) {
   if (p.kind === 'raw') return p.html;
   const m = MARGINS[p.inst];
   const bottom = p.bottom ? `<div class="nota">${esc(p.bottom)}</div>` : '';
-  const foot = p.inst === 'metro' ? FOOT_METRO : '';
+  const foot = footHTML(p.inst);
   return `<div class="pgd" style="min-height:calc(297mm - ${m.top}mm - ${m.bottom}mm)"><div class="pc">${p.html}</div>${bottom}${foot}</div>`;
 }
 function renderPreview(host, pages, idx) {

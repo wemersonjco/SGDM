@@ -47,8 +47,9 @@ const orow = (...a) => `<div class="or">${a.join('')}</div>`;
 const osec = (t, b, cls = '') => `<div class="os ${cls}"><span class="ot">${t}</span>${b}</div>`;
 const ohdr = (t, fls) => `<div class="ofh"><div class="logo">SUS<small>Sistema Único<br>de Saúde</small></div><div class="tt">${t}</div></div>${fls ? '<span class="fls">fls.1/2</span>' : ''}`;
 
-const HOSP = 'HOSPITAL METROPOLITANO DE VARZEA GRANDE';
-const CNES_HOSP = '6853781';
+let HOSP = 'HOSPITAL METROPOLITANO DE VARZEA GRANDE';
+let HOSP_APAC = 'HOSPITAL METROPOLITANO DE VÁRZEA GRANDE';
+let CNES_HOSP = '6853781';
 
 /* a: nome, f20..f28, clinica, carater, docTipo, docNum, medico, data */
 function aihHTML(a) {
@@ -67,7 +68,7 @@ function aihHTML(a) {
 function apacHTML(a) {
   const sc = [18, 21, 24, 27, 30].map(n => orow(oc(n, 'CÓDIGO DO PROCEDIMENTO SECUNDÁRIO', '', 3), oc(n + 1, 'NOME DO PROCEDIMENTO SECUNDÁRIO', '', 6), oc(n + 2, 'QTDE.', '', 1))).join('');
   return `<div class="of apac"><div class="ofi" style="gap:.25em">${ohdr('LAUDO PARA SOLICITAÇÃO/AUTORIZAÇÃO DE<br>PROCEDIMENTO AMBULATORIAL', true)}
-  <div class="ob">IDENTIFICAÇÃO DO ESTABELECIMENTO DE SAÚDE (SOLICITANTE)</div>${orow(oc(1, 'NOME DO ESTABELECIMENTO DE SAÚDE SOLICITANTE', 'HOSPITAL METROPOLITANO DE VÁRZEA GRANDE', 8), oc(2, 'CNES', CNES_HOSP, 2))}
+  <div class="ob">IDENTIFICAÇÃO DO ESTABELECIMENTO DE SAÚDE (SOLICITANTE)</div>${orow(oc(1, 'NOME DO ESTABELECIMENTO DE SAÚDE SOLICITANTE', HOSP_APAC, 8), oc(2, 'CNES', CNES_HOSP, 2))}
   <div class="ob">IDENTIFICAÇÃO DO PACIENTE</div>${orow(oc(3, 'NOME DO PACIENTE', a.nome, 8), oc(4, 'Nº DO PRONTUÁRIO', '', 2)) + orow(oc(5, 'CARTÃO NACIONAL DE SAÚDE (CNS)', '', 5), oc(6, 'DATA DE NASCIMENTO', '', 2), oc(7, 'SEXO', 'Masc. ( )  Fem. ( )', 2)) + orow(oc(8, 'NOME DA MÃE OU RESPONSÁVEL', '', 7), oc(9, 'TELEFONE DE CONTATO', '', 3)) + orow(oc(10, 'ENDEREÇO (RUA, Nº, BAIRRO)', '', 1)) + orow(oc(11, 'MUNICÍPIO DE RESIDÊNCIA', '', 5), oc(12, 'CÓD. IBGE MUNICÍPIO', '', 1.6), oc(13, 'UF', '', .7), oc(14, 'CEP', '', 2))}
   <div class="ob">PROCEDIMENTO SOLICITADO</div>${orow(oc(15, 'CÓDIGO DO PROCEDIMENTO PRINCIPAL', a.f15, 3), oc(16, 'NOME DO PROCEDIMENTO PRINCIPAL', a.f16, 6), oc(17, 'QTDE.', '1', 1))}
   <div class="ob">PROCEDIMENTO(S) SECUNDÁRIO(S)</div>${sc}
