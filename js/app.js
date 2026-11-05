@@ -154,14 +154,6 @@ function aihPages() {
   const rx = docPage('metro', { id: 'aihrx', label: 'Receita pós-op', title: 'RECEITA MÉDICA', content: posOpTexto(S.prot), bottom: PREVIA, fs: '10pt', lh: 1.35 });
   return [aih, meia, rx];
 }
-const APAC_MODELS = {
-  eda: { f15: '02.09.01.003-7', f16: 'ESOFAGOGASTRODUODENOSCOPIA', f33: 'PÓS OPERATÓRIO DE CIRURGIA BARIÁTRICA', f34: 'Z988', f37: 'PACIENTE EM PÓS OPERATÓRIO DE CIRURGIA BARIÁTRICA COM NECESSIDADE DE REALIZAR ENDOSCOPIA DIGESTIVA DE CONTROLE.' },
-  cir: { f15: '', f16: 'CONSULTA EM CIRURGIA GERAL', f33: 'COLELITIASE', f34: 'K802', f37: 'ENCAMINHO PACIENTE EM POS OPERATÓRIO DE CIRURGIA BARIATRICA (BYPASS GASTRICO), APRESENTANDO COLELITIASE COM NECESSIDADE DE COLECISTECTOMIA DEVIDO DESVIO INTESTINAL QUE IMPEDE ACESSO A VIA BILIAR VIA ENDOSCÓPICA CONVENCIONAL.' }
-};
-function apacPages() {
-  return [rawPage({ id: 'apac', label: 'APAC', cls: 'rawof', html: apacHTML({ nome: pNome().trim(), ...APAC_MODELS[S.apacTab], medico: S.aihMedico, data: dShort() }) })];
-}
-
 /* ---------- chrome ---------- */
 function chrome() {
   $('#mods').innerHTML = MODS.map(([k, i, l]) => `<button class="mod" role="tab" aria-selected="${S.mod === k}" data-mod="${k}"><span class="ms">${i}</span>${l}</button>`).join('');
@@ -299,16 +291,6 @@ async function emitirAih() {
 
 /* ---------- Cirurgias e Cadastros (fase 2) ---------- */
 /* ---------- APAC ---------- */
-function renderAPAC() {
-  const eda = S.apacTab === 'eda';
-  $('#view').innerHTML = `<div class="work"><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">request_page</span>APAC</h4><div class="stack"><p style="margin:0;color:var(--muted);font-size:13px">Formulário oficial do SUS. Vêm preenchidos o estabelecimento, o CNES, o procedimento, o diagnóstico, o CID e as observações do modelo escolhido. O nome do paciente vem da faixa acima. O resto fica em branco.</p>
-  <div><label>Modelo</label><div class="opt"><label><input type="radio" name="apm" value="eda" ${eda ? 'checked' : ''}>Endoscopia (EDA)</label><label><input type="radio" name="apm" value="cir" ${!eda ? 'checked' : ''}>Consulta cirurgia geral</label></div></div>
-  ${medSelect('medSelAih', 'Profissional solicitante')}</div></div>
-  <div class="actions"><button class="btn" id="printApac"><span class="ms">print</span>Imprimir</button></div></div>
-  <div class="sheet-wrap"><div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">info</span>Não grava nada.</div></div></div>`;
-  refreshPreview();
-}
-
 /* ---------- modais ---------- */
 let M = { imc: '', tev: 'nao', then: null, msg: '' };
 function openModal(kind) {
@@ -350,7 +332,7 @@ const closeModal = () => { $('#modal').hidden = true; };
 function render() {
   chrome();
   document.querySelector('.pt').hidden = S.mod === 'cir' || S.mod === 'cad';
-  ({ docs: renderDocs, aih: renderAIH, apac: renderAPAC, cir: () => renderCirurgias(), cad: () => renderCad() })[S.mod]();
+  ({ docs: renderDocs, aih: renderAIH, apac: () => renderAPAC(), cir: () => renderCirurgias(), cad: () => renderCad() })[S.mod]();
 }
 
 /* ---------- eventos ---------- */
@@ -424,7 +406,6 @@ document.addEventListener('change', e => {
     if (S.doc === 'receita' && t.value === 'pos_op_gastro' && !S.prot) { renderDocs(); openModal('prot-doc'); } else renderDocs();
   }
   else if (t.name === 'mtev') { M.tev = t.value; updRes(); }
-  else if (t.name === 'apm') { S.apacTab = t.value; refreshPreview(); }
   else if (t.id === 'bp') { S.aihStatus = t.value; renderAIH(); }
   else if (t.dataset.adm) {
     const k = t.dataset.adm, v = t.value;

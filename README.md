@@ -12,7 +12,7 @@ Site estático (HTML, CSS e JavaScript puros). Não precisa de build: abra `inde
 - **AIH**: formulário oficial do SUS. Ao emitir, salva 4 campos no Supabase (paciente, dados clínicos, médico, data), imprime AIH + receita da meia + receita pós-op (com aviso de prévia) e mostra a mensagem para colar no prontuário. Também lista as AIH emitidas e cruza com as cirurgias.
 - **Cirurgias (SCC)**: lançamento, dashboard por período, relatórios diário e mensal, CSV/PDF e cadastro de cirurgiões, com as mesmas tabelas do SCC atual.
 - **Cadastros**: médicos (nome e assinatura, cada um escolhe o seu nas telas de documentos, AIH e APAC), listas de medicamentos e exames, modelos de texto e dados das unidades. Salvos no Supabase (tabelas `sgdm_medicos` e `sgdm_config`), compartilhados por todos.
-- **APAC**: formulário oficial do SUS (modelos EDA e consulta em cirurgia geral).
+- **APAC**: formulário oficial do SUS com todos os campos do procedimento, diagnóstico e observações editáveis. Modelos (EDA, consulta em cirurgia geral e outros que você cadastrar) ficam salvos no Supabase (`sgdm_apac_modelos`) e são compartilhados.
 
 ## Dados do paciente
 

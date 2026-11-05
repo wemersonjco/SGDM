@@ -30,6 +30,7 @@ async function cfgLoadInner() {
   const [r, rm] = await Promise.all([c.from('sgdm_config').select('chave,valor'), c.from('sgdm_medicos').select('id,nome,assinatura').order('nome')]);
   if (!r.error) { const m = {}; (r.data || []).forEach(x => { m[x.chave] = x.valor; }); applyConfig(m); CFG.loaded = true; }
   if (!rm.error) { S.medicos = rm.data || []; if (!S.medicos.some(x => String(x.id) === String(S.medicoId))) S.medicoId = ''; applyMedico(); }
+  if (window.apacLoad) await apacLoad();
   if (['docs', 'cad', 'aih', 'apac'].includes(S.mod)) { const a = document.activeElement; if (!a || a === document.body || a.tagName === 'BUTTON') render(); }
 }
 async function reloadMedicos() {
