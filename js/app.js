@@ -352,7 +352,7 @@ document.addEventListener('click', async e => {
     const { error } = await getDb().from('aih_registros').delete().eq('id', d.adel);
     if (error) toast('Erro ao excluir: ' + error.message); else { toast('AIH excluída.'); S.aihList = null; renderAIH(); }
   }
-  else if (d.csv) {
+  else if (d.csv !== undefined) {
     const esc2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
     const rows = [['Paciente', 'Emissão', 'Médico', 'Dados clínicos', 'Cirurgia']].concat(S.aihList.map(a => { const c = S.aihTab === 'comp' ? matchAih(a) : null; return [a.nome_paciente, fmtIso(a.data_emissao), a.nome_medico, a.dados_clinicos, c ? fmtIso(c.data) : '']; }));
     const blob = new Blob(['﻿' + rows.map(r => r.map(esc2).join(';')).join('\n')], { type: 'text/csv;charset=utf-8' });
@@ -371,7 +371,7 @@ document.addEventListener('click', async e => {
     renderDocs();
   }
   else if (d.delmed) { const [k, i] = d.delmed.split(':'); (k === 'c' ? S.medsCtrl : S.meds).splice(+i, 1); renderDocs(); }
-  else if (d.addex) {
+  else if (d.addex !== undefined) {
     const v = $('#exSel').value; if (!v) return;
     let cur = getText('exames');
     if (cur && !cur.endsWith('\n') && !cur.endsWith(';')) cur += ';\n'; else if (cur.endsWith(';')) cur += '\n';
