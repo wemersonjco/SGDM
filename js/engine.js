@@ -124,7 +124,13 @@ section.doc-metro{page:doc-metro}
 section.doc-ioci{page:doc-ioci}
 section.rawatb{page:rawatb}
 section.rawrep{page:rawrep}
-section.rawof{page:rawof;height:296.5mm;overflow:hidden}
+section.rawof{page:rawof;height:296mm;overflow:visible;break-inside:avoid}
+/* Impressão dos formulários oficiais sem container queries (cqw) nem contenção de layout: alguns Firefox/impressoras cortam o texto digitado.
+   1cqw = 2,1mm; os valores abaixo são os mesmos da prévia, só que em mm fixos. */
+.of{container-type:normal!important;contain:none!important;overflow:visible!important;width:210mm;height:296mm}
+.ofi{font-size:2.73mm!important;padding:6.3mm 6.72mm!important}
+.fls{right:6.72mm!important;top:2.94mm!important}
+.ov{text-rendering:geometricPrecision}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 `;
 function printPages(pages) {
