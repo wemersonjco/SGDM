@@ -157,9 +157,9 @@ function aihPages() {
 /* ---------- chrome ---------- */
 function chrome() {
   $('#mods').innerHTML = MODS.map(([k, i, l]) => `<button class="mod" role="tab" aria-selected="${S.mod === k}" data-mod="${k}"><span class="ms">${i}</span>${l}</button>`).join('');
-  $('#unit').innerHTML = [['metro', 'Metropolitano'], ['ioci', 'IOCI']].map(([k, l]) => `<button aria-pressed="${S.unit === k}" data-unit="${k}">${l}</button>`).join('');
+  $('#unit').innerHTML = Object.keys(UNITS).map(k => [k, UNIT_LABELS[k] || k]).map(([k, l]) => `<button aria-pressed="${S.unit === k}" data-unit="${k}">${esc(l)}</button>`).join('');
 }
-const optsHTML = (list, cur, first = 'Nenhum') => `<option value="">${first}</option>` + list.map(([v, l]) => `<option value="${v}" ${cur === v ? 'selected' : ''}>${l}</option>`).join('');
+const optsHTML = (list, cur, first = 'Nenhum') => `<option value="">${first}</option>` + list.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('');
 
 function pagesNow() {
   if (S.mod === 'docs') return docsPages();
@@ -217,7 +217,7 @@ function renderDocs() {
   const pack = list.length ? `<div class="sec"><div class="pack"><h5><span class="ms">layers</span>Este modelo imprime ${pages.length} ${pages.length === 1 ? 'página' : 'páginas'} juntas</h5><p>Marque o que vai no pacote. Paciente e médico entram em todas as páginas.</p>${list.map((p, i) => `<div class="pg"><input type="checkbox" data-pk="${p[0]}" ${S.bundle[p[0]] ? 'checked' : ''} aria-label="Incluir ${esc(p[1])}"><span class="n">${i + 1}</span><div class="t">${esc(p[1])}<small>${esc(p[2])}</small></div>${p[3] ? `<span class="tag">${p[3]}</span>` : ''}<button class="view" data-page="${p[0]}"><span class="ms" style="font-size:16px">visibility</span>Ver</button></div>`).join('')}</div></div>` : '';
   const doctorBox = isAdmin ? '' : `<div class="sec"><h4><span class="ms" style="font-size:16px">draw</span>Assinatura do médico</h4>${medSelect('medSelDoc', 'Médico que assina os documentos')}</div>`;
   const actions = isAdmin ? `<div class="actions"><button class="btn line" id="copy"><span class="ms">content_copy</span>Copiar texto</button></div>` : `<div class="actions"><button class="btn quiet" id="clr"><span class="ms">delete_sweep</span>Limpar</button>${isAtb || isAdmin ? '' : '<button class="btn line" id="copy"><span class="ms">content_copy</span>Copiar texto</button>'}<button class="btn" id="print"><span class="ms">print</span>Imprimir${pages.length > 1 ? ` pacote (${pages.length} páginas)` : ''}</button></div>`;
-  const side = isAdmin ? '' : `<div class="sheet-wrap">${tabs}<div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">description</span>Folha A4 · ${S.unit === 'metro' ? 'Hospital Metropolitano' : 'Clínica IOCI'}</div></div>`;
+  const side = isAdmin ? '' : `<div class="sheet-wrap">${tabs}<div id="sheet"></div><div class="hint"><span class="ms" style="font-size:16px">description</span>Folha A4 · ${esc(UNIT_LONG[S.unit] || S.unit)}</div></div>`;
   $('#view').innerHTML = `<div class="work" ${isAdmin ? 'style="grid-template-columns:minmax(0,1fr)"' : ''}><div class="card"><div class="sec"><h4><span class="ms" style="font-size:16px">category</span>Tipo de documento</h4><div class="tiles">${DOCS.map(([k, i, l, n]) => `<button class="tile ${n || ''}" data-doc="${k}" aria-pressed="${S.doc === k}"><span class="ms">${i}</span>${l}</button>`).join('')}</div></div>${editor}${pack}${doctorBox}${actions}</div>${side}</div>`;
   refreshPreview();
 }

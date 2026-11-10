@@ -9,7 +9,9 @@ const DOC_TITLES = {
   exames: 'SOLICITAÇÃO DE EXAMES',
   orientacoes: 'ORIENTAÇÕES AO PACIENTE'
 };
-const MARGINS = { metro: { top: 20, bottom: 25 }, ioci: { top: 70, bottom: 20 } };
+const MARGINS = { metro: { top: 20, bottom: 25 }, ioci: { top: 70, bottom: 20, timbre: true } };
+const UNIT_LABELS = { metro: 'Metropolitano', ioci: 'IOCI' };
+const UNIT_LONG = { metro: 'Hospital Metropolitano', ioci: 'Clínica IOCI' };
 const UNITS_DEFAULT = {
   metro: { cab: 'SECRETARIA ESTADUAL DE SAÚDE\nHOSPITAL METROPOLITANO\nSERVIÇO DE CIRURGIA BARIÁTRICA', emitente: 'Hospital Metropolitano\nAv. Dom Orlando Chaves, S/N\nVárzea Grande - MT, 78118-187', rodape: 'Av. Dom Orlando Chaves, S/N - Cristo Rei, Várzea Grande - MT, 78118-187.', cidade: 'Várzea Grande - MT' },
   ioci: { cab: '', emitente: 'IOCI - Instituto de Obesidade e Cirurgia\nAv. Érico Gonçalves Preza Filho, 76\nJardim Itália, Cuiabá - MT, 78060-758\n(65) 3028-7000', rodape: '', cidade: 'Cuiabá - MT' }
@@ -95,7 +97,7 @@ function renderPreview(host, pages, idx) {
   if (p.kind === 'doc') {
     const m = MARGINS[p.inst];
     pad = `padding:${m.top}mm 15mm ${m.bottom}mm;`;
-    if (p.inst === 'ioci') timbre = `<div class="timbre-ph" style="height:${m.top}mm">(espaço do timbre da clínica, 7,0 cm)</div>`;
+    if (m.timbre) timbre = `<div class="timbre-ph" style="height:${m.top}mm">(espaço do papel timbrado, ${(m.top / 10).toLocaleString('pt-BR')} cm)</div>`;
   } else if (p.cls === 'rawatb') pad = 'padding:5mm;';
   host.innerHTML = `<div class="pvhost"><div class="pvpage" style="${pad}">${timbre}${pageInner(p)}</div></div>`;
   fitPreview(host);
@@ -110,9 +112,9 @@ function fitPreview(host) {
 }
 
 /* ---------- impressão ---------- */
-const PRINT_CSS = `
-@page doc-metro{size:A4;margin:20mm 15mm 25mm}
-@page doc-ioci{size:A4;margin:70mm 15mm 20mm}
+const unitPageCss = () => Object.keys(MARGINS).map(u => `@page doc-${u}{size:A4;margin:${MARGINS[u].top}mm 15mm ${MARGINS[u].bottom}mm}\nsection.doc-${u}{page:doc-${u}}`).join('\n');
+const PRINT_CSS = () => `
+${unitPageCss()}
 @page rawatb{size:A4;margin:5mm}
 @page rawof{size:A4;margin:0}
 @page rawrep{size:A4;margin:15mm}
@@ -120,8 +122,6 @@ const PRINT_CSS = `
 html,body{margin:0;padding:0;background:#fff}
 section.s{break-after:page}
 section.s:last-child{break-after:auto}
-section.doc-metro{page:doc-metro}
-section.doc-ioci{page:doc-ioci}
 section.rawatb{page:rawatb}
 section.rawrep{page:rawrep}
 section.rawof{page:rawof;height:296mm;overflow:visible;break-inside:avoid}
@@ -139,7 +139,7 @@ function printPages(pages) {
     const cls = p.kind === 'doc' ? 'doc-' + p.inst : p.cls;
     return `<section class="s ${cls}">${pageInner(p, true)}</section>`;
   }).join('');
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${FORMS_CSS}${PRINT_CSS}</style></head><body>${body}</body></html>`;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${FORMS_CSS}${PRINT_CSS()}</style></head><body>${body}</body></html>`;
   const f = document.getElementById('printFrame');
   const doc = f.contentDocument || f.contentWindow.document;
   doc.open(); doc.write(html); doc.close();

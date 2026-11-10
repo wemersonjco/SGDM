@@ -21,3 +21,5 @@ O nome do paciente fica só na memória da aba. Endereço e CPF só aparecem no 
 ## Pendências conhecidas
 
 - O login (`IOCI`) é conferido no navegador e as tabelas do Supabase têm acesso público. Endurecer isso fica para uma etapa própria.
+
+- Cadastros: é possível cadastrar novos modelos de texto (receita, atestado, encaminhamento, orientações, descrição cirúrgica, evolução, bizuário) e novas unidades (cabeçalho, rodapé, cidade e espaço para papel timbrado), compartilhados via Supabase.
