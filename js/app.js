@@ -288,8 +288,7 @@ async function emitirAih() {
   S.aihBusy = false;
   if (error) { toast('Erro ao salvar a AIH: ' + error.message); return; }
   S.aihList = null;
-  S.protSnap = S.prot; /* só para a mensagem do prontuário */
-  printPages(aihPages(), () => { resetProt(); });
+  printPages(aihPages());
   toast('AIH salva e 3 documentos enviados para impressão.');
   setTimeout(() => openModal('prontuario'), 400);
 }
@@ -311,8 +310,8 @@ function openModal(kind) {
     <footer><button class="btn quiet" data-close>Cancelar</button><button class="btn" id="mOk">${kind === 'prot-aih' ? 'Emitir e imprimir (3 documentos)' : 'Aplicar à receita'}</button></footer></div>`;
     m.hidden = false; updRes(); setTimeout(() => { const i = $('#mImc'); if (i) i.focus(); }, 30);
   } else if (kind === 'prontuario') {
-    const p = protocolo(S.protSnap || S.prot);
-    M.msg = `Prescrito enoxaparina na seguinte posologia: ENOXAPARINA (VOLARE) 40 MG, ${p.qtd.toLowerCase()}, aplicar no subcutâneo ${p.poso}. IMC ${(S.protSnap || S.prot).imc} kg/m², ${(S.protSnap || S.prot).tev === 'sim' ? 'com' : 'sem'} história de TEV. AIH emitida em ${dShort()}.`;
+    const p = protocolo(S.prot);
+    M.msg = `Prescrito enoxaparina na seguinte posologia: ENOXAPARINA (VOLARE) 40 MG, ${p.qtd.toLowerCase()}, aplicar no subcutâneo ${p.poso}. IMC ${S.prot.imc} kg/m², ${S.prot.tev === 'sim' ? 'com' : 'sem'} história de TEV. AIH emitida em ${dShort()}.`;
     m.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><header><h2 id="mt">Cole no prontuário do paciente</h2><p>Os 3 documentos foram enviados para impressão. Cole esta mensagem no prontuário para conferir a dose prescrita na hora da cirurgia.</p></header>
     <div class="mb"><div class="msgbox">${esc(M.msg)}</div></div>
     <footer><button class="btn line" id="mCopy"><span class="ms">content_copy</span>Copiar mensagem</button><button class="btn" data-close>Fechar</button></footer></div>`;
