@@ -181,7 +181,7 @@ function refreshPreview() {
 /* ---------- Documentos ---------- */
 function protChip() {
   if (S.doc !== 'receita' || S.predef.receita !== 'pos_op_gastro') return '';
-  if (!S.prot) return `<div class="chipbar"><span class="ms">vaccines</span>Informe o IMC e a história de TEV para definir a enoxaparina.<button data-open="prot-doc">Informar</button></div>`;
+  if (!S.prot) return `<div class="chipbar"><span class="ms">vaccines</span><div><b>Protocolo de enoxaparina obrigatório.</b><br>Informe o IMC e a história de TEV para poder imprimir esta receita.</div><button data-open="prot-doc">Informar</button></div>`;
   const p = protocolo(S.prot);
   return `<div class="chipbar"><span class="ms">vaccines</span><div>IMC <b>${esc(S.prot.imc)}</b> · ${S.prot.tev === 'sim' ? '<b>com</b>' : 'sem'} história de TEV<br>Enoxaparina (Volare) <b>${p.curto}</b></div><button data-open="prot-doc">Alterar</button></div>`;
 }
@@ -225,8 +225,12 @@ function printDocs() {
   const pages = docsPages();
   if (!pages.length) return;
   if (!pNome().trim()) { toast('Informe o nome do paciente na faixa acima.'); return; }
-  printPages(pages);
+  const posOp = S.doc === 'receita' && S.predef.receita === 'pos_op_gastro';
+  if (posOp && !S.prot) { toast('Preencha o protocolo de enoxaparina (IMC e TEV) antes de imprimir.'); openModal('prot-doc'); return; }
+  /* depois de imprimir, zera o protocolo: o próximo paciente precisa ter o IMC informado de novo */
+  printPages(pages, posOp ? () => { resetProt(); render(); toast('Protocolo de enoxaparina zerado. Informe o IMC do próximo paciente.'); } : null);
 }
+function resetProt() { S.prot = null; delete S.text.receita; }
 
 /* ---------- AIH ---------- */
 async function loadAih() {
@@ -284,7 +288,8 @@ async function emitirAih() {
   S.aihBusy = false;
   if (error) { toast('Erro ao salvar a AIH: ' + error.message); return; }
   S.aihList = null;
-  printPages(aihPages());
+  S.protSnap = S.prot; /* só para a mensagem do prontuário */
+  printPages(aihPages(), () => { resetProt(); });
   toast('AIH salva e 3 documentos enviados para impressão.');
   setTimeout(() => openModal('prontuario'), 400);
 }
@@ -306,8 +311,8 @@ function openModal(kind) {
     <footer><button class="btn quiet" data-close>Cancelar</button><button class="btn" id="mOk">${kind === 'prot-aih' ? 'Emitir e imprimir (3 documentos)' : 'Aplicar à receita'}</button></footer></div>`;
     m.hidden = false; updRes(); setTimeout(() => { const i = $('#mImc'); if (i) i.focus(); }, 30);
   } else if (kind === 'prontuario') {
-    const p = protocolo(S.prot);
-    M.msg = `Prescrito enoxaparina na seguinte posologia: ENOXAPARINA (VOLARE) 40 MG, ${p.qtd.toLowerCase()}, aplicar no subcutâneo ${p.poso}. IMC ${S.prot.imc} kg/m², ${S.prot.tev === 'sim' ? 'com' : 'sem'} história de TEV. AIH emitida em ${dShort()}.`;
+    const p = protocolo(S.protSnap || S.prot);
+    M.msg = `Prescrito enoxaparina na seguinte posologia: ENOXAPARINA (VOLARE) 40 MG, ${p.qtd.toLowerCase()}, aplicar no subcutâneo ${p.poso}. IMC ${(S.protSnap || S.prot).imc} kg/m², ${(S.protSnap || S.prot).tev === 'sim' ? 'com' : 'sem'} história de TEV. AIH emitida em ${dShort()}.`;
     m.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><header><h2 id="mt">Cole no prontuário do paciente</h2><p>Os 3 documentos foram enviados para impressão. Cole esta mensagem no prontuário para conferir a dose prescrita na hora da cirurgia.</p></header>
     <div class="mb"><div class="msgbox">${esc(M.msg)}</div></div>
     <footer><button class="btn line" id="mCopy"><span class="ms">content_copy</span>Copiar mensagem</button><button class="btn" data-close>Fechar</button></footer></div>`;

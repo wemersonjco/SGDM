@@ -133,7 +133,7 @@ section.rawof{page:rawof;height:296mm;overflow:visible;break-inside:avoid}
 .ov{text-rendering:geometricPrecision}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 `;
-function printPages(pages) {
+function printPages(pages, onDone) {
   if (!pages.length) return;
   const body = pages.map(p => {
     const cls = p.kind === 'doc' ? 'doc-' + p.inst : p.cls;
@@ -143,5 +143,5 @@ function printPages(pages) {
   const f = document.getElementById('printFrame');
   const doc = f.contentDocument || f.contentWindow.document;
   doc.open(); doc.write(html); doc.close();
-  setTimeout(() => { f.contentWindow.focus(); f.contentWindow.print(); }, 350);
+  setTimeout(() => { f.contentWindow.focus(); f.contentWindow.print(); if (onDone) onDone(); }, 350);
 }
