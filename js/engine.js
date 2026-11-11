@@ -112,12 +112,13 @@ function fitPreview(host) {
 }
 
 /* ---------- impressão ---------- */
-const unitPageCss = () => Object.keys(MARGINS).map(u => `@page doc-${u}{size:A4;margin:${MARGINS[u].top}mm 15mm ${MARGINS[u].bottom}mm}\nsection.doc-${u}{page:doc-${u}}`).join('\n');
+const unitPageCss = () => Object.keys(MARGINS).map(u => `@page doc-${u}{size:A4 portrait;margin:${MARGINS[u].top}mm 15mm ${MARGINS[u].bottom}mm}\nsection.doc-${u}{page:doc-${u}}`).join('\n');
 const PRINT_CSS = () => `
 ${unitPageCss()}
-@page rawatb{size:A4;margin:5mm}
-@page rawof{size:A4;margin:0}
-@page rawrep{size:A4;margin:15mm}
+@page rawatb{size:A4 portrait;margin:5mm}
+@page rawof{size:A4 portrait;margin:0}
+@page rawrep{size:A4 portrait;margin:15mm}
+@page{size:A4 portrait;margin:0}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#fff}
 section.s{break-after:page}
