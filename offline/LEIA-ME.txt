@@ -1,0 +1,16 @@
+SGDM CONTINGÊNCIA (funciona sem internet)
+
+COMO USAR
+1. Copie o arquivo SGDM_Contingencia.html para o computador (por exemplo, na Área de Trabalho ou em C:\SGDM).
+2. Dê dois cliques nele. Abre no navegador (Chrome ou Firefox). Não precisa instalar nada nem ter internet.
+3. Entre com o mesmo usuário e senha do sistema normal.
+4. Use SEMPRE o mesmo arquivo, aberto do mesmo lugar e no mesmo navegador. Os dados da contingência ficam guardados nesse navegador.
+
+O QUE FICA DIFERENTE DO SISTEMA NORMAL
+- Os dados (AIH emitidas, cirurgias, cadastros) ficam só neste computador. Não aparecem para os outros médicos.
+- Médicos, modelos e unidades vêm de uma cópia feita na data da geração do arquivo. Para atualizar, abra o arquivo com internet e clique em "Atualizar cadastros (com internet)" na faixa amarela.
+- Faça backup com o botão "Backup (baixar)" depois de usar. Para voltar um backup, use "Restaurar backup".
+- Se limpar os dados do navegador, os dados da contingência se perdem (por isso o backup).
+
+PARA GERAR UMA VERSÃO NOVA (quando o sistema mudar)
+python3 offline/build.py <pasta que contém node_modules com material-symbols, @fontsource/inter, jspdf e jspdf-autotable>
